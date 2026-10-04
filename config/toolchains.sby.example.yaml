@@ -1,0 +1,16 @@
+# 将 /opt/oss-cad-suite 替换为执行设备的实际安装目录。
+# 复制为 toolchains.local.yaml 后使用；不要把许可证或账号密钥填入项目。
+profiles:
+  sby:
+    display_name: SBY 开源形式化工具链
+    tools:
+      sby: /opt/oss-cad-suite/bin/sby
+      yosys: /opt/oss-cad-suite/bin/yosys
+      yosys-smtbmc: /opt/oss-cad-suite/bin/yosys-smtbmc
+      z3: /opt/oss-cad-suite/bin/z3
+    environment:
+      PATH: /opt/oss-cad-suite/bin:/usr/local/bin:/usr/bin:/bin
+    max_concurrency: 1
+    minimum_free_bytes: 10737418240
+    minimum_root_free_bytes: 1073741824
+

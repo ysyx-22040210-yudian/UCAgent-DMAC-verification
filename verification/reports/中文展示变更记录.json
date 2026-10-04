@@ -1,0 +1,87 @@
+{
+  "description": "中文展示翻译；未修改机器证据、RTL或证明结论",
+  "changes": {
+    "DMAC_完整流程验证报告.md": {
+      "original_sha256": "40fbab681dd6fd26417a386a94274d61179c3bb6801a2a247bd1efb98cc6cb67",
+      "translated_sha256": "59dcf7657f1d0e5ffcd2f4d7ae86e568f5ffc1b5d768b272966effb1c27a84ed"
+    },
+    "guided/01_dmac_verification_needs_and_plan.md": {
+      "original_sha256": "33a30eab79fb8a163d4d447179bf7293374451124ec84e741b90205f2fd7dfca",
+      "translated_sha256": "9189de7d15b6bcc838cfd4d71e1f8dc4d660481ad5424f0940c1bbad103838fd"
+    },
+    "guided/02_dmac_basic_info.md": {
+      "original_sha256": "363402d053c5d8add3acf073ea729c1e92e8be8abb4e30a773b12a8c30bb909e",
+      "translated_sha256": "3d8ab0ac6e7f3c6e81e4601ef1d8475d8b37526b6654f15e09a50a5c5f6d69c9"
+    },
+    "guided/03_dmac_functions_and_checks.md": {
+      "original_sha256": "1006b251715d40b607b8175d9f5975186c0c5cb62908e0c013749a1d59ff8048",
+      "translated_sha256": "99ad95afa72dfa23665b7d9146624ca8528afa06fab3de8384a83e7c9f328066"
+    },
+    "guided/04_dmac_bug_report.md": {
+      "original_sha256": "df067d985cef30c146d3546ed642fa679ba4b4a2b33b210f7d1abc09a4f70fe9",
+      "translated_sha256": "c486c1c4505cf3f693866ee61e42a8cf0c5ce03045b22049be5be3b6263985ad"
+    },
+    "guided/04_dmac_static_bug_analysis.md": {
+      "original_sha256": "38154a16cb619926dbb65bd7561d0939fdc07d976e869c6e4906cd233eb34ff8",
+      "translated_sha256": "97b9c9d0b8508f9f3b16115c64b37b0bf7b80935acacd8bfe7870a85b0798682"
+    },
+    "guided/05_dmac_formal_summary.md": {
+      "original_sha256": "a550cd723d4f4739b34f65da3675083ec4776bd8be505b350e9a2c0b3ca2c3e6",
+      "translated_sha256": "24b80c389d170565e7a84f6e2f52d6a09b5ffa1377e2b5fca37dd28d93fd9fc0"
+    },
+    "guided/06_dmac_native_evidence.md": {
+      "original_sha256": "978b0423363d680b288e79ab3725308231b0815962090f6ea925b557488a31aa",
+      "translated_sha256": "a4e891ddbb1ceb05016a98424aec84743c12557c7836f103bb1a7ef47b705b3b"
+    },
+    "guided/07_dmac_env_analysis.md": {
+      "original_sha256": "a3842451406d0f011e128c1187335d1b849b8dc096c660c0880128f2e7fb0685",
+      "translated_sha256": "5fd07c5d343f8fb37db044550176aef8bc6d24e01fe154b36aee2626e841020a"
+    },
+    "guided/08_dmac_requirement_traceability.md": {
+      "original_sha256": "83d8732eba560f33595a337f7846a72347e1dadcb5eb53ebb2f58fea2b996ad2",
+      "translated_sha256": "28c7f7c047ff1a14347d4bb8c22e0019ebfb1fa780b1720a689850defaad7253"
+    },
+    "guided/09_dmac_property_review.md": {
+      "original_sha256": "f1ce82f531aabce2035c7ffd276e04725f219c2a9b09133d3164ffa0acb9c14e",
+      "translated_sha256": "d5ebcf6293f9de033dce5339200444eab66d64f5b068a6e6ae5d8e8648b40846"
+    },
+    "guided/10_dmac_joint_guided_evidence.md": {
+      "original_sha256": "c35e0bcb042dcf1b4ecb1d6542c00fcd5b25af1d1306ca102a30847ecfe04b9f",
+      "translated_sha256": "283cf6039a1b85eeeda12e4e90c2bed229b8acd60d0038b20c3371d993cc32ae"
+    },
+    "guided/11_dmac_engineering_review.md": {
+      "original_sha256": "b997ec22aaa88250330719ba7902d14dcd0be26e1f7bc266eb3ff285e43b5074",
+      "translated_sha256": "f762b962af3d7e2602220f375e803b4af7a1f1eaca5d32daea0d9e5cf22a652e"
+    },
+    "testpoint-evidence.csv": {
+      "original_sha256": "e7bcdc47fd54c8eec69698cb3bce464172c045cb29ffef92127eb0fb60f1429d",
+      "translated_sha256": "f4a0ccacf2bb2418c601b3b4debac37a17f029f373892e8a340d9686c1698e04"
+    },
+    "testpoints.html": {
+      "original_sha256": "6794d9ae1d1edf78b4e4c35676f97e2e55d8b2cc8acf45d5312176c6348f8b38",
+      "translated_sha256": "67d1d489efe10716ae915f12b6d79731615234769778b20ac9eac7ea44cdff54"
+    }
+  },
+  "omitted": [
+    "replay/C_CK_DUPLEX_DONE/sim",
+    "replay/C_CK_RESET_ABORT_RD/sim",
+    "replay/C_CK_RESET_ABORT_WR/sim",
+    "replay/C_CK_THREE_RD/sim",
+    "replay/C_CK_THREE_WR/sim",
+    "replay/fault_address_step_baseline/sim",
+    "replay/fault_address_step_mutant/sim",
+    "replay/fault_early_done_baseline/sim",
+    "replay/fault_early_done_mutant/sim",
+    "replay/fault_fifo_pop_baseline/sim",
+    "replay/fault_fifo_pop_mutant/sim",
+    "replay/fault_length_encoding_baseline/sim",
+    "replay/fault_length_encoding_mutant/sim",
+    "replay/fault_read_lane_baseline/sim",
+    "replay/fault_read_lane_mutant/sim",
+    "replay/fault_reset_lane_baseline/sim",
+    "replay/fault_reset_lane_mutant/sim",
+    "replay/fault_write_lane_baseline/sim",
+    "replay/fault_write_lane_mutant/sim"
+  ],
+  "omission_reason": "省略可重新编译的 Icarus sim 二进制，保留其源码与日志"
+}

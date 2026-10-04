@@ -1,0 +1,30 @@
+schema_version: 1
+design:
+  top: dmac_harness
+  sources:
+  - rtl/dmac_fifo.sv
+  - rtl/dmac.sv
+  - formal/dmac_harness.sv
+  include_dirs:
+  - formal
+  defines:
+  - FORMAL
+  - SYNTHESIS
+  parameters:
+    ADDR_W: 32
+    LEN_W: 32
+    FIFO_DEPTH: 2
+workflow:
+  family: formal
+  methodology: systemverilog
+  authoring_mode: guided
+toolchain: sby
+formal:
+  engine: sby
+  sby:
+    mode: prove
+    depth: 12
+    timeout_seconds: 240
+    multiclock: false
+  cex_replay:
+    enabled: false

@@ -1,0 +1,24 @@
+schema_version: 1
+design:
+  top: dmac
+  sources:
+  - dmac/rtl/dmac_fifo.sv
+  - dmac/rtl/dmac.sv
+  include_dirs: []
+  defines:
+  - SYNTHESIS
+  parameters: {}
+workflow:
+  family: formal
+  methodology: systemverilog
+  authoring_mode: guided
+toolchain: sby
+formal:
+  engine: sby
+  sby:
+    mode: bmc
+    depth: 12
+    timeout_seconds: 240
+    multiclock: false
+  cex_replay:
+    enabled: false

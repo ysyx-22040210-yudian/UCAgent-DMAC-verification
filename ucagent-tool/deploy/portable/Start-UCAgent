@@ -1,0 +1,6 @@
+#!/bin/sh
+# Launch the shipped Tk application and local execution service without setup.
+set -eu
+bundle_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+export PYTHONDONTWRITEBYTECODE=1
+exec "$bundle_dir/oss-cad-suite/bin/tabbypy3" -B "$bundle_dir/UCAgent-Desktop.pyz" --local --bundle "$bundle_dir" "$@"

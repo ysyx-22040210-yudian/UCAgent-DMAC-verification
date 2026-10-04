@@ -1,0 +1,27 @@
+
+# {{ dut }} SBY 形式化验证环境分析报告
+
+## 1. 当前工具结论
+
+- 验证结论：{{ report.verification_status }}
+- 执行模式：{{ report.mode }}，深度 {{ report.depth }}
+- COI：不支持；空洞性与无界活性：未建立。
+- 业务 Cover 与 guard witness 缺口不归为 RTL 缺陷。
+
+## 2. 属性分类与证据
+
+| 属性 | 类型 | 结果 | Manifest |
+|---|---|---|---|
+{% for p in report.properties %}| {{ p.label }} | {{ p.kind }} | {{ p.status }} | {{ p.evidence | default('假设，非证明') }} |
+{% endfor %}
+
+## 3. 问题审查
+
+{% for e in entries %}
+
+### {{ e.id }} — {{ e.prop_name }}
+
+- 分类：{{ e.resolution or '待分析' }}
+- 分析：{{ e.analysis }}
+- 后续处理：{{ e.action_detail }}
+{% endfor %}

@@ -1,0 +1,17 @@
+[options]
+mode prove
+depth 40
+timeout 240
+multiclock off
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal -sv -DSYNTHESIS "inputs/dmac/rtl/dmac_fifo.sv" "inputs/dmac/rtl/dmac.sv" "inputs/formal_out/tests/dmac_checker.sv" "inputs/formal_out/tests/dmac_wrapper.sv"
+prep -top dmac_wrapper
+check -assert
+write_json ucagent_design.json
+
+[files]
+inputs

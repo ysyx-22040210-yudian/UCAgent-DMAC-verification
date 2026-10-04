@@ -1,0 +1,36 @@
+{
+  "before": {
+    "sources": [
+      "dmac/rtl/dmac_fifo.sv",
+      "dmac/rtl/dmac.sv"
+    ],
+    "mode": "prove",
+    "depth": 40,
+    "timeout_seconds": 240,
+    "reset_policy": "unconstrained",
+    "filelists": [],
+    "include_dirs": [],
+    "defines": [
+      "SYNTHESIS"
+    ],
+    "reset_active": 0
+  },
+  "after": {
+    "sources": [
+      "dmac/rtl/dmac_fifo.sv",
+      "dmac/rtl/dmac.sv"
+    ],
+    "mode": "bmc",
+    "depth": 12,
+    "timeout_seconds": 240,
+    "reset_policy": "unconstrained",
+    "filelists": [],
+    "include_dirs": [],
+    "defines": [
+      "SYNTHESIS"
+    ],
+    "reset_active": 0
+  },
+  "reason": "Full guided and joint induction attempts timed out; preserve attempts and explicitly report bounded results as inconclusive",
+  "properties_and_assumptions_unchanged": true
+}

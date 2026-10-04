@@ -1,0 +1,257 @@
+[
+  {
+    "case": "accepted_cover_a32_l1_f1",
+    "run_id": "771482a2f50b4eeaad0a42b735af37f6",
+    "parameters": [
+      32,
+      1,
+      1
+    ],
+    "mode": "cover",
+    "verification_status": "passed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "fb5669390bc214c3b1aac7af9c4683b99bd4270f475a6a90455d9cd64f703852",
+    "assertion_count": 56,
+    "cover_count": 17
+  },
+  {
+    "case": "accepted_cover_a32_l32_f2",
+    "run_id": "6bd1ef7edf434402ae0cff36679bdc70",
+    "parameters": [
+      32,
+      32,
+      2
+    ],
+    "mode": "cover",
+    "verification_status": "passed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "cb33e33bc9adb6ae50f7626839bb000a41e06eac3d56106eb094d674045fd131",
+    "assertion_count": 58,
+    "cover_count": 17
+  },
+  {
+    "case": "accepted_prove_a16_l8_f3",
+    "run_id": "002c3b05dd484c44b0f87d05f6bdad1e",
+    "parameters": [
+      16,
+      8,
+      3
+    ],
+    "mode": "prove",
+    "verification_status": "passed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "e104f5f1db39afcf6809404346e77c728442b7ba5032e6ad03fe181d966fa13a",
+    "assertion_count": 60,
+    "cover_count": 17
+  },
+  {
+    "case": "accepted_prove_a32_l1_f4",
+    "run_id": "189ae4514756471e80a9c740c35920f5",
+    "parameters": [
+      32,
+      1,
+      4
+    ],
+    "mode": "prove",
+    "verification_status": "passed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "ca4b0438f8167b5f1f183863a760ed7db324f30aac2fd81bd73343b0d683d33c",
+    "assertion_count": 62,
+    "cover_count": 17
+  },
+  {
+    "case": "accepted_prove_a32_l32_f2",
+    "run_id": "da585410434c4cf889b18eba50cec087",
+    "parameters": [
+      32,
+      32,
+      2
+    ],
+    "mode": "prove",
+    "verification_status": "passed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "71dc9da3c7eeb360f56019fda077123fc4f79b8175cfe5767892596f112c30ab",
+    "assertion_count": 58,
+    "cover_count": 17
+  },
+  {
+    "case": "accepted_prove_a32_l8_f1",
+    "run_id": "04fd27d2cd08450d803dcd78a17be70a",
+    "parameters": [
+      32,
+      8,
+      1
+    ],
+    "mode": "prove",
+    "verification_status": "passed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "451584fb3b893cb8a6890a0cc1f73b07184b97849ead71c68337529e4a0fbec1",
+    "assertion_count": 56,
+    "cover_count": 17
+  },
+  {
+    "case": "fault_address_step",
+    "run_id": "d59c7d3dd3204f01be461e91f436ded1",
+    "parameters": [
+      16,
+      2,
+      2
+    ],
+    "mode": "bmc",
+    "verification_status": "failed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "f1c303782732c1d3538b14b998b706de6e7a6d1bf8eef7990a05f92be2d08400",
+    "assertion_count": 58,
+    "cover_count": 17
+  },
+  {
+    "case": "fault_early_done",
+    "run_id": "f8e23590e32241bda34650aee357a63f",
+    "parameters": [
+      16,
+      2,
+      2
+    ],
+    "mode": "bmc",
+    "verification_status": "failed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "97df52d0bcda14ecf269a6f365fa0160c6dafaa7b315d5995c62fca9daa976c2",
+    "assertion_count": 58,
+    "cover_count": 17
+  },
+  {
+    "case": "fault_fifo_pop",
+    "run_id": "2475baf0201845afb6084971f2a4a6ee",
+    "parameters": [
+      16,
+      2,
+      2
+    ],
+    "mode": "bmc",
+    "verification_status": "failed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "c8c0ef4dce7f71c40532f1acf0bf6f0537d1fdb044f13f164fe37d771a9c2efe",
+    "assertion_count": 58,
+    "cover_count": 17
+  },
+  {
+    "case": "fault_length_encoding",
+    "run_id": "1531039948d84f03885f2c3c9287b9e8",
+    "parameters": [
+      16,
+      2,
+      2
+    ],
+    "mode": "bmc",
+    "verification_status": "failed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "c935bc49bfe93452950fa9e0372a6ca3c23e6a694527267ad16c04111df91173",
+    "assertion_count": 58,
+    "cover_count": 17
+  },
+  {
+    "case": "fault_read_lane",
+    "run_id": "06d87e8edb7a487d910a21177c46ed75",
+    "parameters": [
+      16,
+      2,
+      2
+    ],
+    "mode": "bmc",
+    "verification_status": "failed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "0816d02bc10529e7834a9e79b0cfd099db0e9bed016ad6329e2b2acbeaffcb23",
+    "assertion_count": 58,
+    "cover_count": 17
+  },
+  {
+    "case": "fault_reset_lane",
+    "run_id": "28a15a4880044065afb58a618c16ea1d",
+    "parameters": [
+      16,
+      2,
+      2
+    ],
+    "mode": "bmc",
+    "verification_status": "failed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "d37eebbcaa0544148dcf57469da636452464b64147fe565d0c1f865803186f2d",
+    "assertion_count": 58,
+    "cover_count": 17
+  },
+  {
+    "case": "fault_write_lane",
+    "run_id": "993f857b1cfe46529ace5d520d7a6622",
+    "parameters": [
+      16,
+      2,
+      2
+    ],
+    "mode": "bmc",
+    "verification_status": "failed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "65195cb78f0cf9a98b33d34da7738242214f9cd2379f66337ad2cdc4136da43c",
+    "assertion_count": 58,
+    "cover_count": 17
+  },
+  {
+    "case": "fifo_cover_f1",
+    "run_id": "8bfc22f0ac7249fcb620f88a1cfad99e",
+    "parameters": [
+      32,
+      32,
+      1
+    ],
+    "mode": "cover",
+    "verification_status": "passed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "a8031f7048ec0e678cb6030a3b9401370577f2ec9aa77b4848edd9be296acdad",
+    "assertion_count": 7,
+    "cover_count": 3
+  },
+  {
+    "case": "fifo_cover_f3",
+    "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+    "parameters": [
+      32,
+      32,
+      3
+    ],
+    "mode": "cover",
+    "verification_status": "passed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "817bfb29a32643dcde128c7a369992641e5c656fae7ec808788a2b01fdd07f0f",
+    "assertion_count": 9,
+    "cover_count": 3
+  },
+  {
+    "case": "fifo_cover_f4",
+    "run_id": "e8c5b9732679472b9538ffa119cf8313",
+    "parameters": [
+      32,
+      32,
+      4
+    ],
+    "mode": "cover",
+    "verification_status": "passed",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "6edd48535073fedf97480a0397434d11156634a2083fb44d870f65fc3ef42c0b",
+    "assertion_count": 10,
+    "cover_count": 3
+  },
+  {
+    "case": "joint_guided_prove_a32_l32_f2_4a047b61",
+    "run_id": "6fe692e2e61d49f78a3caf1103bab687",
+    "parameters": [
+      32,
+      32,
+      2
+    ],
+    "mode": "prove",
+    "verification_status": "unknown",
+    "signatures_and_inputs": "verified",
+    "input_fingerprint": "df2a92923a8d01fee110dc7c6045a27b497b3716dc98128b509f6c931848fa3a",
+    "assertion_count": 0,
+    "cover_count": 0
+  }
+]

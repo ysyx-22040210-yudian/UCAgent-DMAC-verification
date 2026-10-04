@@ -1,0 +1,2519 @@
+{
+  "cancel_requested": false,
+  "capabilities": {
+    "authoring": "shared_agent_with_manual_review",
+    "automatic_fallback": false,
+    "bounded_proof": "bmc_no_counterexample_is_inconclusive",
+    "coi": "unsupported",
+    "dynamic_replay": "requires_actual_simulation_receipt",
+    "engine": "sby",
+    "liveness": "not_established",
+    "property_syntax": "native_yosys_expressions",
+    "stage_control": "original_stage_manager",
+    "tool_acceptance": "real_signed_execution",
+    "vacuity": "not_established_trigger_cover_only"
+  },
+  "evidence": {
+    "coverage": {
+      "coi": "unsupported",
+      "covered": 75,
+      "liveness": "not_established",
+      "total": 82,
+      "vacuity": "not_established"
+    },
+    "depth": 12,
+    "engine": "sby",
+    "input_sha256": "fce2c3069ac3096abbfa9e4340c84b40bf787a604d067f46695d02a6bbb8b51c",
+    "mode": "bmc",
+    "properties": [
+      {
+        "ck": "CK-API-RESET-INITIAL",
+        "fc": "FC-API-RESET",
+        "fg": "FG-API",
+        "kind": "assume",
+        "label": "M_CK_API_RESET_INITIAL",
+        "mode": null,
+        "status": "assumption"
+      },
+      {
+        "ck": "CK-API-HOST-RD-WAIT",
+        "fc": "FC-API-HOST-WAIT",
+        "fg": "FG-API",
+        "kind": "assume",
+        "label": "M_CK_API_HOST_RD_WAIT",
+        "mode": null,
+        "status": "assumption"
+      },
+      {
+        "ck": "CK-API-HOST-WR-WAIT",
+        "fc": "FC-API-HOST-WAIT",
+        "fg": "FG-API",
+        "kind": "assume",
+        "label": "M_CK_API_HOST_WR_WAIT",
+        "mode": null,
+        "status": "assumption"
+      },
+      {
+        "ck": "CK-API-DEV-RD-WAIT",
+        "fc": "FC-API-DEVICE-WAIT",
+        "fg": "FG-API",
+        "kind": "assume",
+        "label": "M_CK_API_DEV_RD_WAIT",
+        "mode": null,
+        "status": "assumption"
+      },
+      {
+        "ck": "CK-API-DEV-WR-WAIT-REQ",
+        "fc": "FC-API-DEVICE-WAIT",
+        "fg": "FG-API",
+        "kind": "assume",
+        "label": "M_CK_API_DEV_WR_WAIT_REQ",
+        "mode": null,
+        "status": "assumption"
+      },
+      {
+        "ck": "CK-API-DEV-WR-WAIT-DATA",
+        "fc": "FC-API-DEVICE-WAIT",
+        "fg": "FG-API",
+        "kind": "assume",
+        "label": "M_CK_API_DEV_WR_WAIT_DATA",
+        "mode": null,
+        "status": "assumption"
+      },
+      {
+        "ck": "CK-HOST-RD-ACK-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-HOST-ACK",
+        "fg": "FG-HOST",
+        "kind": "assert",
+        "label": "A_CK_HOST_RD_ACK_REQ",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:50.13-50.82"
+      },
+      {
+        "ck": "CK-HOST-RD-ACK-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-HOST-ACK",
+        "fg": "FG-HOST",
+        "kind": "guard_witness",
+        "label": "G_A_CK_HOST_RD_ACK_REQ",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:53.3-53.58"
+      },
+      {
+        "ck": "CK-HOST-WR-ACK-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-HOST-ACK",
+        "fg": "FG-HOST",
+        "kind": "assert",
+        "label": "A_CK_HOST_WR_ACK_REQ",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:56.13-56.82"
+      },
+      {
+        "ck": "CK-HOST-WR-ACK-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-HOST-ACK",
+        "fg": "FG-HOST",
+        "kind": "guard_witness",
+        "label": "G_A_CK_HOST_WR_ACK_REQ",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:59.3-59.58"
+      },
+      {
+        "ck": "CK-HOST-RD-LATCH-ADDRESS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-HOST-LATCH",
+        "fg": "FG-HOST",
+        "kind": "assert",
+        "label": "A_CK_HOST_RD_LATCH_ADDRESS",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:62.93-62.165"
+      },
+      {
+        "ck": "CK-HOST-RD-LATCH-ADDRESS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-HOST-LATCH",
+        "fg": "FG-HOST",
+        "kind": "guard_witness",
+        "label": "G_A_CK_HOST_RD_LATCH_ADDRESS",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:65.3-65.217"
+      },
+      {
+        "ck": "CK-HOST-WR-LATCH-ADDRESS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-HOST-LATCH",
+        "fg": "FG-HOST",
+        "kind": "assert",
+        "label": "A_CK_HOST_WR_LATCH_ADDRESS",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:68.344-68.419"
+      },
+      {
+        "ck": "CK-HOST-WR-LATCH-ADDRESS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-HOST-LATCH",
+        "fg": "FG-HOST",
+        "kind": "guard_witness",
+        "label": "G_A_CK_HOST_WR_LATCH_ADDRESS",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:71.3-71.719"
+      },
+      {
+        "ck": "CK-HOST-RD-NO-IMMEDIATE-REACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-HOST-BUSY",
+        "fg": "FG-HOST",
+        "kind": "assert",
+        "label": "A_CK_HOST_RD_NO_IMMEDIATE_REACK",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:74.77-74.131"
+      },
+      {
+        "ck": "CK-HOST-RD-NO-IMMEDIATE-REACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-HOST-BUSY",
+        "fg": "FG-HOST",
+        "kind": "guard_witness",
+        "label": "G_A_CK_HOST_RD_NO_IMMEDIATE_REACK",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:77.3-77.190"
+      },
+      {
+        "ck": "CK-HOST-WR-NO-IMMEDIATE-REACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-HOST-BUSY",
+        "fg": "FG-HOST",
+        "kind": "assert",
+        "label": "A_CK_HOST_WR_NO_IMMEDIATE_REACK",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:80.77-80.131"
+      },
+      {
+        "ck": "CK-HOST-WR-NO-IMMEDIATE-REACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-HOST-BUSY",
+        "fg": "FG-HOST",
+        "kind": "guard_witness",
+        "label": "G_A_CK_HOST_WR_NO_IMMEDIATE_REACK",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:83.3-83.190"
+      },
+      {
+        "ck": "CK-HOST-RD-DONE-NO-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-HOST-NEXT",
+        "fg": "FG-HOST",
+        "kind": "assert",
+        "label": "A_CK_HOST_RD_DONE_NO_ACK",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:86.13-86.77"
+      },
+      {
+        "ck": "CK-HOST-RD-DONE-NO-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-HOST-NEXT",
+        "fg": "FG-HOST",
+        "kind": "guard_witness",
+        "label": "G_A_CK_HOST_RD_DONE_NO_ACK",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:89.3-89.63"
+      },
+      {
+        "ck": "CK-HOST-WR-DONE-NO-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-HOST-NEXT",
+        "fg": "FG-HOST",
+        "kind": "assert",
+        "label": "A_CK_HOST_WR_DONE_NO_ACK",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:92.13-92.77"
+      },
+      {
+        "ck": "CK-HOST-WR-DONE-NO-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-HOST-NEXT",
+        "fg": "FG-HOST",
+        "kind": "guard_witness",
+        "label": "G_A_CK_HOST_WR_DONE_NO_ACK",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:95.3-95.63"
+      },
+      {
+        "ck": "CK-HOST-RD-PENDING-AFTER-DONE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-HOST-NEXT",
+        "fg": "FG-HOST",
+        "kind": "assert",
+        "label": "A_CK_HOST_RD_PENDING_AFTER_DONE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:98.112-98.182"
+      },
+      {
+        "ck": "CK-HOST-RD-PENDING-AFTER-DONE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-HOST-NEXT",
+        "fg": "FG-HOST",
+        "kind": "guard_witness",
+        "label": "G_A_CK_HOST_RD_PENDING_AFTER_DONE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:101.3-101.161"
+      },
+      {
+        "ck": "CK-HOST-WR-PENDING-AFTER-DONE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-HOST-NEXT",
+        "fg": "FG-HOST",
+        "kind": "assert",
+        "label": "A_CK_HOST_WR_PENDING_AFTER_DONE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:104.112-104.182"
+      },
+      {
+        "ck": "CK-HOST-WR-PENDING-AFTER-DONE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-HOST-NEXT",
+        "fg": "FG-HOST",
+        "kind": "guard_witness",
+        "label": "G_A_CK_HOST_WR_PENDING_AFTER_DONE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:107.3-107.161"
+      },
+      {
+        "ck": "CK-READ-MEM-FIRST-AFTER-ACCEPT",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-READ-MEM-HANDSHAKE",
+        "fg": "FG-READ",
+        "kind": "assert",
+        "label": "A_CK_READ_MEM_FIRST_AFTER_ACCEPT",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:110.94-110.188"
+      },
+      {
+        "ck": "CK-READ-MEM-FIRST-AFTER-ACCEPT",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-READ-MEM-HANDSHAKE",
+        "fg": "FG-READ",
+        "kind": "guard_witness",
+        "label": "G_A_CK_READ_MEM_FIRST_AFTER_ACCEPT",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:113.3-113.144"
+      },
+      {
+        "ck": "CK-READ-DEV-ACK-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-READ-DEVICE-HANDSHAKE",
+        "fg": "FG-READ",
+        "kind": "assert",
+        "label": "A_CK_READ_DEV_ACK_REQ",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:116.13-116.81"
+      },
+      {
+        "ck": "CK-READ-DEV-ACK-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-READ-DEVICE-HANDSHAKE",
+        "fg": "FG-READ",
+        "kind": "guard_witness",
+        "label": "G_A_CK_READ_DEV_ACK_REQ",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:119.3-119.58"
+      },
+      {
+        "ck": "CK-READ-NO-DEV-TRANSFER-WITHOUT-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-READ-PIPELINE",
+        "fg": "FG-READ",
+        "kind": "assert",
+        "label": "A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:122.13-122.86"
+      },
+      {
+        "ck": "CK-READ-NO-DEV-TRANSFER-WITHOUT-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-READ-PIPELINE",
+        "fg": "FG-READ",
+        "kind": "guard_witness",
+        "label": "G_A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:125.3-125.75"
+      },
+      {
+        "ck": "CK-READ-DEV-FRAGMENT-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-READ-PIPELINE",
+        "fg": "FG-READ",
+        "kind": "assert",
+        "label": "A_CK_READ_DEV_FRAGMENT_HOLD",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:128.214-128.298"
+      },
+      {
+        "ck": "CK-READ-DEV-FRAGMENT-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-READ-PIPELINE",
+        "fg": "FG-READ",
+        "kind": "guard_witness",
+        "label": "G_A_CK_READ_DEV_FRAGMENT_HOLD",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:131.3-131.259"
+      },
+      {
+        "ck": "CK-WRITE-DEV-ACK-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-WRITE-DEVICE-HANDSHAKE",
+        "fg": "FG-WRITE",
+        "kind": "assert",
+        "label": "A_CK_WRITE_DEV_ACK_REQ",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:134.13-134.82"
+      },
+      {
+        "ck": "CK-WRITE-DEV-ACK-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-WRITE-DEVICE-HANDSHAKE",
+        "fg": "FG-WRITE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_WRITE_DEV_ACK_REQ",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:137.3-137.59"
+      },
+      {
+        "ck": "CK-WRITE-MEM-VALID-AFTER-WORD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-WRITE-MEM-HANDSHAKE",
+        "fg": "FG-WRITE",
+        "kind": "assert",
+        "label": "A_CK_WRITE_MEM_VALID_AFTER_WORD",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:140.339-140.393"
+      },
+      {
+        "ck": "CK-WRITE-MEM-VALID-AFTER-WORD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-WRITE-MEM-HANDSHAKE",
+        "fg": "FG-WRITE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_WRITE_MEM_VALID_AFTER_WORD",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:143.3-143.388"
+      },
+      {
+        "ck": "CK-WRITE-NO-DEV-TRANSFER-WITHOUT-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-WRITE-PIPELINE",
+        "fg": "FG-WRITE",
+        "kind": "assert",
+        "label": "A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:146.13-146.87"
+      },
+      {
+        "ck": "CK-WRITE-NO-DEV-TRANSFER-WITHOUT-REQ",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-WRITE-PIPELINE",
+        "fg": "FG-WRITE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:149.3-149.76"
+      },
+      {
+        "ck": "CK-WRITE-STALLED-WORD-NOT-OVERWRITTEN",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-WRITE-PIPELINE",
+        "fg": "FG-WRITE",
+        "kind": "assert",
+        "label": "A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:152.97-152.207"
+      },
+      {
+        "ck": "CK-WRITE-STALLED-WORD-NOT-OVERWRITTEN",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-WRITE-PIPELINE",
+        "fg": "FG-WRITE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:155.3-155.154"
+      },
+      {
+        "ck": "CK-ADDRESS-RD-FIRST",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-ADDRESS-FIRST",
+        "fg": "FG-ADDRESS",
+        "kind": "assert",
+        "label": "A_CK_ADDRESS_RD_FIRST",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:158.94-158.161"
+      },
+      {
+        "ck": "CK-ADDRESS-RD-FIRST",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-ADDRESS-FIRST",
+        "fg": "FG-ADDRESS",
+        "kind": "guard_witness",
+        "label": "G_A_CK_ADDRESS_RD_FIRST",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:161.3-161.133"
+      },
+      {
+        "ck": "CK-ADDRESS-WR-FIRST",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-ADDRESS-FIRST",
+        "fg": "FG-ADDRESS",
+        "kind": "assert",
+        "label": "A_CK_ADDRESS_WR_FIRST",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:164.357-164.426"
+      },
+      {
+        "ck": "CK-ADDRESS-WR-FIRST",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-ADDRESS-FIRST",
+        "fg": "FG-ADDRESS",
+        "kind": "guard_witness",
+        "label": "G_A_CK_ADDRESS_WR_FIRST",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:167.3-167.396"
+      },
+      {
+        "ck": "CK-ADDRESS-RD-STEP",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-ADDRESS-STEP",
+        "fg": "FG-ADDRESS",
+        "kind": "assert",
+        "label": "A_CK_ADDRESS_RD_STEP",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:170.114-170.188"
+      },
+      {
+        "ck": "CK-ADDRESS-RD-STEP",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-ADDRESS-STEP",
+        "fg": "FG-ADDRESS",
+        "kind": "guard_witness",
+        "label": "G_A_CK_ADDRESS_RD_STEP",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:173.3-173.152"
+      },
+      {
+        "ck": "CK-ADDRESS-WR-STEP",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-ADDRESS-STEP",
+        "fg": "FG-ADDRESS",
+        "kind": "assert",
+        "label": "A_CK_ADDRESS_WR_STEP",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:176.114-176.188"
+      },
+      {
+        "ck": "CK-ADDRESS-WR-STEP",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-ADDRESS-STEP",
+        "fg": "FG-ADDRESS",
+        "kind": "guard_witness",
+        "label": "G_A_CK_ADDRESS_WR_STEP",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:179.3-179.152"
+      },
+      {
+        "ck": "CK-ADDRESS-RD-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-ADDRESS-HOLD",
+        "fg": "FG-ADDRESS",
+        "kind": "assert",
+        "label": "A_CK_ADDRESS_RD_HOLD",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:182.97-182.168"
+      },
+      {
+        "ck": "CK-ADDRESS-RD-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-ADDRESS-HOLD",
+        "fg": "FG-ADDRESS",
+        "kind": "guard_witness",
+        "label": "G_A_CK_ADDRESS_RD_HOLD",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:185.3-185.135"
+      },
+      {
+        "ck": "CK-ADDRESS-WR-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-ADDRESS-HOLD",
+        "fg": "FG-ADDRESS",
+        "kind": "assert",
+        "label": "A_CK_ADDRESS_WR_HOLD",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:188.97-188.194"
+      },
+      {
+        "ck": "CK-ADDRESS-WR-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-ADDRESS-HOLD",
+        "fg": "FG-ADDRESS",
+        "kind": "guard_witness",
+        "label": "G_A_CK_ADDRESS_WR_HOLD",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:191.3-191.135"
+      },
+      {
+        "ck": "CK-ADDRESS-RD-WRAP",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-ADDRESS-WRAP",
+        "fg": "FG-ADDRESS",
+        "kind": "assert",
+        "label": "A_CK_ADDRESS_RD_WRAP",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:194.155-194.229"
+      },
+      {
+        "ck": "CK-ADDRESS-RD-WRAP",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-ADDRESS-WRAP",
+        "fg": "FG-ADDRESS",
+        "kind": "guard_witness",
+        "label": "G_A_CK_ADDRESS_RD_WRAP",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:197.3-197.193"
+      },
+      {
+        "ck": "CK-ADDRESS-WR-WRAP",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-ADDRESS-WRAP",
+        "fg": "FG-ADDRESS",
+        "kind": "assert",
+        "label": "A_CK_ADDRESS_WR_WRAP",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:200.155-200.229"
+      },
+      {
+        "ck": "CK-ADDRESS-WR-WRAP",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-ADDRESS-WRAP",
+        "fg": "FG-ADDRESS",
+        "kind": "guard_witness",
+        "label": "G_A_CK_ADDRESS_WR_WRAP",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:203.3-203.193"
+      },
+      {
+        "ck": "CK-QUOTA-ENCODING-BOUNDARY",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-QUOTA-ENCODING",
+        "fg": "FG-QUOTA",
+        "kind": "assert",
+        "label": "A_CK_QUOTA_ENCODING_BOUNDARY",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:206.22-206.2417"
+      },
+      {
+        "ck": "CK-QUOTA-ENCODING-BOUNDARY",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-QUOTA-ENCODING",
+        "fg": "FG-QUOTA",
+        "kind": "guard_witness",
+        "label": "G_A_CK_QUOTA_ENCODING_BOUNDARY",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:209.3-209.68"
+      },
+      {
+        "ck": "CK-QUOTA-RD-ZERO",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-QUOTA-ZERO",
+        "fg": "FG-QUOTA",
+        "kind": "assert",
+        "label": "A_CK_QUOTA_RD_ZERO",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:212.433-212.474"
+      },
+      {
+        "ck": "CK-QUOTA-RD-ZERO",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-QUOTA-ZERO",
+        "fg": "FG-QUOTA",
+        "kind": "guard_witness",
+        "label": "G_A_CK_QUOTA_RD_ZERO",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:215.3-215.469"
+      },
+      {
+        "ck": "CK-QUOTA-WR-ZERO",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-QUOTA-ZERO",
+        "fg": "FG-QUOTA",
+        "kind": "assert",
+        "label": "A_CK_QUOTA_WR_ZERO",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:218.433-218.474"
+      },
+      {
+        "ck": "CK-QUOTA-WR-ZERO",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-QUOTA-ZERO",
+        "fg": "FG-QUOTA",
+        "kind": "guard_witness",
+        "label": "G_A_CK_QUOTA_WR_ZERO",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:221.3-221.469"
+      },
+      {
+        "ck": "CK-QUOTA-RD-LEN1",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-QUOTA-LONG",
+        "fg": "FG-QUOTA",
+        "kind": "assert",
+        "label": "A_CK_QUOTA_RD_LEN1",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:224.715-224.786"
+      },
+      {
+        "ck": "CK-QUOTA-RD-LEN1",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-QUOTA-LONG",
+        "fg": "FG-QUOTA",
+        "kind": "guard_witness",
+        "label": "G_A_CK_QUOTA_RD_LEN1",
+        "mode": "cover",
+        "status": "uncovered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:227.3-227.751"
+      },
+      {
+        "ck": "CK-QUOTA-WR-LEN1",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-QUOTA-LONG",
+        "fg": "FG-QUOTA",
+        "kind": "assert",
+        "label": "A_CK_QUOTA_WR_LEN1",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:230.715-230.786"
+      },
+      {
+        "ck": "CK-QUOTA-WR-LEN1",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-QUOTA-LONG",
+        "fg": "FG-QUOTA",
+        "kind": "guard_witness",
+        "label": "G_A_CK_QUOTA_WR_LEN1",
+        "mode": "cover",
+        "status": "uncovered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:233.3-233.751"
+      },
+      {
+        "ck": "CK-DATA-RD-LOW-FIRST",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DATA-READ-FIRST",
+        "fg": "FG-DATA",
+        "kind": "assert",
+        "label": "A_CK_DATA_RD_LOW_FIRST",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:236.214-236.293"
+      },
+      {
+        "ck": "CK-DATA-RD-LOW-FIRST",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DATA-READ-FIRST",
+        "fg": "FG-DATA",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DATA_RD_LOW_FIRST",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:239.3-239.254"
+      },
+      {
+        "ck": "CK-DATA-RD-FOUR-LANES",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DATA-READ-LANES",
+        "fg": "FG-DATA",
+        "kind": "assert",
+        "label": "A_CK_DATA_RD_FOUR_LANES",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:242.404-242.706"
+      },
+      {
+        "ck": "CK-DATA-RD-FOUR-LANES",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DATA-READ-LANES",
+        "fg": "FG-DATA",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DATA_RD_FOUR_LANES",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:245.3-245.445"
+      },
+      {
+        "ck": "CK-DATA-WR-FOUR-LANES",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DATA-WRITE-PACK",
+        "fg": "FG-DATA",
+        "kind": "assert",
+        "label": "A_CK_DATA_WR_FOUR_LANES",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:248.388-248.520"
+      },
+      {
+        "ck": "CK-DATA-WR-FOUR-LANES",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DATA-WRITE-PACK",
+        "fg": "FG-DATA",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DATA_WR_FOUR_LANES",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:251.3-251.429"
+      },
+      {
+        "ck": "CK-DATA-RD-TWO-WORD-LOCAL-ORDER",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DATA-ORDER-BOUNDARY",
+        "fg": "FG-DATA",
+        "kind": "assert",
+        "label": "A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:254.683-254.1278"
+      },
+      {
+        "ck": "CK-DATA-RD-TWO-WORD-LOCAL-ORDER",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DATA-ORDER-BOUNDARY",
+        "fg": "FG-DATA",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:257.3-257.734"
+      },
+      {
+        "ck": "CK-DATA-WR-TWO-WORD-LOCAL-ORDER",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DATA-ORDER-BOUNDARY",
+        "fg": "FG-DATA",
+        "kind": "assert",
+        "label": "A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:260.683-260.942"
+      },
+      {
+        "ck": "CK-DATA-WR-TWO-WORD-LOCAL-ORDER",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DATA-ORDER-BOUNDARY",
+        "fg": "FG-DATA",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:263.3-263.734"
+      },
+      {
+        "ck": "CK-FLOW-RD-VALID-ADDRESS-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-FLOW-READ-STALL",
+        "fg": "FG-FLOW",
+        "kind": "assert",
+        "label": "A_CK_FLOW_RD_VALID_ADDRESS_HOLD",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:266.97-266.179"
+      },
+      {
+        "ck": "CK-FLOW-RD-VALID-ADDRESS-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-FLOW-READ-STALL",
+        "fg": "FG-FLOW",
+        "kind": "guard_witness",
+        "label": "G_A_CK_FLOW_RD_VALID_ADDRESS_HOLD",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:269.3-269.146"
+      },
+      {
+        "ck": "CK-FLOW-WR-VALID-ADDRESS-DATA-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-FLOW-WRITE-STALL",
+        "fg": "FG-FLOW",
+        "kind": "assert",
+        "label": "A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:272.97-272.210"
+      },
+      {
+        "ck": "CK-FLOW-WR-VALID-ADDRESS-DATA-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-FLOW-WRITE-STALL",
+        "fg": "FG-FLOW",
+        "kind": "guard_witness",
+        "label": "G_A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:275.3-275.151"
+      },
+      {
+        "ck": "CK-FLOW-DEV-RD-ACK-GATED",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-FLOW-DEVICE-GATING",
+        "fg": "FG-FLOW",
+        "kind": "assert",
+        "label": "A_CK_FLOW_DEV_RD_ACK_GATED",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:278.13-278.86"
+      },
+      {
+        "ck": "CK-FLOW-DEV-RD-ACK-GATED",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-FLOW-DEVICE-GATING",
+        "fg": "FG-FLOW",
+        "kind": "guard_witness",
+        "label": "G_A_CK_FLOW_DEV_RD_ACK_GATED",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:281.3-281.74"
+      },
+      {
+        "ck": "CK-FLOW-DEV-WR-ACK-GATED",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-FLOW-DEVICE-GATING",
+        "fg": "FG-FLOW",
+        "kind": "assert",
+        "label": "A_CK_FLOW_DEV_WR_ACK_GATED",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:284.13-284.86"
+      },
+      {
+        "ck": "CK-FLOW-DEV-WR-ACK-GATED",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-FLOW-DEVICE-GATING",
+        "fg": "FG-FLOW",
+        "kind": "guard_witness",
+        "label": "G_A_CK_FLOW_DEV_WR_ACK_GATED",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:287.3-287.74"
+      },
+      {
+        "ck": "CK-FLOW-BUFFER-WR-VISIBLE-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-FLOW-BUFFER-BOUNDARY",
+        "fg": "FG-FLOW",
+        "kind": "assert",
+        "label": "A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:290.97-290.200"
+      },
+      {
+        "ck": "CK-FLOW-BUFFER-WR-VISIBLE-HOLD",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-FLOW-BUFFER-BOUNDARY",
+        "fg": "FG-FLOW",
+        "kind": "guard_witness",
+        "label": "G_A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:293.3-293.147"
+      },
+      {
+        "ck": "CK-FLOW-BUFFER-NO-SPURIOUS-DEV-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-FLOW-BUFFER-BOUNDARY",
+        "fg": "FG-FLOW",
+        "kind": "assert",
+        "label": "A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:296.13-296.118"
+      },
+      {
+        "ck": "CK-FLOW-BUFFER-NO-SPURIOUS-DEV-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-FLOW-BUFFER-BOUNDARY",
+        "fg": "FG-FLOW",
+        "kind": "guard_witness",
+        "label": "G_A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:299.3-299.89"
+      },
+      {
+        "ck": "CK-RESET-HOST-SILENCE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-RESET-SILENCE",
+        "fg": "FG-RESET",
+        "kind": "assert",
+        "label": "A_CK_RESET_HOST_SILENCE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:302.15-302.111"
+      },
+      {
+        "ck": "CK-RESET-HOST-SILENCE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-RESET-SILENCE",
+        "fg": "FG-RESET",
+        "kind": "guard_witness",
+        "label": "G_A_CK_RESET_HOST_SILENCE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:305.3-305.58"
+      },
+      {
+        "ck": "CK-RESET-DATA-CHANNEL-SILENCE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-RESET-SILENCE",
+        "fg": "FG-RESET",
+        "kind": "assert",
+        "label": "A_CK_RESET_DATA_CHANNEL_SILENCE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:308.15-308.117"
+      },
+      {
+        "ck": "CK-RESET-DATA-CHANNEL-SILENCE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-RESET-SILENCE",
+        "fg": "FG-RESET",
+        "kind": "guard_witness",
+        "label": "G_A_CK_RESET_DATA_CHANNEL_SILENCE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:311.3-311.66"
+      },
+      {
+        "ck": "CK-RESET-INTERRUPT-RD-STALL",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-RESET-INTERRUPT",
+        "fg": "FG-RESET",
+        "kind": "assert",
+        "label": "A_CK_RESET_INTERRUPT_RD_STALL",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:314.87-314.179"
+      },
+      {
+        "ck": "CK-RESET-INTERRUPT-RD-STALL",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-RESET-INTERRUPT",
+        "fg": "FG-RESET",
+        "kind": "guard_witness",
+        "label": "G_A_CK_RESET_INTERRUPT_RD_STALL",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:317.3-317.134"
+      },
+      {
+        "ck": "CK-RESET-INTERRUPT-WR-STALL",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-RESET-INTERRUPT",
+        "fg": "FG-RESET",
+        "kind": "assert",
+        "label": "A_CK_RESET_INTERRUPT_WR_STALL",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:320.87-320.179"
+      },
+      {
+        "ck": "CK-RESET-INTERRUPT-WR-STALL",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-RESET-INTERRUPT",
+        "fg": "FG-RESET",
+        "kind": "guard_witness",
+        "label": "G_A_CK_RESET_INTERRUPT_WR_STALL",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:323.3-323.134"
+      },
+      {
+        "ck": "CK-RESET-INTERRUPT-DEVICE-PARTIAL",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-RESET-INTERRUPT",
+        "fg": "FG-RESET",
+        "kind": "assert",
+        "label": "A_CK_RESET_INTERRUPT_DEVICE_PARTIAL",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:326.116-326.222"
+      },
+      {
+        "ck": "CK-RESET-INTERRUPT-DEVICE-PARTIAL",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-RESET-INTERRUPT",
+        "fg": "FG-RESET",
+        "kind": "guard_witness",
+        "label": "G_A_CK_RESET_INTERRUPT_DEVICE_PARTIAL",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:329.3-329.169"
+      },
+      {
+        "ck": "CK-RESET-RD-DONE-CLEAR",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-RESET-NO-DONE",
+        "fg": "FG-RESET",
+        "kind": "assert",
+        "label": "A_CK_RESET_RD_DONE_CLEAR",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:332.53-332.101"
+      },
+      {
+        "ck": "CK-RESET-RD-DONE-CLEAR",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-RESET-NO-DONE",
+        "fg": "FG-RESET",
+        "kind": "guard_witness",
+        "label": "G_A_CK_RESET_RD_DONE_CLEAR",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:335.3-335.95"
+      },
+      {
+        "ck": "CK-RESET-WR-DONE-CLEAR",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-RESET-NO-DONE",
+        "fg": "FG-RESET",
+        "kind": "assert",
+        "label": "A_CK_RESET_WR_DONE_CLEAR",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:338.53-338.101"
+      },
+      {
+        "ck": "CK-RESET-WR-DONE-CLEAR",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-RESET-NO-DONE",
+        "fg": "FG-RESET",
+        "kind": "guard_witness",
+        "label": "G_A_CK_RESET_WR_DONE_CLEAR",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:341.3-341.95"
+      },
+      {
+        "ck": "CK-RESET-RD-RESTART-ADDRESS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-RESET-RESTART",
+        "fg": "FG-RESET",
+        "kind": "assert",
+        "label": "A_CK_RESET_RD_RESTART_ADDRESS",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:344.143-344.239"
+      },
+      {
+        "ck": "CK-RESET-RD-RESTART-ADDRESS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-RESET-RESTART",
+        "fg": "FG-RESET",
+        "kind": "guard_witness",
+        "label": "G_A_CK_RESET_RD_RESTART_ADDRESS",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:347.3-347.190"
+      },
+      {
+        "ck": "CK-RESET-WR-RESTART-ADDRESS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-RESET-RESTART",
+        "fg": "FG-RESET",
+        "kind": "assert",
+        "label": "A_CK_RESET_WR_RESTART_ADDRESS",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:350.408-350.506"
+      },
+      {
+        "ck": "CK-RESET-WR-RESTART-ADDRESS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-RESET-RESTART",
+        "fg": "FG-RESET",
+        "kind": "guard_witness",
+        "label": "G_A_CK_RESET_WR_RESTART_ADDRESS",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:353.3-353.455"
+      },
+      {
+        "ck": "CK-CONCURRENT-ACCEPT-AFTER-RESET",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-CONCURRENT-ACCEPT",
+        "fg": "FG-CONCURRENT",
+        "kind": "assert",
+        "label": "A_CK_CONCURRENT_ACCEPT_AFTER_RESET",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:356.120-356.191"
+      },
+      {
+        "ck": "CK-CONCURRENT-ACCEPT-AFTER-RESET",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-CONCURRENT-ACCEPT",
+        "fg": "FG-CONCURRENT",
+        "kind": "guard_witness",
+        "label": "G_A_CK_CONCURRENT_ACCEPT_AFTER_RESET",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:359.3-359.172"
+      },
+      {
+        "ck": "CK-CONCURRENT-MEM-TRANSFER",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-CONCURRENT-TRANSFER",
+        "fg": "FG-CONCURRENT",
+        "kind": "cover",
+        "label": "C_CK_CONCURRENT_MEM_TRANSFER",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:362.13-362.120"
+      },
+      {
+        "ck": "CK-CONCURRENT-DEVICE-TRANSFER",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-CONCURRENT-TRANSFER",
+        "fg": "FG-CONCURRENT",
+        "kind": "cover",
+        "label": "C_CK_CONCURRENT_DEVICE_TRANSFER",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:365.13-365.115"
+      },
+      {
+        "ck": "CK-CONCURRENT-RD-STALL-WR-HANDSHAKE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-CONCURRENT-STALL",
+        "fg": "FG-CONCURRENT",
+        "kind": "assert",
+        "label": "A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:368.131-368.215"
+      },
+      {
+        "ck": "CK-CONCURRENT-RD-STALL-WR-HANDSHAKE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-CONCURRENT-STALL",
+        "fg": "FG-CONCURRENT",
+        "kind": "guard_witness",
+        "label": "G_A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:371.3-371.186"
+      },
+      {
+        "ck": "CK-CONCURRENT-WR-STALL-RD-HANDSHAKE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-CONCURRENT-STALL",
+        "fg": "FG-CONCURRENT",
+        "kind": "assert",
+        "label": "A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:374.131-374.239"
+      },
+      {
+        "ck": "CK-CONCURRENT-WR-STALL-RD-HANDSHAKE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-CONCURRENT-STALL",
+        "fg": "FG-CONCURRENT",
+        "kind": "guard_witness",
+        "label": "G_A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:377.3-377.186"
+      },
+      {
+        "ck": "CK-CONCURRENT-SIMULTANEOUS-DONE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-CONCURRENT-DONE",
+        "fg": "FG-CONCURRENT",
+        "kind": "assert",
+        "label": "A_CK_CONCURRENT_SIMULTANEOUS_DONE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:380.54-380.186"
+      },
+      {
+        "ck": "CK-CONCURRENT-SIMULTANEOUS-DONE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-CONCURRENT-DONE",
+        "fg": "FG-CONCURRENT",
+        "kind": "guard_witness",
+        "label": "G_A_CK_CONCURRENT_SIMULTANEOUS_DONE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:383.3-383.129"
+      },
+      {
+        "ck": "CK-DONE-RD-ONE-CYCLE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DONE-PULSE",
+        "fg": "FG-DONE",
+        "kind": "assert",
+        "label": "A_CK_DONE_RD_ONE_CYCLE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:386.80-386.126"
+      },
+      {
+        "ck": "CK-DONE-RD-ONE-CYCLE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DONE-PULSE",
+        "fg": "FG-DONE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DONE_RD_ONE_CYCLE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:389.3-389.120"
+      },
+      {
+        "ck": "CK-DONE-WR-ONE-CYCLE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DONE-PULSE",
+        "fg": "FG-DONE",
+        "kind": "assert",
+        "label": "A_CK_DONE_WR_ONE_CYCLE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:392.80-392.126"
+      },
+      {
+        "ck": "CK-DONE-WR-ONE-CYCLE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DONE-PULSE",
+        "fg": "FG-DONE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DONE_WR_ONE_CYCLE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:395.3-395.120"
+      },
+      {
+        "ck": "CK-DONE-RD-PREV-DEV-HANDSHAKE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DONE-READ-CAUSE",
+        "fg": "FG-DONE",
+        "kind": "assert",
+        "label": "A_CK_DONE_RD_PREV_DEV_HANDSHAKE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:398.42-398.124"
+      },
+      {
+        "ck": "CK-DONE-RD-PREV-DEV-HANDSHAKE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DONE-READ-CAUSE",
+        "fg": "FG-DONE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DONE_RD_PREV_DEV_HANDSHAKE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:401.3-401.99"
+      },
+      {
+        "ck": "CK-DONE-WR-PREV-MEM-HANDSHAKE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DONE-WRITE-CAUSE",
+        "fg": "FG-DONE",
+        "kind": "assert",
+        "label": "A_CK_DONE_WR_PREV_MEM_HANDSHAKE",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:404.42-404.128"
+      },
+      {
+        "ck": "CK-DONE-WR-PREV-MEM-HANDSHAKE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DONE-WRITE-CAUSE",
+        "fg": "FG-DONE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DONE_WR_PREV_MEM_HANDSHAKE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:407.3-407.99"
+      },
+      {
+        "ck": "CK-DONE-RD-NO-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DONE-ACK-GAP",
+        "fg": "FG-DONE",
+        "kind": "assert",
+        "label": "A_CK_DONE_RD_NO_ACK",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:410.13-410.72"
+      },
+      {
+        "ck": "CK-DONE-RD-NO-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DONE-ACK-GAP",
+        "fg": "FG-DONE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DONE_RD_NO_ACK",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:413.3-413.58"
+      },
+      {
+        "ck": "CK-DONE-WR-NO-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DONE-ACK-GAP",
+        "fg": "FG-DONE",
+        "kind": "assert",
+        "label": "A_CK_DONE_WR_NO_ACK",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:416.13-416.72"
+      },
+      {
+        "ck": "CK-DONE-WR-NO-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DONE-ACK-GAP",
+        "fg": "FG-DONE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DONE_WR_NO_ACK",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:419.3-419.58"
+      },
+      {
+        "ck": "CK-DONE-RD-NEXT-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DONE-ACK-GAP",
+        "fg": "FG-DONE",
+        "kind": "assert",
+        "label": "A_CK_DONE_RD_NEXT_ACK",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:422.112-422.172"
+      },
+      {
+        "ck": "CK-DONE-RD-NEXT-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DONE-ACK-GAP",
+        "fg": "FG-DONE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DONE_RD_NEXT_ACK",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:425.3-425.151"
+      },
+      {
+        "ck": "CK-DONE-WR-NEXT-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+        "fc": "FC-DONE-ACK-GAP",
+        "fg": "FG-DONE",
+        "kind": "assert",
+        "label": "A_CK_DONE_WR_NEXT_ACK",
+        "mode": "bmc",
+        "status": "inconclusive",
+        "tool_name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:428.112-428.172"
+      },
+      {
+        "ck": "CK-DONE-WR-NEXT-ACK",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-DONE-ACK-GAP",
+        "fg": "FG-DONE",
+        "kind": "guard_witness",
+        "label": "G_A_CK_DONE_WR_NEXT_ACK",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:431.3-431.151"
+      },
+      {
+        "ck": "CK-COVER-RD-NONALIGNED",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-NONALIGNED",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_RD_NONALIGNED",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:434.135-434.224"
+      },
+      {
+        "ck": "CK-COVER-WR-NONALIGNED",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-NONALIGNED",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_WR_NONALIGNED",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:437.400-437.491"
+      },
+      {
+        "ck": "CK-COVER-RD-LEN0-COMPLETE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-ZERO",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_RD_LEN0_COMPLETE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:440.433-440.482"
+      },
+      {
+        "ck": "CK-COVER-WR-LEN0-COMPLETE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-ZERO",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_WR_LEN0_COMPLETE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:443.433-443.482"
+      },
+      {
+        "ck": "CK-COVER-RD-LEN1",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-LONG",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_RD_LEN1",
+        "mode": "cover",
+        "status": "uncovered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:446.715-446.755"
+      },
+      {
+        "ck": "CK-COVER-WR-LEN1",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-LONG",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_WR_LEN1",
+        "mode": "cover",
+        "status": "uncovered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:449.715-449.755"
+      },
+      {
+        "ck": "CK-COVER-RD-LONGER-PROGRESS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-LONG",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_RD_LONGER_PROGRESS",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:452.204-452.504"
+      },
+      {
+        "ck": "CK-COVER-WR-LONGER-PROGRESS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-LONG",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_WR_LONGER_PROGRESS",
+        "mode": "cover",
+        "status": "uncovered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:455.13-455.1002"
+      },
+      {
+        "ck": "CK-COVER-RD-THREE-COMMANDS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-THREE-COMMANDS",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_RD_THREE_COMMANDS",
+        "mode": "cover",
+        "status": "uncovered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:458.13-458.756"
+      },
+      {
+        "ck": "CK-COVER-WR-THREE-COMMANDS",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-THREE-COMMANDS",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_WR_THREE_COMMANDS",
+        "mode": "cover",
+        "status": "uncovered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:461.13-461.756"
+      },
+      {
+        "ck": "CK-COVER-RD-PENDING-NEXT",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-PENDING",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_RD_PENDING_NEXT",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:464.112-464.159"
+      },
+      {
+        "ck": "CK-COVER-WR-PENDING-NEXT",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-PENDING",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_WR_PENDING_NEXT",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:467.112-467.159"
+      },
+      {
+        "ck": "CK-COVER-RESET-RD-STALL",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-RESET-REENTRY",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_RESET_RD_STALL",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:470.13-470.185"
+      },
+      {
+        "ck": "CK-COVER-RESET-WR-STALL",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-RESET-REENTRY",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_RESET_WR_STALL",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:473.13-473.185"
+      },
+      {
+        "ck": "CK-COVER-RESET-PARTIAL-FRAGMENT",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-RESET-REENTRY",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_RESET_PARTIAL_FRAGMENT",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:476.13-476.256"
+      },
+      {
+        "ck": "CK-COVER-DUPLEX-OVERLAP",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-DUPLEX",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_DUPLEX_OVERLAP",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:479.13-479.322"
+      },
+      {
+        "ck": "CK-COVER-SIMULTANEOUS-DONE",
+        "counterexample": null,
+        "evidence": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+        "fc": "FC-COVER-SIMULTANEOUS-DONE",
+        "fg": "FG-COVERAGE",
+        "kind": "cover",
+        "label": "C_CK_COVER_SIMULTANEOUS_DONE",
+        "mode": "cover",
+        "status": "covered",
+        "tool_name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:482.13-482.88"
+      }
+    ],
+    "schema_version": 1,
+    "verification_status": "inconclusive"
+  },
+  "execution_status": "completed",
+  "id": "5081ad7183fe40ef84bec88043a12d95",
+  "last_result": {
+    "complete": true,
+    "last_check_result": {
+      "check_info": [
+        {
+          "checked_in_last_run": true,
+          "checker_class": "SbyGuidedChecker",
+          "checker_name": "formal_summary_check",
+          "count_check": 2,
+          "count_fail": 0,
+          "count_pass": 2,
+          "last_check_pass": true,
+          "last_msg": {
+            "coverage": {
+              "coi": "unsupported",
+              "covered": 75,
+              "liveness": "not_established",
+              "total": 82,
+              "vacuity": "not_established"
+            },
+            "evidence": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/5081ad7183fe40ef84bec88043a12d95/formal_out/tests/sby_evidence.json",
+            "execution_status": "completed",
+            "message": "Stage work completed; verification_status is the DUT conclusion, not the stage completion flag.",
+            "verification_status": "inconclusive"
+          },
+          "name": "SbyGuidedChecker"
+        }
+      ],
+      "check_pass": true
+    },
+    "message": "All stages completed successfully. Now you should review your work to check if everything is correct and all the users needs are matched. When you are confident that everything is fine, you can use the `Exit` tool to exit the mission. "
+  },
+  "options": {
+    "cex_replay": true,
+    "dut": "dmac",
+    "engine": "sby",
+    "human_review": false,
+    "project_id": "b6fcf378761140e9b80c9c6aa990873d",
+    "static_review": true,
+    "toolchain": "sby"
+  },
+  "revision": 140,
+  "state": "completed",
+  "updated_at": 1791140867.2092953,
+  "verification_status": "inconclusive",
+  "view": {
+    "all_completed": true,
+    "current_index": 14,
+    "last_check": {
+      "check_info": [
+        {
+          "checked_in_last_run": true,
+          "checker_class": "SbyGuidedChecker",
+          "checker_name": "formal_summary_check",
+          "count_check": 2,
+          "count_fail": 0,
+          "count_pass": 2,
+          "last_check_pass": true,
+          "last_msg": {
+            "coverage": {
+              "coi": "unsupported",
+              "covered": 75,
+              "liveness": "not_established",
+              "total": 82,
+              "vacuity": "not_established"
+            },
+            "evidence": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/5081ad7183fe40ef84bec88043a12d95/formal_out/tests/sby_evidence.json",
+            "execution_status": "completed",
+            "message": "Stage work completed; verification_status is the DUT conclusion, not the stage completion flag.",
+            "verification_status": "inconclusive"
+          },
+          "name": "SbyGuidedChecker"
+        }
+      ],
+      "check_pass": true
+    },
+    "next_action": "Review final evidence.",
+    "stages": [
+      {
+        "children": [],
+        "current": false,
+        "description": "需求分析与验证规划",
+        "details": {
+          "check_pass": true,
+          "checker": [
+            "Validate planning fields in .formal_records.yaml and render the planning markdown."
+          ],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "1",
+          "task": {
+            "description": [
+              "维护 planning：项目概述、范围、策略、交付物和风险；规划格式见 Guide_Doc/sby_workflow.md。Check 自动渲染 01 文档。"
+            ],
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "1-requirement_analysis_and_planning-需求分析与验证规划"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "requirement_analysis_and_planning",
+        "index": 0,
+        "journal": "恢复会话实际重执行本阶段原生门禁；采用前序Agent/工程师撰写且保持相同RTL的规格与属性，未继承任何阶段完成或run_results。已阅读本阶段要求的输入。",
+        "name": "requirement_analysis_and_planning",
+        "status": "completed"
+      },
+      {
+        "children": [],
+        "current": false,
+        "description": "dmac功能理解",
+        "details": {
+          "check_pass": true,
+          "checker": [
+            "Validate basic_info fields in .formal_records.yaml and render the basic info markdown."
+          ],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "2",
+          "task": {
+            "description": [
+              "维护 basic_info：完整端口、实际展开位宽、功能、正确性要求；明确 clock_signal/reset_signal，时序设计声明 clock_count=1、clock_edge。不猜测复位极性。Check 自动渲染 02 文档。"
+            ],
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "2-dut_function_understanding-dmac功能理解"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "dut_function_understanding",
+        "index": 1,
+        "journal": "恢复会话实际重执行本阶段原生门禁；采用前序Agent/工程师撰写且保持相同RTL的规格与属性，未继承任何阶段完成或run_results。已阅读本阶段要求的输入。",
+        "name": "dut_function_understanding",
+        "status": "completed"
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "current": false,
+            "description": "DUT功能分组与层次划分[FG:12]",
+            "details": {
+              "check_pass": true,
+              "checker": [
+                "Validates the formal specification structure and content."
+              ],
+              "fail_count": 0,
+              "is_completed": true,
+              "is_skipped": false,
+              "last_human_check_msg": "",
+              "last_human_check_result": null,
+              "needs_human_check": false,
+              "reached": true,
+              "section_index": "3.1",
+              "task": {
+                "description": [
+                  "按 Guide_Doc/sby_workflow.md 在 spec.function_groups 中维护 FG/FC/CK，包含 FG-API 和 FG-COVERAGE；style 使用 Assume/Comb/Seq/Cover，sva_body 使用本引擎支持的表达式。仅修改当前子阶段要求的层级。"
+                ],
+                "output_files": [],
+                "reference_files": {},
+                "title": "3.1-dut_function_grouping-DUT功能分组与层次划分[FG:12]",
+                "upper_task": {
+                  "description": [
+                    "沿用 FG→FC→CK 三个子阶段和原标签，维护 spec；Guide_Doc/sby_workflow.md 给出完整记录示例。"
+                  ],
+                  "output_files": [
+                    "formal_out/.formal_records.yaml"
+                  ],
+                  "reference_files": {
+                    "Guide_Doc/sby_workflow.md": "Readed",
+                    "dmac/rtl/dmac.sv": "Readed",
+                    "dmac/rtl/dmac_fifo.sv": "Readed",
+                    "formal_out/.formal_records.yaml": "Readed"
+                  },
+                  "title": "3-functional_specification_analysis-功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}"
+                }
+              }
+            },
+            "disabled_reason": "",
+            "enabled": true,
+            "id": "dut_function_grouping",
+            "index": 2,
+            "journal": "恢复会话实际重执行本阶段原生门禁；采用前序Agent/工程师撰写且保持相同RTL的规格与属性，未继承任何阶段完成或run_results。已阅读本阶段要求的输入。",
+            "name": "dut_function_grouping",
+            "status": "completed"
+          },
+          {
+            "children": [],
+            "current": false,
+            "description": "具体功能点识别与定义[FC:48]",
+            "details": {
+              "check_pass": true,
+              "checker": [
+                "Validates the formal specification structure and content."
+              ],
+              "fail_count": 0,
+              "is_completed": true,
+              "is_skipped": false,
+              "last_human_check_msg": "",
+              "last_human_check_result": null,
+              "needs_human_check": false,
+              "reached": true,
+              "section_index": "3.2",
+              "task": {
+                "description": [
+                  "按 Guide_Doc/sby_workflow.md 在 spec.function_groups 中维护 FG/FC/CK，包含 FG-API 和 FG-COVERAGE；style 使用 Assume/Comb/Seq/Cover，sva_body 使用本引擎支持的表达式。仅修改当前子阶段要求的层级。"
+                ],
+                "output_files": [],
+                "reference_files": {},
+                "title": "3.2-function_point_definition-具体功能点识别与定义[FC:48]",
+                "upper_task": {
+                  "description": [
+                    "沿用 FG→FC→CK 三个子阶段和原标签，维护 spec；Guide_Doc/sby_workflow.md 给出完整记录示例。"
+                  ],
+                  "output_files": [
+                    "formal_out/.formal_records.yaml"
+                  ],
+                  "reference_files": {
+                    "Guide_Doc/sby_workflow.md": "Readed",
+                    "dmac/rtl/dmac.sv": "Readed",
+                    "dmac/rtl/dmac_fifo.sv": "Readed",
+                    "formal_out/.formal_records.yaml": "Readed"
+                  },
+                  "title": "3-functional_specification_analysis-功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}"
+                }
+              }
+            },
+            "disabled_reason": "",
+            "enabled": true,
+            "id": "function_point_definition",
+            "index": 3,
+            "journal": "恢复会话实际重执行本阶段原生门禁；采用前序Agent/工程师撰写且保持相同RTL的规格与属性，未继承任何阶段完成或run_results。已阅读本阶段要求的输入。",
+            "name": "function_point_definition",
+            "status": "completed"
+          },
+          {
+            "children": [],
+            "current": false,
+            "description": "检测点设计与定义[CK:88]",
+            "details": {
+              "check_pass": true,
+              "checker": [
+                "Validates the formal specification structure and content."
+              ],
+              "fail_count": 0,
+              "is_completed": true,
+              "is_skipped": false,
+              "last_human_check_msg": "",
+              "last_human_check_result": null,
+              "needs_human_check": false,
+              "reached": true,
+              "section_index": "3.3",
+              "task": {
+                "description": [
+                  "按 Guide_Doc/sby_workflow.md 在 spec.function_groups 中维护 FG/FC/CK，包含 FG-API 和 FG-COVERAGE；style 使用 Assume/Comb/Seq/Cover，sva_body 使用本引擎支持的表达式。仅修改当前子阶段要求的层级。"
+                ],
+                "output_files": [],
+                "reference_files": {},
+                "title": "3.3-check_point_design-检测点设计与定义[CK:88]",
+                "upper_task": {
+                  "description": [
+                    "沿用 FG→FC→CK 三个子阶段和原标签，维护 spec；Guide_Doc/sby_workflow.md 给出完整记录示例。"
+                  ],
+                  "output_files": [
+                    "formal_out/.formal_records.yaml"
+                  ],
+                  "reference_files": {
+                    "Guide_Doc/sby_workflow.md": "Readed",
+                    "dmac/rtl/dmac.sv": "Readed",
+                    "dmac/rtl/dmac_fifo.sv": "Readed",
+                    "formal_out/.formal_records.yaml": "Readed"
+                  },
+                  "title": "3-functional_specification_analysis-功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}"
+                }
+              }
+            },
+            "disabled_reason": "",
+            "enabled": true,
+            "id": "check_point_design",
+            "index": 4,
+            "journal": "恢复会话实际重执行本阶段原生门禁；采用前序Agent/工程师撰写且保持相同RTL的规格与属性，未继承任何阶段完成或run_results。已阅读本阶段要求的输入。",
+            "name": "check_point_design",
+            "status": "completed"
+          }
+        ],
+        "current": false,
+        "description": "功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}",
+        "details": {
+          "check_pass": true,
+          "checker": [],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "3",
+          "task": {
+            "description": [
+              "沿用 FG→FC→CK 三个子阶段和原标签，维护 spec；Guide_Doc/sby_workflow.md 给出完整记录示例。"
+            ],
+            "notes": "You have complete this stage's submissions (3.1-dut_function_grouping-DUT功能分组与层次划分[FG:12], 3.2-function_point_definition-具体功能点识别与定义[FC:48], 3.3-check_point_design-检测点设计与定义[CK:88]), now you need to check this stage is complete or not.",
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "3-functional_specification_analysis-功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "functional_specification_analysis",
+        "index": 5,
+        "journal": "恢复会话实际重执行本阶段原生门禁；采用前序Agent/工程师撰写且保持相同RTL的规格与属性，未继承任何阶段完成或run_results。已阅读本阶段要求的输入。",
+        "name": "functional_specification_analysis",
+        "status": "completed"
+      },
+      {
+        "children": [],
+        "current": false,
+        "description": "属性实现与自动同步（SBY 原生表达式）",
+        "details": {
+          "check_pass": true,
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage."
+          ],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "4",
+          "task": {
+            "description": [
+              "填写每个 CK 的 sva_body、sby_guard、sby_trigger；填写 extra_config.sby 输入集及明确复位策略。Check 自动生成 checker/wrapper，不编辑派生 SV。",
+              "组合检查用 Comb，采样历史用 Seq；约束用 Assume，业务可达性用 Cover。每个断言还生成具名 guard witness。此阶段通过仅说明已生成，下一阶段执行真实编译。"
+            ],
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "4-property_generation-属性实现与自动同步（SBY 原生表达式）"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "property_generation",
+        "index": 6,
+        "journal": "恢复会话实际重执行本阶段原生门禁；采用前序Agent/工程师撰写且保持相同RTL的规格与属性，未继承任何阶段完成或run_results。已阅读本阶段要求的输入。",
+        "name": "property_generation",
+        "status": "completed"
+      },
+      {
+        "children": [],
+        "current": false,
+        "description": "验证脚本生成与执行（SBY）",
+        "details": {
+          "check_pass": true,
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage."
+          ],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "5",
+          "task": {
+            "description": [
+              "确认 extra_config.sby.sources/filelists/include_dirs/defines、mode、depth、timeout_seconds 及 reset_policy。Check 自动生成 .sby，并分别运行 prove（或 bmc）与 cover；不用写 Tcl 或调用 Shell。",
+              "核对实际编译的 DUT 端口与 basic_info 完全一致。执行错误要修复；真实反例保留，进入下一阶段分析。"
+            ],
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "5-script_generation-验证脚本生成与执行（SBY）"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "script_generation",
+        "index": 7,
+        "journal": "恢复会话重新执行BMC/Cover真实完成，逐属性状态仍inconclusive，新的签名运行已核验。未复用前序会话完成状态。",
+        "name": "script_generation",
+        "status": "completed"
+      },
+      {
+        "children": [],
+        "current": false,
+        "description": "验证环境调试与迭代修复{MAX_ITERATION: 5}",
+        "details": {
+          "check_pass": true,
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage."
+          ],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "6",
+          "task": {
+            "description": [
+              "读取 tests/sby_coverage.json 及对应 manifest/VCD，审查每个 Assume 和初始复位约束，在 extra_config.sby.review 写下规格依据及限制。",
+              "补全 analysis.fa_entries：持续 falsified 的断言只有确认 RTL_BUG 才能保留推进；环境错误必须真实修复后重跑。未决证明、未命中 Cover/guard witness 用 INCONCLUSIVE，不当作 RTL 缺陷或不可达证明。",
+              "Check 检查输入指纹；输入未变时验证签名并复用，输入改变后重新运行，不接受旧日志。"
+            ],
+            "output_files": [
+              "formal_out/tests/dmac_checker.sv",
+              "formal_out/tests/dmac_wrapper.sv"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "6-environment_debugging_iteration-验证环境调试与迭代修复{MAX_ITERATION: 5}"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "environment_debugging_iteration",
+        "index": 8,
+        "journal": "恢复会话实际重执行本阶段原生门禁；采用前序Agent/工程师撰写且保持相同RTL的规格与属性，未继承任何阶段完成或run_results。已阅读本阶段要求的输入。",
+        "name": "environment_debugging_iteration",
+        "status": "completed"
+      },
+      {
+        "children": [],
+        "current": false,
+        "description": "覆盖分析与优化（业务 Cover / guard witness；COI 不支持）",
+        "details": {
+          "check_pass": true,
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage."
+          ],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "7",
+          "task": {
+            "description": [
+              "按 FG/FC/CK 查看业务 Cover 和断言 guard witness，分别分析缺口，必要时改属性/深度后重跑。COI、完整空洞性、无界活性显示未建立，不使用 90% COI 门限冒充。",
+              "所有缺口需真实分析。允许带 INCONCLUSIVE 结论完成分析工作，不表示覆盖闭环或 DUT 通过。"
+            ],
+            "output_files": [
+              "formal_out/tests/dmac_checker.sv"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "7-coverage_analysis_and_optimization-覆盖分析与优化（业务 Cover / guard witness；COI 不支持）"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "coverage_analysis_and_optimization",
+        "index": 9,
+        "journal": "逐项审查当前75/82覆盖与63条BMC未决。6条Assume版本绑定，70项INCONCLUSIVE不改变任何假设或运行结论；更深覆盖、无界prove超时保留。工程师通过原门禁接续Agent上下文失败。",
+        "name": "coverage_analysis_and_optimization",
+        "status": "completed"
+      },
+      {
+        "children": [],
+        "current": false,
+        "description": "形式化反例 Python 测试用例生成",
+        "details": {
+          "check_pass": true,
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage.",
+            "Validate, execute, and attest counterexample test reproductions."
+          ],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "8",
+          "task": {
+            "description": [
+              "只为已审查 RTL_BUG 的 falsified 属性生成 tests/test_dmac_counterexample.py；读取对应签名 manifest 的 counterexample_path，明确接口/时钟映射并真实驱动 dut。",
+              "沿用原始 test_cex_ck_* 命名和 dut fixture，执行 Step/RefreshComb、真实断言及 Finish。Check 必须真实执行并验证复现证据；仅有 VCD 或测试函数不算复现。无缺陷时写明无需复现。"
+            ],
+            "output_files": [
+              "formal_out/tests/test_dmac_counterexample.py"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "8-counterexample_python_testgen-形式化反例 Python 测试用例生成"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "counterexample_python_testgen",
+        "index": 10,
+        "journal": "启用的反例分支实际Check：当前没有已确认原始DUT RTL_BUG；内置Agent生成的说明文件存在，无该分支动态反例回放义务。7故障/19次Icarus为独立原生辅助证据，不登记为原始DUT缺陷。",
+        "name": "counterexample_python_testgen",
+        "status": "completed"
+      },
+      {
+        "children": [],
+        "current": false,
+        "description": "RTL缺陷分析与报告",
+        "details": {
+          "check_pass": true,
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage.",
+            "Validates the consistency of the formal verification bug report."
+          ],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "9",
+          "task": {
+            "description": [
+              "沿用 bugs 条目与 04 Bug 报告：仅记录当前已审查 RTL_BUG，补齐源码位置、触发、预期/实际、根因和修复建议。不把 cover 缺口或 inconclusive 当作 DUT 缺陷。"
+            ],
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "9-formal_execution-RTL缺陷分析与报告"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "formal_execution",
+        "index": 11,
+        "journal": "实际缺陷一致性Check生成04_dmac_bug_report.md，当前bugs=[]。BMC未决、prove超时及修改版故障不当作原始DUT缺陷。",
+        "name": "formal_execution",
+        "status": "completed"
+      },
+      {
+        "children": [],
+        "current": false,
+        "description": "静态分析Bug与形式化验证结果关联",
+        "details": {
+          "check_pass": true,
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage.",
+            "Validates the linkage between static bugs and formal verification results."
+          ],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "10",
+          "task": {
+            "description": [
+              "核对静态分析线索与已审查 RTL_BUG。没有反例不证明静态线索是误报，未决项保留未决说明；标签约定见 Guide_Doc/sby_workflow.md。"
+            ],
+            "output_files": [
+              "formal_out/04_dmac_static_bug_analysis.md"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "10-static_bug_validation-静态分析Bug与形式化验证结果关联"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "static_bug_validation",
+        "index": 12,
+        "journal": "工程师通读两个固定RTL并提交逐源码位置静态审查，核对扩展计数、地址、lane、FIFO深度/同拍替换、done和复位。静态门禁实际通过；验证缺口明示保留。",
+        "name": "static_bug_validation",
+        "status": "completed"
+      },
+      {
+        "children": [],
+        "current": false,
+        "description": "验证总结与审查",
+        "details": {
+          "check_pass": true,
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage."
+          ],
+          "fail_count": 1,
+          "is_completed": true,
+          "is_skipped": false,
+          "last_human_check_msg": "",
+          "last_human_check_result": null,
+          "needs_human_check": false,
+          "reached": true,
+          "section_index": "11",
+          "task": {
+            "description": [
+              "填写 summary.core_function、overall_result 和 acceptance_conclusion；overall_result 必须与当前签名结果 passed/failed/inconclusive 一致。Check 渲染 05 总结，列出覆盖缺口、工具限制和证据。",
+              "不得设置 stats_override，不得把预算耗尽或阶段完成称为验证通过。反例复现为关闭分支时明确未执行，不能声称已动态复现。"
+            ],
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ],
+            "reference_files": {
+              "Guide_Doc/sby_workflow.md": "Readed",
+              "dmac/rtl/dmac.sv": "Readed",
+              "dmac/rtl/dmac_fifo.sv": "Readed",
+              "formal_out/.formal_records.yaml": "Readed"
+            },
+            "title": "11-verification_review_and_summary-验证总结与审查"
+          }
+        },
+        "disabled_reason": "",
+        "enabled": true,
+        "id": "verification_review_and_summary",
+        "index": 13,
+        "journal": "总结仅采用当前签名SBY统计：overall_result=inconclusive，原生证明/故障/回放分列，未声称FormalMC/VCS验收或全参数证明。原生Check/Complete完成全部14个启用节点；Agent与工程师撰写分工均留痕。",
+        "name": "verification_review_and_summary",
+        "status": "completed"
+      }
+    ]
+  },
+  "workspace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/5081ad7183fe40ef84bec88043a12d95"
+}

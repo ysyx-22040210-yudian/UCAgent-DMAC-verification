@@ -1,0 +1,12 @@
+# Administrator example: replace the executable with the actual licensed installation.
+# This file contains no commercial binary, license value or credential.
+profiles:
+  formalmc_local:
+    display_name: FormalMC - original UCAgent workflow
+    tools:
+      formalmc: /opt/formalmc/bin/FormalMC
+    environment:
+      PATH: /usr/local/bin:/usr/bin:/bin
+    execution_user: ucagent
+    max_concurrency: 1
+    minimum_free_bytes: 10737418240

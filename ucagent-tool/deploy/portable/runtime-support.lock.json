@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "package": "libc6",
+  "version": "2.35-0ubuntu3.8",
+  "platform": "linux-x86_64",
+  "url": "https://snapshot.ubuntu.com/ubuntu/20240701T000000Z/pool/main/g/glibc/libc6_2.35-0ubuntu3.8_amd64.deb",
+  "sha256": "76d582e6b5a7057acd8b239edf102329a5a966303d7d1b7a024b447e057b342e",
+  "size": 3235218,
+  "source": "https://snapshot.ubuntu.com/ubuntu/20240701T000000Z/pool/main/g/glibc/"
+}

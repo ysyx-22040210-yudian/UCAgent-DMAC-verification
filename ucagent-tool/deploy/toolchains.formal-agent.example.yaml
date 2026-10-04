@@ -1,0 +1,58 @@
+profiles:
+  sby:
+    tools:
+      sby: /home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/sby
+      yosys: /home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/yosys
+      yosys-smtbmc: /home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/yosys-smtbmc
+      z3: /home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/z3
+    environment:
+      PATH: /home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin:/usr/local/bin:/usr/bin:/bin
+    execution_user: ucagent
+    minimum_free_bytes: 10737418240
+    minimum_root_free_bytes: 1073741824
+    max_concurrency: 1
+  formal-agent:
+    claude_model: gpt-5.6-sol
+    tools:
+      claude: /home/ucagent-lab/tools/claude-code/2.1.263/bin/claude
+    environment:
+      HOME: /home/ucagent-lab/home
+      TMPDIR: /home/ucagent-lab/tmp
+    execution_user: ucagent
+    max_concurrency: 1
+    agent_max_concurrency: 1
+    minimum_free_bytes: 10737418240
+    minimum_root_free_bytes: 1073741824
+  synopsys_o2018:
+    display_name: Synopsys O-2018.09-SP2 (VCS + Verdi)
+    tools:
+      vcs: /home/synopsys/vcs/O-2018.09-SP2/bin/vcs
+      urg: /home/synopsys/vcs/O-2018.09-SP2/bin/urg
+      verdi: /home/synopsys/verdi/Verdi_O-2018.09-SP2/bin/verdi
+      python: /home/ucagent-lab/current/venv/bin/python
+    environment:
+      PATH: /home/ucagent-lab/current/venv/bin:/usr/bin:/bin:/usr/local/bin:/home/synopsys/vcs/O-2018.09-SP2/bin:/home/synopsys/verdi/Verdi_O-2018.09-SP2/bin:/opt/rh/devtoolset-11/root/usr/bin
+      LD_LIBRARY_PATH: /opt/rh/devtoolset-11/root/usr/lib64:/opt/rh/devtoolset-11/root/usr/lib
+      TMPDIR: /home/ucagent-lab/tmp
+      TMP: /home/ucagent-lab/tmp
+      TEMP: /home/ucagent-lab/tmp
+      VCS_HOME: /home/synopsys/vcs/O-2018.09-SP2
+      VCS_TARGET_ARCH: linux64
+      VERDI_HOME: /home/synopsys/verdi/Verdi_O-2018.09-SP2
+    versions:
+      vcs: O-2018.09-SP2
+      urg: O-2018.09-SP2
+      verdi: Verdi_O-2018.09-SP2
+      uvm: "1.2"
+    fsdb_pli:
+      table: /home/synopsys/verdi/Verdi_O-2018.09-SP2/share/PLI/VCS/linux64/novas.tab
+      library: /home/synopsys/verdi/Verdi_O-2018.09-SP2/share/PLI/VCS/linux64/pli.a
+      runtime_library_dirs:
+        - /home/synopsys/verdi/Verdi_O-2018.09-SP2/share/PLI/lib/linux64
+    license_environment_names:
+      - SNPSLMD_LICENSE_FILE
+      - LM_LICENSE_FILE
+    execution_user: ucagent
+    max_concurrency: 1
+    minimum_free_bytes: 10737418240
+    minimum_root_free_bytes: 1073741824

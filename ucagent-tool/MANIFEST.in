@@ -1,0 +1,2 @@
+recursive-include ucagent *.yaml *.yml *.md *.json *.jinja2 *.j2 *.txt *.ini *.sv *.v *.tcl *.py *.sh *.html *.css *.js *.svg *.png
+recursive-include ucagent/eda/native *.cpp

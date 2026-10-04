@@ -1,0 +1,409 @@
+{
+  "schema_version": 1,
+  "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+  "toolchain_id": "sby",
+  "tool": "sby",
+  "tool_version": null,
+  "execution_host": "unknown",
+  "execution_user": null,
+  "command": [
+    "/home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/sby",
+    "-d",
+    "proof",
+    "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fifo-20261005/.ucagent/platform-inputs/40e9409f1a20473a96f426b594bc4b0f/run.sby"
+  ],
+  "started_at": "2026-10-04T17:00:36.539779+00:00",
+  "completed_at": "2026-10-04T17:00:36.974943+00:00",
+  "execution_status": "completed",
+  "verification_status": "passed",
+  "return_code": 0,
+  "input_hashes": {
+    ".ucagent/platform-inputs/40e9409f1a20473a96f426b594bc4b0f/run.sby": "d9d2ed94cdb9b3ec1e306d514e51669643877c573896c014f5e11b60951b1667",
+    "formal": "d7f73294f645daec4826b9d93e43d9b6bb044bdc47ce655b64ece6286c3db15c",
+    "formal/fifo_harness.sv": "f7d8c2c0f70b94552cc9da776740524c217f1409486ddaa4bb6702220cd0eba4",
+    "formal/fifo_monitor.svh": "cb29540b331cced8fa7dcca12566b9d8ae901ce20fef40e85b7fd9dc53ad1ebc",
+    "rtl/dmac_fifo.sv": "30c6023684d19c3a850d80b28f4628960df7ef24eebb1e6c03b8d61d0e2fd5a8"
+  },
+  "prepared_input_hashes": {
+    ".ucagent/platform-inputs/40e9409f1a20473a96f426b594bc4b0f/run.sby": "d9d2ed94cdb9b3ec1e306d514e51669643877c573896c014f5e11b60951b1667"
+  },
+  "input_hash_excludes": [
+    ".ucagent",
+    ".ucagent/platform-runs/40e9409f1a20473a96f426b594bc4b0f/formal"
+  ],
+  "input_fingerprint": "817bfb29a32643dcde128c7a369992641e5c656fae7ec808788a2b01fdd07f0f",
+  "session_inputs": [
+    {
+      "source": "formal",
+      "destination": "inputs/formal"
+    },
+    {
+      "source": "rtl/dmac_fifo.sv",
+      "destination": "inputs/rtl/dmac_fifo.sv"
+    }
+  ],
+  "cache_hit": false,
+  "source_manifest": null,
+  "test": null,
+  "suite": null,
+  "seed": null,
+  "property_set": null,
+  "metadata": {
+    "adapter": "sby",
+    "engine": "sby/smtbmc/z3",
+    "mode": "cover",
+    "depth": 12,
+    "cacheable": false
+  },
+  "tests": [],
+  "coverage": [],
+  "properties": [
+    {
+      "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:24.5-24.54",
+      "status": "disabled",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_COUNT",
+        "location": "inputs/formal/fifo_monitor.svh:24.5-24.54",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:29.5-29.71",
+      "status": "disabled",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_HEAD",
+        "location": "inputs/formal/fifo_monitor.svh:29.5-29.71",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:26.5-26.85",
+      "status": "disabled",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_POINTER",
+        "location": "inputs/formal/fifo_monitor.svh:26.5-26.85",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:25.5-25.87",
+      "status": "disabled",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_RANGE",
+        "location": "inputs/formal/fifo_monitor.svh:25.5-25.87",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:28.5-28.95",
+      "status": "disabled",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_READY",
+        "location": "inputs/formal/fifo_monitor.svh:28.5-28.95",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:27.5-27.63",
+      "status": "disabled",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_VALID",
+        "location": "inputs/formal/fifo_monitor.svh:27.5-27.63",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property COVER in fifo_harness/dut at inputs/formal/fifo_monitor.svh:32.5-32.55",
+      "status": "covered",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_FIFO_EMPTY",
+        "location": "inputs/formal/fifo_monitor.svh:32.5-32.55",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace0.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in fifo_harness/dut at inputs/formal/fifo_monitor.svh:31.5-31.58",
+      "status": "covered",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_FIFO_FULL",
+        "location": "inputs/formal/fifo_monitor.svh:31.5-31.58",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace1.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in fifo_harness/dut at inputs/formal/fifo_monitor.svh:30.5-30.73",
+      "status": "covered",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_FIFO_FULL_REPLACE",
+        "location": "inputs/formal/fifo_monitor.svh:30.5-30.73",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace2.vcd"
+      }
+    },
+    {
+      "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_222]",
+      "status": "disabled",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_222",
+        "location": "inputs/formal/fifo_monitor.svh:36.9-36.72",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_235]",
+      "status": "disabled",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_235",
+        "location": "inputs/formal/fifo_monitor.svh:36.9-36.72",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_248]",
+      "status": "disabled",
+      "runtime_seconds": 0.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_248",
+        "location": "inputs/formal/fifo_monitor.svh:36.9-36.72",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    }
+  ],
+  "diagnostics": [],
+  "artifacts": [
+    {
+      "id": "08ef58cccd684f7c88bf3de1c39fa850",
+      "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+      "path": ".",
+      "kind": "proof_directory",
+      "is_directory": true,
+      "size_bytes": 426196,
+      "sha256": "4ce09883e36cdb6d0c0e19152d4feed11f851c2cacc9a70662fc1ef4929715b2",
+      "media_type": "application/x-directory",
+      "hash_excludes": [
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "e9146c9ab9f6432b96a9fee6eceab1ef",
+      "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+      "path": "events.ndjson",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 13653,
+      "sha256": "ccdf40efc0825ea56f4664c061b6439703aac2578f7692ec2e629c5118dadc3a",
+      "media_type": "application/octet-stream",
+      "hash_excludes": []
+    },
+    {
+      "id": "8a9780970abe417488b65bce51c34ea3",
+      "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+      "path": "proof/engine_0/trace0.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 5366,
+      "sha256": "2407c275c3f36962f29abf91e465bdcb204d3f4717a2facd7f8668feb972c677",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "4ebb29b5e69d4a848e28842e71d6f641",
+      "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+      "path": "proof/engine_0/trace1.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 8798,
+      "sha256": "fd40b61da53d1607601da4f2f6c2eafc9d33dacdc523aa71f668de3abfe8870a",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "12cd63b3bfda41f9a42cdef188ba7af7",
+      "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+      "path": "proof/engine_0/trace2.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 8798,
+      "sha256": "cb7305bdea798eaffafc9dd3cc2a213a0846314f8ca5284dd2689d8dc6a4feb1",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "c1202780be894021ad89253827192672",
+      "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+      "path": "proof/logfile.txt",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 4790,
+      "sha256": "11902c7b3f504757d75320244d042110ee1deb7ee4194e2917b781e1c0524b14",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    },
+    {
+      "id": "1ae5966a4eec4599ade3b1d44feec9b4",
+      "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+      "path": "proof/run.xml",
+      "kind": "report",
+      "is_directory": false,
+      "size_bytes": 8408,
+      "sha256": "86704b19181f624f1fd97066d8e18503d0b4188beed111171c74bd79e60dd13a",
+      "media_type": "text/xml",
+      "hash_excludes": []
+    },
+    {
+      "id": "52d6b21e12944752ac19e0481ffddb55",
+      "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+      "path": "proof/status",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 9,
+      "sha256": "4d489b9bfaac73d73a64a4023bf4d947ca1d4216d9f72864c97bfb6a2bc07d56",
+      "media_type": "application/octet-stream",
+      "hash_excludes": []
+    },
+    {
+      "id": "e4337ff4068b4daca5da8c643b1cbffb",
+      "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+      "path": "stderr.log",
+      "kind": "log",
+      "is_directory": false,
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    },
+    {
+      "id": "8777b769dc824c5dacc3367189a8b444",
+      "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+      "path": "stdout.log",
+      "kind": "log",
+      "is_directory": false,
+      "size_bytes": 4790,
+      "sha256": "11902c7b3f504757d75320244d042110ee1deb7ee4194e2917b781e1c0524b14",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    }
+  ],
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "digest": "37770ccdee125c3bfb54bdb410a73ee3cd2fc09e69f61ed689b5236c3c2ab22b"
+  }
+}

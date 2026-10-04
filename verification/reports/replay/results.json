@@ -1,0 +1,173 @@
+[
+  {
+    "case": "fault_address_step_mutant",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-address_step-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-address_step-20261005/.ucagent/platform-runs/d59c7d3dd3204f01be461e91f436ded1/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "84ccd8c226c830a35fca1ebd1109ce9c220e3d33d07ba7bc4d7adccb7815df71",
+    "vectors": 5,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "fault_address_step_baseline",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-address_step-20261005/.ucagent/platform-runs/d59c7d3dd3204f01be461e91f436ded1/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "84ccd8c226c830a35fca1ebd1109ce9c220e3d33d07ba7bc4d7adccb7815df71",
+    "vectors": 5,
+    "compile_code": 0,
+    "run_code": 1
+  },
+  {
+    "case": "fault_early_done_mutant",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-early_done-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-early_done-20261005/.ucagent/platform-runs/f8e23590e32241bda34650aee357a63f/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "33c04eefe74eb19848cedd3d34387249cb2da1db6d23860e0720dcc9ccb61fba",
+    "vectors": 9,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "fault_early_done_baseline",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-early_done-20261005/.ucagent/platform-runs/f8e23590e32241bda34650aee357a63f/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "33c04eefe74eb19848cedd3d34387249cb2da1db6d23860e0720dcc9ccb61fba",
+    "vectors": 9,
+    "compile_code": 0,
+    "run_code": 1
+  },
+  {
+    "case": "fault_fifo_pop_mutant",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-fifo_pop-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-fifo_pop-20261005/.ucagent/platform-runs/2475baf0201845afb6084971f2a4a6ee/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "5c4cfcd209e1e0a17fae2b7573dfc051044abbab59ec774fd4e93ceef1f59bd1",
+    "vectors": 9,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "fault_fifo_pop_baseline",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-fifo_pop-20261005/.ucagent/platform-runs/2475baf0201845afb6084971f2a4a6ee/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "5c4cfcd209e1e0a17fae2b7573dfc051044abbab59ec774fd4e93ceef1f59bd1",
+    "vectors": 9,
+    "compile_code": 0,
+    "run_code": 1
+  },
+  {
+    "case": "fault_length_encoding_mutant",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-length_encoding-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-length_encoding-20261005/.ucagent/platform-runs/1531039948d84f03885f2c3c9287b9e8/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "d4ae4baeefc9903be078a6fdc04aaab7b019f0433bd32d124db179e0e353d832",
+    "vectors": 4,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "fault_length_encoding_baseline",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-length_encoding-20261005/.ucagent/platform-runs/1531039948d84f03885f2c3c9287b9e8/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "d4ae4baeefc9903be078a6fdc04aaab7b019f0433bd32d124db179e0e353d832",
+    "vectors": 4,
+    "compile_code": 0,
+    "run_code": 1
+  },
+  {
+    "case": "fault_read_lane_mutant",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-read_lane-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-read_lane-20261005/.ucagent/platform-runs/06d87e8edb7a487d910a21177c46ed75/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "65b0732e7524e9af05e2ba4305c8575b9ed886c9887f8e4a6827caae8b9178cc",
+    "vectors": 5,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "fault_read_lane_baseline",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-read_lane-20261005/.ucagent/platform-runs/06d87e8edb7a487d910a21177c46ed75/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "65b0732e7524e9af05e2ba4305c8575b9ed886c9887f8e4a6827caae8b9178cc",
+    "vectors": 5,
+    "compile_code": 0,
+    "run_code": 1
+  },
+  {
+    "case": "fault_reset_lane_mutant",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-reset_lane-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-reset_lane-20261005/.ucagent/platform-runs/28a15a4880044065afb58a618c16ea1d/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "afb49fbe57ee89c373a04eb76f3887c589487678da078b3c84939014b1177020",
+    "vectors": 3,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "fault_reset_lane_baseline",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-reset_lane-20261005/.ucagent/platform-runs/28a15a4880044065afb58a618c16ea1d/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "afb49fbe57ee89c373a04eb76f3887c589487678da078b3c84939014b1177020",
+    "vectors": 3,
+    "compile_code": 0,
+    "run_code": 1
+  },
+  {
+    "case": "fault_write_lane_mutant",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-write_lane-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-write_lane-20261005/.ucagent/platform-runs/993f857b1cfe46529ace5d520d7a6622/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "2fe8992815932ecc1856940fe3c083fc4cedfa10cb8fb33a336f834fb22e71d2",
+    "vectors": 4,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "fault_write_lane_baseline",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fault-write_lane-20261005/.ucagent/platform-runs/993f857b1cfe46529ace5d520d7a6622/formal/proof/engine_0/trace.vcd",
+    "trace_sha256": "2fe8992815932ecc1856940fe3c083fc4cedfa10cb8fb33a336f834fb22e71d2",
+    "vectors": 4,
+    "compile_code": 0,
+    "run_code": 1
+  },
+  {
+    "case": "C_CK_RESET_ABORT_RD",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-native-20261005/.ucagent/platform-runs/6bd1ef7edf434402ae0cff36679bdc70/formal/proof/engine_0/trace3.vcd",
+    "trace_sha256": "52d6625527282daa8c4dddedd33a33ec973b4933ed7857c05d5a2ed41aa0a4be",
+    "vectors": 5,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "C_CK_RESET_ABORT_WR",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-native-20261005/.ucagent/platform-runs/6bd1ef7edf434402ae0cff36679bdc70/formal/proof/engine_0/trace10.vcd",
+    "trace_sha256": "d2d2d11a8080545981a1036aadae8c0921dabe69f79f6f94be32e2ba13a1d06d",
+    "vectors": 9,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "C_CK_DUPLEX_DONE",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-native-20261005/.ucagent/platform-runs/6bd1ef7edf434402ae0cff36679bdc70/formal/proof/engine_0/trace11.vcd",
+    "trace_sha256": "2d0b1ef2b64b74c9529b317c4fd0215d8010f85fab1c9c5328120cd4d18bbe2b",
+    "vectors": 9,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "C_CK_THREE_RD",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-native-20261005/.ucagent/platform-runs/6bd1ef7edf434402ae0cff36679bdc70/formal/proof/engine_0/trace14.vcd",
+    "trace_sha256": "2fb36d54962d5f679362c66bc0d41a9966dda3aed168075ec583ad89f517adcf",
+    "vectors": 23,
+    "compile_code": 0,
+    "run_code": 0
+  },
+  {
+    "case": "C_CK_THREE_WR",
+    "source": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+    "trace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-native-20261005/.ucagent/platform-runs/6bd1ef7edf434402ae0cff36679bdc70/formal/proof/engine_0/trace15.vcd",
+    "trace_sha256": "0671c141f536f3d28cb444098974b66cf3ac3d0776a624fcbcb1c6f1a950ba2a",
+    "vectors": 23,
+    "compile_code": 0,
+    "run_code": 0
+  }
+]

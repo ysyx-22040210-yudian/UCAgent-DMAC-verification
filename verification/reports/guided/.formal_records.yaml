@@ -1,0 +1,2022 @@
+dut: dmac
+planning:
+  project_overview: 对默认参数 ADDR_W=32、LEN_W=32、FIFO_DEPTH=2 的双向 DMAC 开展 SBY 形式化验证：读方向为内存到设备，写方向为设备到内存；主任务使用引导式黑盒接口属性，另由工程师运行原生辅助环境承担完整数据队列、FIFO
+    内部状态和任意长度计数模型义务。
+  verification_scope:
+    included:
+    - 默认参数 32/32/2 下全部 26 个端口的方向、位宽、握手和双向独立行为
+    - host 命令接受、锁存、忙时等待、完成脉冲以及连续命令
+    - 任意起始地址、每次实际内存握手后地址加 8 和 32 位自然回绕
+    - len 表示内存拍数减一，所有 32 位模式合法，内存拍数为 len+1，设备拍数为 4 倍
+    - 内存背压稳定性、低 16 位片段优先的数据拆分与拼接、端到端数据顺序
+    - FIFO 空满、顺序、同拍入出队、满时替换，并以原生辅助参数实例检查深度 1 和非二次幂深度
+    - 低有效异步复位，包括初始复位和传输中再次复位，以及复位后无残留
+    - 双向并发、连续至少三条突发、待处理 host 请求、可达覆盖和有条件的局部前进
+    - 故障对照、真实动态反例回放分支和静态线索与形式结果关联分支
+    excluded:
+    - 综合、时序收敛、跨时钟域以及规格不存在的 busy、status、dev_fixed、字节使能或独立响应通道
+    - 无公平性前提下永久背压场景的最终完成保证
+    - SBY 不支持的自动白盒导出、完整并发 SVA、COI、无界活性和完整空洞性证明
+    fixed_parameters:
+      ADDR_W: 32
+      LEN_W: 32
+      FIFO_DEPTH: 2
+    environment_policy:
+    - 不限制 haddr 对齐或数值，首地址原样使用并按 32 位地址宽度回绕。
+    - 不限制 len 值；len 不是字节数，不设置奇数字节或部分末拍规则。
+    - 不限制数据值，也不限制 mem ready、device req 或 host 请求造成的背压时长。
+    - 仅依据握手协议约束等待期间由环境驱动的请求、命令参数和写入数据稳定；每项 Assume 均须记录规格依据。
+    - rst_n 是低有效异步复位；验证必须覆盖初始复位，并允许活动传输期间再次拉低，不得假定复位只发生一次。
+  strategy:
+  - 先从 README 和两个 RTL 建立 R01 至 R14 的需求追踪，再完成接口理解；本轮在 FG 分组前停下由工程师审查规划与接口。
+  - 主任务引导式（guided）环境只使用 DUT 顶层可见端口，承担接口连接、外部可观察控制与握手安全属性、协议 Assume 和业务 Cover；不得层次引用、注入
+    RTL 或编造白盒导出支持。
+  - 原生辅助（native）环境由工程师独立运行，承担完整数据记分板、FIFO 内部模型、任意 32 位 len 的扩展计数与配额等白盒或长状态义务；其属性和结果使用
+    native 命名空间，不冒充主任务结果。
+  - 安全性使用 prove；业务可达性另行运行 cover。若改用 bmc，则无反例仍记为未决；Cover 命中只证明探针可达，不能替代正确性证明或 COI。
+  - 复位、背压和历史采样条件逐项显式建模；不以地址对齐、len 子集、有限背压或数据约束换取通过。
+  - 对 falsified 属性先核查环境和当前输入签名，再保留真实 RTL 缺陷；启用的反例动态回放与静态关联分支无 Bug 时也走完明确的无 Bug 路径。
+  - 最终统一需求表按 R→FG→FC→CK→属性身份→当前签名运行结果追踪，并分别标注 guided 主任务与 native 辅助工程的已证明、仅覆盖、未决或不支持结论。
+  requirements:
+  - id: R01
+    requirement: 逐一核对 26 个顶层端口的方向和位宽；读方向 mem→DMAC→device，写方向 device→DMAC→mem；两方向资源与进度相互独立。两个
+      device req 均由 device 发起。
+    guided_responsibility: 核对展开后的全部顶层连接，并检查双向外部握手可同时发生且一侧背压不直接阻塞另一侧。
+    native_responsibility: 在辅助环境中复核参数展开和双通道内部状态独立性。
+  - id: R02
+    requirement: host 在 req&&ack 时接受并锁存命令；同方向活动期间不重接受；pending 请求按协议稳定，done 周期不接受，下一周期可接受新命令。
+    guided_responsibility: 检查 ack 条件、参数锁存的外部效果、忙时拒绝、done 间隔及连续至少三条命令。
+    native_responsibility: 用命令序号模型核对每次接受与完成的一一对应。
+  - id: R03
+    requirement: 任意 haddr 直接成为首个内存地址，每次实际内存握手后加 8，等待时稳定，并按 ADDR_W=32 自然回绕。
+    guided_responsibility: 以外部握手历史检查首地址、递增、稳定和回绕；不假定地址对齐。
+    native_responsibility: 以扩展参考地址模型交叉检查长序列回绕。
+  - id: R04
+    requirement: N=len+1；恰有 N 拍内存和 4N 拍设备传输；len=0 与全 1 均合法，计数器需 LEN_W+1 位且不得超额。
+    guided_responsibility: 检查可见握手的局部边界、零长度编码、禁止完成后额外传输，并覆盖代表性进度。
+    native_responsibility: 使用 33 位参考计数和任意 len 符号模型证明接受配额、剩余配额、4:1 比例、零值及全 1 值不溢出。
+  - id: R05
+    requirement: mem valid 等待 ready 时保持有效；读地址稳定，写地址和 64 位写数据均稳定。
+    guided_responsibility: 以顶层信号的逐周期历史直接证明两个内存通道的背压稳定性。
+    native_responsibility: 检查 FIFO 边界交互不会改变被阻塞的队首数据。
+  - id: R06
+    requirement: 读路径把每个 64 位内存字按 [15:0]、[31:16]、[47:32]、[63:48] 依次交给 device，全部字保持端到端顺序和一致性。
+    guided_responsibility: 检查可见 lane 顺序的局部关系和交付握手边界，不声称在无白盒队列时已完成任意积压的全数据证明。
+    native_responsibility: 用无损参考队列记录每次 mem_rd 握手数据，逐拍比对所有 dev_rd 握手数据并证明队列顺序。
+  - id: R07
+    requirement: 写路径按低片段优先把四个 16 位 device 数据拼成一个 64 位内存字，全部字保持端到端顺序和一致性。
+    guided_responsibility: 检查可见四拍拼接的局部关系、第四拍与写有效边界，不把有限历史检查当作完整队列证明。
+    native_responsibility: 用无损片段及整字参考队列逐拍记录 dev_wr 握手，逐字比对所有 mem_wr 握手数据并证明顺序。
+  - id: R08
+    requirement: FIFO 正确处理空、满、全部数据顺序、同拍入出队、满时替换、深度 1 和非二次幂深度，且无同拍数据直通。
+    guided_responsibility: 默认深度 2 下只检查顶层可观察的流控和顺序后果；guided 不导出 FIFO 指针、计数或存储。
+    native_responsibility: 直接实例化或绑定原生 FIFO 模型，分别以 DEPTH=2、1、3 证明容量、指针回绕、计数、同拍 push/pop、满时替换、无直通和数据顺序。
+  - id: R09
+    requirement: done 仅在最后目标端握手后置位一个周期；每个已接受且未被复位中断的命令恰好一次完成，禁止提前、重复或超配额完成。
+    guided_responsibility: 检查 done 脉冲、与最后可见目标握手的局部时序及 done 周期 ack 禁止。
+    native_responsibility: 用完整配额与命令序号模型证明任意长度下完成条件、唯一性和无超额传输。
+  - id: R10
+    requirement: rst_n 低有效异步复位；初始复位和传输中再次复位立即中断命令并清空部分拼接/FIFO，不为被中断命令产生 done；复位后新命令无残留。
+    guided_responsibility: 检查复位期间接口静默、复位后外部控制状态、活动及各类背压期间重置的可达性。
+    native_responsibility: 检查内部 active、计数、lane、拼接和 FIFO 状态清除，并用新命令数据模型证明无残留。
+  - id: R11
+    requirement: 读写方向可同时接受、传输和完成，任一方向的请求或背压不得改变另一方向的配额与数据。
+    guided_responsibility: 建立并发握手及同时完成 Cover，证明跨方向外部控制的非干扰安全条件。
+    native_responsibility: 用两套独立参考队列和计数模型并行核对全数据与配额。
+  - id: R12
+    requirement: 连续至少三条 burst、提前等待的 host 请求和关键状态均应可达；在明确且有限的 ready/req 条件下检查局部前进，不要求永久背压时完成。
+    guided_responsibility: 以业务 Cover 展示连续命令、等待、并发和完成场景；局部前进条件必须显式且不得伪装无界活性。
+    native_responsibility: 补充长序列和模型边界的覆盖见证，并单独标注覆盖而非证明。
+  - id: R13
+    requirement: 每项环境 Assume 都有规格依据，历史引用具备足够有效条件；未决项区分工具限制、深度不足、环境错误和 RTL 缺陷。
+    guided_responsibility: 维护 Assume 审查、输入签名和能力限制；guard witness 仅作触发探针，不声称完整空洞性。
+    native_responsibility: 提供辅助环境假设清单、参数及签名，便于与主任务独立审查。
+  - id: R14
+    requirement: 执行故障对照；真实形式反例必须经动态运行复现；静态线索需与源码位置、预期行为和当前形式证据关联。
+    guided_responsibility: 走完已启用的 counterexample_python_testgen 与 static_bug_validation
+      分支；无 RTL_BUG 时明确记录无需回放和无 Bug 关联结论。
+    native_responsibility: 工程师提供本轮独立原生辅助运行和故障对照的当前签名证据，不继承既有工程结论。
+  native_ck_obligations:
+  - planned_id: NCK-R04-COUNT
+    obligation: 33 位任意长度参考计数：N=len+1、读写各 N 拍内存与 4N 拍设备、全 1 len 无溢出、禁止超额。
+    parameters: ADDR_W=32、LEN_W=32、FIFO_DEPTH=2
+  - planned_id: NCK-R06-RD-DATA
+    obligation: 完整读数据队列：捕获每个 64 位读握手，低片段优先逐一比对所有 16 位交付，覆盖任意 FIFO 积压与任意 burst 长度。
+    parameters: ADDR_W=32、LEN_W=32、FIFO_DEPTH=2
+  - planned_id: NCK-R07-WR-DATA
+    obligation: 完整写数据队列：捕获所有 16 位输入并按四拍拼接，逐一比对 64 位写握手，覆盖任意 FIFO 积压与任意 burst 长度。
+    parameters: ADDR_W=32、LEN_W=32、FIFO_DEPTH=2
+  - planned_id: NCK-R08-FIFO-D2
+    obligation: 默认深度 2 FIFO 的空满容量、顺序、指针回绕、同拍入出队、满时替换和无同拍直通。
+    parameters: WIDTH=64、DEPTH=2
+  - planned_id: NCK-R08-FIFO-D1
+    obligation: 深度 1 FIFO 的空满交替、满时同拍替换、顺序和无同拍直通。
+    parameters: WIDTH=64、DEPTH=1；原生辅助参数实例
+  - planned_id: NCK-R08-FIFO-D3
+    obligation: 非二次幂深度 3 FIFO 的显式末端回绕、容量、同拍入出队和全部数据顺序。
+    parameters: WIDTH=64、DEPTH=3；原生辅助参数实例
+  - planned_id: NCK-R09-DONE
+    obligation: 命令序号与完整配额模型：最后目标端握手后恰好一个 done，禁止提前、重复、遗漏和完成后额外传输。
+    parameters: ADDR_W=32、LEN_W=32、FIFO_DEPTH=2
+  - planned_id: NCK-R10-RESET
+    obligation: 初始及传输中异步复位清空内部计数、lane、部分拼接和 FIFO；复位后新命令数据与旧命令隔离。
+    parameters: 默认参数，并覆盖读写各类部分进度
+  - planned_id: NCK-R11-DUPLEX
+    obligation: 两套完整计数和数据队列并行运行，证明读写同时接受、传输、完成时互不污染。
+    parameters: ADDR_W=32、LEN_W=32、FIFO_DEPTH=2
+  deliverables:
+  - 需求 R01-R14 到 FG、FC、CK、属性身份和当前签名结果的统一追踪表
+  - guided 主任务的原生 Yosys 表达式属性、自动生成 checker、wrapper 与 SBY prove/cover 签名证据
+  - native 辅助工程的上述 NCK 义务、参数、属性身份和由工程师提供的本轮当前签名证据索引
+  - 约束依据、历史有效条件、输入版本和工具能力限制审查记录
+  - 覆盖缺口分类、反例动态回放或明确无 Bug 分支、Bug 报告与静态关联报告
+  - 最终中文总结；只使用与最终输入一致的当前签名运行结果，明确区分主任务和辅助工程，不继承上一任务结论
+  risks:
+  - guided 自动路径不支持白盒导出，若缺少工程师提供的 native 当前签名证据，完整数据、FIFO 和任意长度计数义务必须保持未决。
+  - LEN_W=32 的全长度空间无法靠有界展开穷举；必须依赖正确的扩展计数不变量与归纳证明，bmc 无反例不能升级为证明。
+  - 永久背压合法，因此无公平性时最终完成不是可证明要求；局部前进和 Cover 需避免混同无界活性。
+  - 异步复位可在传输中重入；遗漏复位边界或历史有效条件会制造伪反例或掩盖残留状态。
+  - FIFO 深度 1 和非二次幂检查属于独立 native 参数辅助工程，不能冒充默认参数主任务签名。
+  - Cover 和 guard witness 不能替代 COI 或完整空洞性分析；本引擎的 COI 不支持，vacuity 与 liveness 未建立。
+  - 反例仅在实际动态运行成功且症状一致后才算复现；静态线索在无形式反例时不能仅据无反例判为误报。
+basic_info:
+  module_type: 单时钟、双向独立、带缓冲的数据宽度转换 DMA 控制器
+  parameters:
+  - name: ADDR_W
+    value: 32
+    desc: 内存地址位宽；本轮主任务使用默认值 32
+  - name: LEN_W
+    value: 32
+    desc: host 长度字段位宽；本轮主任务使用默认值 32
+  - name: FIFO_DEPTH
+    value: 2
+    desc: 读写两个 64 位 FIFO 的深度；本轮主任务使用默认值 2
+  ports:
+    inputs:
+    - name: clk
+      width: 1
+      signal_type: clock
+      desc: 唯一时钟，全部协议在上升沿采样
+    - name: rst_n
+      width: 1
+      signal_type: reset
+      desc: 低有效异步复位，可在初始阶段或活动传输中再次拉低
+    - name: host_rd_req
+      width: 1
+      signal_type: data
+      desc: host 提交内存到设备读命令的请求
+    - name: host_rd_haddr
+      width: 32
+      signal_type: data
+      desc: 读命令的任意 32 位内存首地址，不要求对齐
+    - name: host_rd_len
+      width: 32
+      signal_type: data
+      desc: 读命令的 64 位内存拍数减一；所有位模式合法
+    - name: host_wr_req
+      width: 1
+      signal_type: data
+      desc: host 提交设备到内存写命令的请求
+    - name: host_wr_haddr
+      width: 32
+      signal_type: data
+      desc: 写命令的任意 32 位内存首地址，不要求对齐
+    - name: host_wr_len
+      width: 32
+      signal_type: data
+      desc: 写命令的 64 位内存拍数减一；所有位模式合法
+    - name: mem_rd_ready
+      width: 1
+      signal_type: data
+      desc: 内存接受读地址且同一采样沿的 mem_rd_data 已就绪
+    - name: mem_rd_data
+      width: 64
+      signal_type: data
+      desc: mem_rd_valid&&mem_rd_ready 同沿由 DMAC 接收的完整 64 位读数据
+    - name: mem_wr_ready
+      width: 1
+      signal_type: data
+      desc: 内存可在本采样沿接受 64 位写地址和数据
+    - name: dev_rd_req
+      width: 1
+      signal_type: data
+      desc: 由 device 发起的 16 位读请求；等待 ack 时保持请求
+    - name: dev_wr_req
+      width: 1
+      signal_type: data
+      desc: 由 device 发起的 16 位写请求；等待 ack 时保持请求和数据
+    - name: dev_wr_data
+      width: 16
+      signal_type: data
+      desc: device 发给 DMAC 的 16 位写数据
+    outputs:
+    - name: host_rd_ack
+      width: 1
+      signal_type: data
+      desc: 读方向命令接受确认；req、方向空闲、非 done 且非复位时组合置位
+    - name: host_rd_done
+      width: 1
+      signal_type: data
+      desc: 最后一个 16 位读数据被 device 接收后产生的单周期完成指示
+    - name: host_wr_ack
+      width: 1
+      signal_type: data
+      desc: 写方向命令接受确认；req、方向空闲、非 done 且非复位时组合置位
+    - name: host_wr_done
+      width: 1
+      signal_type: data
+      desc: 最后一个 64 位写数据被 memory 接收后产生的单周期完成指示
+    - name: mem_rd_valid
+      width: 1
+      signal_type: data
+      desc: 当前 32 位读地址有效；与 ready 同沿完成一次内存读传输
+    - name: mem_rd_addr
+      width: 32
+      signal_type: data
+      desc: 当前完整 64 位内存读的字节地址，首拍原样采用 haddr
+    - name: mem_wr_valid
+      width: 1
+      signal_type: data
+      desc: 当前 32 位写地址及 64 位写数据有效；与 ready 同沿完成传输
+    - name: mem_wr_addr
+      width: 32
+      signal_type: data
+      desc: 当前完整 64 位内存写的字节地址，首拍原样采用 haddr
+    - name: mem_wr_data
+      width: 64
+      signal_type: data
+      desc: 由四个低片段优先的 16 位 device 写拍拼成的完整内存写数据
+    - name: dev_rd_ack
+      width: 1
+      signal_type: data
+      desc: 存在可交付读数据且 device 请求时置位，并在同沿交付一个 16 位片段
+    - name: dev_rd_data
+      width: 16
+      signal_type: data
+      desc: DMAC 发给 device 的 16 位读数据，按每个 64 位字的低片段优先输出
+    - name: dev_wr_ack
+      width: 1
+      signal_type: data
+      desc: 命令尚有接收配额且当前片段可被接收时，对 device 写请求确认
+  clock_reset:
+    clock_signal: clk
+    clock_count: 1
+    clock_edge: posedge
+    reset_signal: rst_n
+    reset_polarity: 低有效
+    reset_type: 异步置位、建议同步释放
+    reset_edge: negedge
+    reset_behavior: 立即取消读写活动命令，清零地址、33 位剩余计数、2 位片段索引、写拼接寄存器、完成寄存器以及两个 FIFO 的指针和计数；不为被中断命令生成
+      done。
+  interface_protocol:
+    host:
+    - 每个方向在 req&&ack 的 clk 上升沿接受一条命令并锁存 haddr 与 len；活动期间不再确认同方向命令。
+    - 下一条命令可提前提出，但未收到 ack 前 req、haddr 和 len 需保持；done 周期不接受命令，下一周期可接受。
+    - len 是完整 64 位内存拍数减一：N=len+1；不是字节数。每条命令对应 N 个内存拍和 4N 个 16 位 device 拍，无奇数字节末拍。
+    memory:
+    - valid&&ready 的 clk 上升沿完成传输；读 ready 同时表示该沿的读数据有效，不存在独立读响应。
+    - 每个方向的首地址直接使用 haddr；仅在对应内存握手后地址加 8，并按 32 位自然回绕。
+    - valid 在背压期间保持，读地址稳定；写地址和写数据均稳定。
+    device:
+    - dev_rd_req 和 dev_wr_req 都由 device 发起；req&&ack 的上升沿传输一个完整 16 位拍。
+    - 读方向由 DMAC 输出数据，写方向由 device 输出数据；device 写等待时 req 和 data 稳定，device 读等待时 req 稳定。
+  implementation_understanding:
+  - 读方向在接受命令时把 len+1 同时装入 33 位取数和交付剩余计数；深度 2 的 64 位 FIFO 可从 memory 预取。每个队首字由 2 位 lane
+    索引依次选择四个 16 位片段，仅第四片段实际交付后弹出。
+  - 写方向在接受命令时把 len+1 同时装入 33 位收集和提交剩余计数；64 位拼接寄存器按 lane 写入 16 位片段，第四片段握手时把完整字推入深度
+    2 FIFO。FIFO 满时前三片段仍可收集，第四片段等待空间。
+  - 两个 FIFO 是同步、首字可见且无同拍直通的队列；满队列若同拍弹出则允许推入替换，push 与 pop 同拍时计数保持。指针在 DEPTH-1 显式回绕。
+  - 读方向的完成目标端是 device：最后一个字的 lane 3 交付后结束；写方向的完成目标端是 memory：最后一个完整字写握手后结束。done 寄存器默认下一周期清零。
+  - 读写路径分别拥有 active、地址、计数、lane、FIFO 和完成状态，RTL 无跨方向控制依赖，可并发运行。
+  core_functions:
+  - 独立接受并执行内存到设备的读 burst，以及设备到内存的写 burst。
+  - 按每个 64 位字的 [15:0]、[31:16]、[47:32]、[63:48] 顺序完成 64 位与 16 位宽度转换。
+  - 用独立 FIFO 解耦内存和 device 的任意时长背压，同时以实际握手驱动地址、数据和配额进度。
+  - 支持所有 32 位 len 编码、任意 32 位起始地址和地址自然回绕，并允许读写并发。
+  - 异步复位可中断任何部分进度，清除缓冲有效状态并允许复位后接受全新命令。
+  correctness_requirements:
+  - R01：26 个展开端口的方向和位宽准确，两个由 device 发起的 req 不得反向解释，读写方向互相独立。
+  - R02：命令只在 req&&ack 接受，参数被锁存；忙时不重接受，done 周期保留，随后可处理等待命令。
+  - R03：首地址不对齐修正，每次实际内存握手后精确加 8，等待时稳定并按 32 位回绕。
+  - R04：N=len+1，设备拍数为 4N；len=0 和全 1 均正确，33 位计数不溢出且无超额传输。
+  - R05：内存背压期间 valid、地址以及写数据满足稳定性要求。
+  - R06-R07：读拆分和写拼接均低片段优先，所有握手数据端到端一致且保持顺序。
+  - R08：FIFO 的空满、容量、指针、同拍入出队、满时替换和顺序正确；深度 1 与非二次幂由独立原生辅助参数实例检查。
+  - R09：done 只在最后目标端握手后产生一个周期，每条未被复位中断的已接受命令只完成一次，不提前、不重复。
+  - R10：低有效异步复位在初始及传输中均有效，被中断命令不完成，复位后数据、部分拼接和 FIFO 无残留。
+  - R11-R12：双向接受、传输和完成可并发；连续至少三条 burst 与等待请求可达；仅在明确有限服务条件下讨论局部前进。
+  - R13-R14：环境约束和历史条件有规格依据，结论按证据分类；故障、动态回放及静态关联分支按真实当前签名执行。
+spec:
+  function_groups:
+  - id: FG-API
+    name: 接口环境与协议假设
+    description: 对应 R01、R02、R13；在 host 或 device 请求等待确认以及初始复位样本等环境触发场景，期望环境仅遵守已确认的等待保持和初始复位协议，同时不限制地址对齐、len、数据或背压时长；guided
+      仅能约束顶层输入，不能导出内部状态或把公平性作为隐含前提。
+    functions:
+    - id: FC-API-RESET
+      description: 对应 R10、R13；在形式运行的首个采样点触发，期望只要求一个低有效复位样本以建立已知初态，其后 rst_n 仍可任意再次拉低；guided
+        仅对顶层复位输入建模，不假定只复位一次或同步断言。
+      check_points:
+      - id: CK-API-RESET-INITIAL
+        style: Assume
+        description: 对应 R10、R13；仅在形式时间零的首个采样点触发，要求 rst_n 为低以建立确定初态；此 Assume 不约束后续采样，必须允许运行中再次复位。
+        sva_body: '!rst_n'
+        sby_guard: '!uc_past_valid'
+        sby_trigger: '!uc_past_valid'
+    - id: FC-API-HOST-WAIT
+      description: 对应 R02、R13；当某方向 host req 已提出但尚未 ack 时触发，期望该方向 req、haddr 和 len 保持到接受；guided
+        只加入规格明确的顶层等待保持，不限制地址、长度取值或请求等待时长。
+      check_points:
+      - id: CK-API-HOST-RD-WAIT
+        style: Assume
+        description: 对应 R02、R13；当前一采样沿 host_rd_req 有效且 host_rd_ack 无效、期间未复位时触发，要求本采样沿
+          host_rd_req、host_rd_haddr、host_rd_len 保持；不限制其数值或等待周期数。
+        sva_body: host_rd_req && $stable(host_rd_haddr) && $stable(host_rd_len)
+        sby_guard: uc_past_valid && rst_n && $past(rst_n && host_rd_req && !host_rd_ack)
+        sby_trigger: uc_past_valid && rst_n && $past(rst_n && host_rd_req && !host_rd_ack)
+      - id: CK-API-HOST-WR-WAIT
+        style: Assume
+        description: 对应 R02、R13；当前一采样沿 host_wr_req 有效且 host_wr_ack 无效、期间未复位时触发，要求本采样沿
+          host_wr_req、host_wr_haddr、host_wr_len 保持；不限制其数值或等待周期数。
+        sva_body: host_wr_req && $stable(host_wr_haddr) && $stable(host_wr_len)
+        sby_guard: uc_past_valid && rst_n && $past(rst_n && host_wr_req && !host_wr_ack)
+        sby_trigger: uc_past_valid && rst_n && $past(rst_n && host_wr_req && !host_wr_ack)
+    - id: FC-API-DEVICE-WAIT
+      description: 对应 R01、R13；当 device 发起的读或写 req 尚未 ack 时触发，期望读 req 保持、写 req 与写数据保持；guided
+        不要求 device 必须在有限周期内请求或持续请求，因此不引入公平性。
+      check_points:
+      - id: CK-API-DEV-RD-WAIT
+        style: Assume
+        description: 对应 R01、R13；当前一采样沿 dev_rd_req 有效且 dev_rd_ack 无效、期间未复位时触发，要求本采样沿
+          dev_rd_req 保持；不要求 device 在空闲时发起请求。
+        sva_body: dev_rd_req
+        sby_guard: uc_past_valid && rst_n && $past(rst_n && dev_rd_req && !dev_rd_ack)
+        sby_trigger: uc_past_valid && rst_n && $past(rst_n && dev_rd_req && !dev_rd_ack)
+      - id: CK-API-DEV-WR-WAIT-REQ
+        style: Assume
+        description: 对应 R01、R13；当前一采样沿 dev_wr_req 有效且 dev_wr_ack 无效、期间未复位时触发，要求本采样沿
+          dev_wr_req 保持。
+        sva_body: dev_wr_req
+        sby_guard: uc_past_valid && rst_n && $past(rst_n && dev_wr_req && !dev_wr_ack)
+        sby_trigger: uc_past_valid && rst_n && $past(rst_n && dev_wr_req && !dev_wr_ack)
+      - id: CK-API-DEV-WR-WAIT-DATA
+        style: Assume
+        description: 对应 R01、R13；当前一采样沿 dev_wr_req 有效且 dev_wr_ack 无效、期间未复位时触发，要求本采样沿
+          dev_wr_data 保持；不限制数据内容。
+        sva_body: dev_wr_req && $stable(dev_wr_data)
+        sby_guard: uc_past_valid && rst_n && $past(rst_n && dev_wr_req && !dev_wr_ack)
+        sby_trigger: uc_past_valid && rst_n && $past(rst_n && dev_wr_req && !dev_wr_ack)
+  - id: FG-HOST
+    name: 主机命令接受与排队
+    description: 对应 R02、R12；在读写 req 到达、命令活动、done 周期及等待中的下一命令场景，期望 ack 准确表示接受、同方向不重接受且随后可接收新命令；guided
+      通过顶层 req/ack/done 和后续可见行为检查，不声称拥有内部 busy 信号或无限命令队列。
+    functions:
+    - id: FC-HOST-ACK
+      description: 对应 R02；当任一 host ack 置位时触发，期望同方向 req 同时有效且该沿唯一接受命令；guided 可直接判定
+        ack 不得脱离 req，但不引用不存在的 busy 端口。
+      check_points:
+      - id: CK-HOST-RD-ACK-REQ
+        style: Comb
+        description: 对应 R02；当 host_rd_ack 为高时触发，期望同拍 host_rd_req 与 rst_n 均为高，禁止无请求或复位中确认读命令。
+        sva_body: '!host_rd_ack || (host_rd_req && rst_n)'
+        sby_guard: 1'b1
+        sby_trigger: host_rd_ack
+      - id: CK-HOST-WR-ACK-REQ
+        style: Comb
+        description: 对应 R02；当 host_wr_ack 为高时触发，期望同拍 host_wr_req 与 rst_n 均为高，禁止无请求或复位中确认写命令。
+        sva_body: '!host_wr_ack || (host_wr_req && rst_n)'
+        sby_guard: 1'b1
+        sby_trigger: host_wr_ack
+    - id: FC-HOST-LATCH
+      description: 对应 R02、R03、R04；当 req&&ack 接受命令时触发，期望随后首地址和零长度等外部行为使用该沿的 haddr 与
+        len；guided 通过顶层后续行为检查可见锁存效果，不读取内部地址或计数寄存器。
+      check_points:
+      - id: CK-HOST-RD-LATCH-ADDRESS
+        style: Seq
+        description: 对应 R02、R03；读命令接受后的紧邻周期出现首个 mem_rd_valid 且两拍 rst_n 均高时，期望 mem_rd_addr
+          等于接受沿 host_rd_haddr；只检查无等待的一拍固定窗口。
+        sva_body: mem_rd_addr == $past(host_rd_haddr)
+        sby_guard: uc_past_valid && rst_n && $past(rst_n && host_rd_req && host_rd_ack)
+          && mem_rd_valid
+        sby_trigger: uc_past_valid && rst_n && $past(rst_n && host_rd_req && host_rd_ack)
+          && mem_rd_valid
+      - id: CK-HOST-WR-LATCH-ADDRESS
+        style: Seq
+        description: 对应 R02、R03；写命令接受后紧接四拍连续 device 写握手，并在再下一拍首次出现 mem_wr_valid 的固定窗口中，期望
+          mem_wr_addr 等于接受沿 host_wr_haddr；任意等待下的锁存归 native 模型。
+        sva_body: mem_wr_addr == $past(host_wr_haddr, 5)
+        sby_guard: $past(uc_past_valid, 4) && rst_n && $past(rst_n, 1) && $past(rst_n,
+          2) && $past(rst_n, 3) && $past(rst_n, 4) && $past(rst_n, 5) && $past(host_wr_req
+          && host_wr_ack, 5) && $past(dev_wr_req && dev_wr_ack, 4) && $past(dev_wr_req
+          && dev_wr_ack, 3) && $past(dev_wr_req && dev_wr_ack, 2) && $past(dev_wr_req
+          && dev_wr_ack, 1) && mem_wr_valid
+        sby_trigger: $past(uc_past_valid, 4) && rst_n && $past(rst_n, 1) && $past(rst_n,
+          2) && $past(rst_n, 3) && $past(rst_n, 4) && $past(rst_n, 5) && $past(host_wr_req
+          && host_wr_ack, 5) && $past(dev_wr_req && dev_wr_ack, 4) && $past(dev_wr_req
+          && dev_wr_ack, 3) && $past(dev_wr_req && dev_wr_ack, 2) && $past(dev_wr_req
+          && dev_wr_ack, 1) && mem_wr_valid
+    - id: FC-HOST-BUSY
+      description: 对应 R02；当已接受命令尚未完成且未复位时触发，期望同方向即使保持或重新提出 req 也不出现第二次 ack；guided
+        以可见接受/完成历史维护局部活动状态，不把另一方向活动误作阻塞条件。
+      check_points:
+      - id: CK-HOST-RD-NO-IMMEDIATE-REACK
+        style: Seq
+        description: 对应 R02；当前一采样沿接受读命令、本采样尚未复位且不可能已完成时触发，期望 host_rd_ack 为低，即使 host_rd_req
+          继续为高也不重复接受。
+        sva_body: '!host_rd_ack'
+        sby_guard: uc_past_valid && rst_n && $past(rst_n && host_rd_req && host_rd_ack)
+        sby_trigger: uc_past_valid && rst_n && $past(rst_n && host_rd_req && host_rd_ack)
+      - id: CK-HOST-WR-NO-IMMEDIATE-REACK
+        style: Seq
+        description: 对应 R02；当前一采样沿接受写命令、本采样尚未复位且不可能已完成时触发，期望 host_wr_ack 为低，即使 host_wr_req
+          继续为高也不重复接受。
+        sva_body: '!host_wr_ack'
+        sby_guard: uc_past_valid && rst_n && $past(rst_n && host_wr_req && host_wr_ack)
+        sby_trigger: uc_past_valid && rst_n && $past(rst_n && host_wr_req && host_wr_ack)
+    - id: FC-HOST-NEXT
+      description: 对应 R02、R12；当 pending req 跨越 done 周期时触发，期望 done 当周期不 ack，而后续空闲周期可以接受；guided
+        检查有限边界时序，不承诺在 req 未遵守保持或复位重入时接受。
+      check_points:
+      - id: CK-HOST-RD-DONE-NO-ACK
+        style: Comb
+        description: 对应 R02；当 host_rd_done 为高时触发，期望 host_rd_ack 同拍为低，完成报告周期不得接受下一读命令。
+        sva_body: '!host_rd_done || !host_rd_ack'
+        sby_guard: 1'b1
+        sby_trigger: host_rd_done
+      - id: CK-HOST-WR-DONE-NO-ACK
+        style: Comb
+        description: 对应 R02；当 host_wr_done 为高时触发，期望 host_wr_ack 同拍为低，完成报告周期不得接受下一写命令。
+        sva_body: '!host_wr_done || !host_wr_ack'
+        sby_guard: 1'b1
+        sby_trigger: host_wr_done
+      - id: CK-HOST-RD-PENDING-AFTER-DONE
+        style: Seq
+        description: 对应 R02、R12；当读 req 按协议保持跨越前一拍 host_rd_done、前后两拍 rst_n 均高时，期望当前空闲拍
+          host_rd_ack 为高并接受等待命令。
+        sva_body: host_rd_ack && !host_rd_done
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_rd_req)
+          && ($past(host_rd_done && host_rd_req))
+        sby_trigger: 1'b1
+      - id: CK-HOST-WR-PENDING-AFTER-DONE
+        style: Seq
+        description: 对应 R02、R12；当写 req 按协议保持跨越前一拍 host_wr_done、前后两拍 rst_n 均高时，期望当前空闲拍
+          host_wr_ack 为高并接受等待命令。
+        sva_body: host_wr_ack && !host_wr_done
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_wr_req)
+          && ($past(host_wr_done && host_wr_req))
+        sby_trigger: 1'b1
+  - id: FG-READ
+    name: 内存到设备读通道
+    description: 对应 R01、R05、R06；在读命令接受、mem 读握手、设备读请求和背压场景，期望 64 位数据经独立读通道按握手送往 16
+      位设备端；guided 检查顶层读通道控制和可表达的局部数据关系，任意积压下完整数据队列证明保留给 native 义务。
+    functions:
+    - id: FC-READ-MEM-HANDSHAKE
+      description: 对应 R01、R05；在 mem_rd_valid 与 mem_rd_ready 组合变化时触发，期望仅两者同高的上升沿接收一拍
+        64 位数据，ready 同沿携带有效读数据；guided 仅依据顶层握手判定传输，不构造独立响应通道。
+      check_points:
+      - id: CK-READ-MEM-FIRST-AFTER-ACCEPT
+        style: Seq
+        description: 对应 R01、R03；读命令在前一拍接受且当前未复位时，期望当前拍呈现以接受地址为首地址的 mem_rd_valid；若当前
+          ready 为高则同沿接收 mem_rd_data。
+        sva_body: mem_rd_valid && mem_rd_addr == $past(host_rd_haddr)
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_rd_req
+          && host_rd_ack))
+        sby_trigger: 1'b1
+    - id: FC-READ-DEVICE-HANDSHAKE
+      description: 对应 R01、R06；当 device 发起 dev_rd_req 时触发，期望仅在有可交付数据时由 dev_rd_ack 同沿交付一个
+        16 位片段，ack 不得脱离 req；guided 检查顶层 req/ack/data，不读取 FIFO 有效位。
+      check_points:
+      - id: CK-READ-DEV-ACK-REQ
+        style: Comb
+        description: 对应 R01、R06；当 dev_rd_ack 为高时触发，期望同拍 dev_rd_req 与 rst_n 为高；该沿的
+          dev_rd_data 才解释为一个有效 16 位交付。
+        sva_body: '!dev_rd_ack || (dev_rd_req && rst_n)'
+        sby_guard: 1'b1
+        sby_trigger: dev_rd_ack
+    - id: FC-READ-PIPELINE
+      description: 对应 R05、R08；当 memory 与 device 的背压模式不同时触发，期望读侧可预取并按握手独立推进，且未握手时不误计传输；guided
+        只检查外部握手和稳定性，内部深度、空满及全部排队顺序由 native 模型承担。
+      check_points:
+      - id: CK-READ-NO-DEV-TRANSFER-WITHOUT-REQ
+        style: Comb
+        description: 对应 R01、R08；当 dev_rd_req 为低时触发，期望 dev_rd_ack 为低，无论 memory 是否正在预取，禁止无
+          device 请求交付。
+        sva_body: dev_rd_req || !dev_rd_ack
+        sby_guard: 1'b1
+        sby_trigger: '!dev_rd_req'
+      - id: CK-READ-DEV-FRAGMENT-HOLD
+        style: Seq
+        description: 对应 R06；当无积压歧义的 len=0 读命令接受、下一拍完成唯一 mem 读，并在再下一拍发生首个 device 交付的固定三拍窗口中，期望首片段等于该
+          mem 字的低 16 位；完整读数据顺序仍由 NCK-R06-RD-DATA 负责。
+        sva_body: dev_rd_data == ($past(mem_rd_data) & 64'hffff)
+        sby_guard: (($past(uc_past_valid)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)))
+          && ($past(host_rd_req && host_rd_ack && host_rd_len == 0,2)) && ($past(mem_rd_valid
+          && mem_rd_ready)) && (dev_rd_req && dev_rd_ack)
+        sby_trigger: 1'b1
+  - id: FG-WRITE
+    name: 设备到内存写通道
+    description: 对应 R01、R05、R07；在写命令接受、设备写请求、四片段收集、mem 写握手和背压场景，期望 16 位数据经独立写通道组成
+      64 位写拍；guided 检查顶层控制和可表达的局部拼接关系，任意积压下完整数据队列证明保留给 native 义务。
+    functions:
+    - id: FC-WRITE-DEVICE-HANDSHAKE
+      description: 对应 R01、R07；当 device 发起 dev_wr_req 时触发，期望仅 dev_wr_req&&dev_wr_ack
+        的上升沿接收一拍 16 位数据，ack 不得脱离 req；guided 观察顶层握手，不读取收集剩余计数或 lane。
+      check_points:
+      - id: CK-WRITE-DEV-ACK-REQ
+        style: Comb
+        description: 对应 R01、R07；当 dev_wr_ack 为高时触发，期望同拍 dev_wr_req 与 rst_n 为高；仅该沿采样
+          dev_wr_data。
+        sva_body: '!dev_wr_ack || (dev_wr_req && rst_n)'
+        sby_guard: 1'b1
+        sby_trigger: dev_wr_ack
+    - id: FC-WRITE-MEM-HANDSHAKE
+      description: 对应 R01、R05、R07；当 mem_wr_valid 置位或遭遇 ready 背压时触发，期望 valid&&ready
+        同沿提交完整地址和 64 位数据，未握手不提交；guided 直接检查顶层 valid/ready/address/data。
+      check_points:
+      - id: CK-WRITE-MEM-VALID-AFTER-WORD
+        style: Seq
+        description: 对应 R01、R07；写命令接受后紧接四拍连续 dev_wr_req&&dev_wr_ack，在再下一拍的固定窗口中期望
+          mem_wr_valid 呈现所拼完整字；只判定该连续窗口，不要求环境总是连续请求。
+        sva_body: mem_wr_valid
+        sby_guard: (($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_wr_req
+          && host_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(dev_wr_req
+          && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req
+          && dev_wr_ack,4))
+        sby_trigger: 1'b1
+    - id: FC-WRITE-PIPELINE
+      description: 对应 R07、R08；当 device 连续提供片段而 memory 背压时触发，期望允许顶层可见范围内的片段收集并在容量边界施加反压，不出现越权
+        ack；guided 不推断内部 FIFO 空满，完整容量与排队顺序保留给 native 模型。
+      check_points:
+      - id: CK-WRITE-NO-DEV-TRANSFER-WITHOUT-REQ
+        style: Comb
+        description: 对应 R01、R08；当 dev_wr_req 为低时触发，期望 dev_wr_ack 为低，禁止无 device 请求采样写片段。
+        sva_body: dev_wr_req || !dev_wr_ack
+        sby_guard: 1'b1
+        sby_trigger: '!dev_wr_req'
+      - id: CK-WRITE-STALLED-WORD-NOT-OVERWRITTEN
+        style: Seq
+        description: 对应 R05、R08；当前一采样 mem_wr_valid 高且 mem_wr_ready 低、期间未复位时触发，期望本采样仍呈现同一
+          mem_wr_valid、地址和数据，即使 device 侧继续具备局部收集条件。
+        sva_body: mem_wr_valid && $stable(mem_wr_addr) && $stable(mem_wr_data)
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid
+          && !mem_wr_ready))
+        sby_trigger: 1'b1
+  - id: FG-ADDRESS
+    name: 内存地址生成与保持
+    description: 对应 R03、R05；在命令首拍、每次实际 mem 握手、无握手等待和地址溢出场景，期望地址原样从任意 haddr 起步、握手后加
+      8、等待时稳定并按 32 位回绕；guided 可直接观察顶层地址和握手，不添加对齐约束。
+    functions:
+    - id: FC-ADDRESS-FIRST
+      description: 对应 R03；在读命令接受后紧邻读 valid，或写命令接受后四拍连续 device 握手再出现首个写 valid 的固定窗口中，期望
+        mem 地址等于接受沿任意 haddr；任意等待下完整命令关联由 native 模型承担。
+      check_points:
+      - id: CK-ADDRESS-RD-FIRST
+        style: Seq
+        description: 对应 R03；读命令接受后的紧邻周期出现首个 mem_rd_valid 且两拍 rst_n 均高时，期望 mem_rd_addr
+          等于接受沿 host_rd_haddr，包括低三位非零值。
+        sva_body: mem_rd_addr == $past(host_rd_haddr)
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_rd_req
+          && host_rd_ack))
+        sby_trigger: 1'b1
+      - id: CK-ADDRESS-WR-FIRST
+        style: Seq
+        description: 对应 R03；写命令接受后紧接四拍连续 device 写握手，并在再下一拍出现首个 mem_wr_valid 时，期望 mem_wr_addr
+          等于接受沿 host_wr_haddr，包括低三位非零值。
+        sva_body: mem_wr_addr == $past(host_wr_haddr,5)
+        sby_guard: (($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_wr_req
+          && host_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(dev_wr_req
+          && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req
+          && dev_wr_ack,4)) && (mem_wr_valid)
+        sby_trigger: 1'b1
+    - id: FC-ADDRESS-STEP
+      description: 对应 R03；当前一采样沿发生对应 mem valid&&ready 且事务继续时触发，期望下一可见地址按 32 位加 8；guided
+        检查局部相邻握手关系，长序列参考地址可由 native 模型交叉检查。
+      check_points:
+      - id: CK-ADDRESS-RD-STEP
+        style: Seq
+        description: 对应 R03；当前一采样沿 mem_rd_valid&&mem_rd_ready 且下一读拍仍有效、期间未复位时触发，期望
+          mem_rd_addr 等于前一地址按 32 位加 8。
+        sva_body: mem_rd_addr == ($past(mem_rd_addr) + 32'd8)
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_rd_valid
+          && mem_rd_ready)) && (mem_rd_valid)
+        sby_trigger: 1'b1
+      - id: CK-ADDRESS-WR-STEP
+        style: Seq
+        description: 对应 R03；当前一采样沿 mem_wr_valid&&mem_wr_ready 且下一写拍仍有效、期间未复位时触发，期望
+          mem_wr_addr 等于前一地址按 32 位加 8。
+        sva_body: mem_wr_addr == ($past(mem_wr_addr) + 32'd8)
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid
+          && mem_wr_ready)) && (mem_wr_valid)
+        sby_trigger: 1'b1
+    - id: FC-ADDRESS-HOLD
+      description: 对应 R03、R05；当 mem valid 高而 ready 低时触发，期望同方向地址在持续等待期间保持；guided 可直接检查顶层稳定性，不限制背压持续时间。
+      check_points:
+      - id: CK-ADDRESS-RD-HOLD
+        style: Seq
+        description: 对应 R03、R05；当前一采样 mem_rd_valid 高且 mem_rd_ready 低、期间未复位时触发，期望 mem_rd_valid
+          继续为高且 mem_rd_addr 不变。
+        sva_body: (mem_rd_valid) && ($stable(mem_rd_addr))
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_rd_valid
+          && !mem_rd_ready))
+        sby_trigger: 1'b1
+      - id: CK-ADDRESS-WR-HOLD
+        style: Seq
+        description: 对应 R03、R05；当前一采样 mem_wr_valid 高且 mem_wr_ready 低、期间未复位时触发，期望 mem_wr_valid
+          继续为高且 mem_wr_addr 不变。
+        sva_body: (mem_wr_valid) && ($stable(mem_wr_addr)) && ($stable(mem_wr_data))
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid
+          && !mem_wr_ready))
+        sby_trigger: 1'b1
+    - id: FC-ADDRESS-WRAP
+      description: 对应 R03；当地址接近 32 位上界并发生 mem 握手时触发，期望加 8 后按 32 位自然回绕而非饱和或对齐；guided
+        通过顶层相邻地址判定并以 Cover 展示边界可达。
+      check_points:
+      - id: CK-ADDRESS-RD-WRAP
+        style: Seq
+        description: 对应 R03；当前一读地址位于 32 位上界附近并完成握手、下一读拍有效时触发，期望下一 mem_rd_addr 为前值加
+          8 的低 32 位。
+        sva_body: mem_rd_addr == ($past(mem_rd_addr) + 32'd8)
+        sby_guard: (((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_rd_valid
+          && mem_rd_ready)) && (mem_rd_valid)) && ($past(mem_rd_addr > 32'hfffffff7))
+        sby_trigger: 1'b1
+      - id: CK-ADDRESS-WR-WRAP
+        style: Seq
+        description: 对应 R03；当前一写地址位于 32 位上界附近并完成握手、下一写拍有效时触发，期望下一 mem_wr_addr 为前值加
+          8 的低 32 位。
+        sva_body: mem_wr_addr == ($past(mem_wr_addr) + 32'd8)
+        sby_guard: (((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid
+          && mem_wr_ready)) && (mem_wr_valid)) && ($past(mem_wr_addr > 32'hfffffff7))
+        sby_trigger: 1'b1
+  - id: FG-QUOTA
+    name: 长度编码与传输配额
+    description: 对应 R04、R09；在任意 len 命令、零长度、较长长度以及完成边界场景，期望 N=len+1 个 mem 拍和 4N 个 device
+      拍且不超额；guided 只规划顶层可观察的固定有限窗口，完整 33 位任意长度及任意背压配额证明由 planning.native_ck_obligations
+      中的 native 模型承担。
+    functions:
+    - id: FC-QUOTA-ENCODING
+      description: 对应 R04；只在无等待的固定有限窗口中核对接受沿 len=0/1 与一/两拍 64 位 mem 字及四/八拍 16 位 device
+        数据的关系；不限制其他命令 len，任意 32 位编码由 NCK-R04-COUNT 证明。
+      check_points:
+      - id: CK-QUOTA-ENCODING-BOUNDARY
+        style: Seq
+        description: 对应 R04；当固定窗口内可由过去的 host req&&ack 明确归属 len=0 或 len=1 命令时，检查窗口中的
+          mem/device 拍数按 1:4 编码；不使用完成时当前 host_len，任意等待和全长度由 NCK-R04-COUNT 证明。
+        sva_body: (!((($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)))
+          && ($past(host_rd_req && host_rd_ack,6)) && ($past(host_rd_len == 0,6))
+          && ($past(mem_rd_valid && mem_rd_ready,5)) && ($past(dev_rd_req && dev_rd_ack,4))
+          && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2))
+          && ($past(dev_rd_req && dev_rd_ack))) || host_rd_done) && (!((($past(uc_past_valid,9))
+          && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) &&
+          ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7))
+          && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))) && ($past(host_rd_req
+          && host_rd_ack,10)) && ($past(host_rd_len == 1,10)) && ($past(mem_rd_valid
+          && mem_rd_ready,9)) && ($past(mem_rd_valid && mem_rd_ready,8)) && ($past(dev_rd_req
+          && dev_rd_ack,8)) && ($past(dev_rd_req && dev_rd_ack,7)) && ($past(dev_rd_req
+          && dev_rd_ack,6)) && ($past(dev_rd_req && dev_rd_ack,5)) && ($past(dev_rd_req
+          && dev_rd_ack,4)) && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req
+          && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack))) || host_rd_done)
+          && (!((($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)))
+          && ($past(host_wr_req && host_wr_ack,6)) && ($past(host_wr_len == 0,6))
+          && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4))
+          && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2))
+          && ($past(mem_wr_valid && mem_wr_ready))) || host_wr_done) && (!((($past(uc_past_valid,9))
+          && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) &&
+          ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7))
+          && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))) && ($past(host_wr_req
+          && host_wr_ack,10)) && ($past(host_wr_len == 1,10)) && ($past(dev_wr_req
+          && dev_wr_ack,9)) && ($past(dev_wr_req && dev_wr_ack,8)) && ($past(dev_wr_req
+          && dev_wr_ack,7)) && ($past(dev_wr_req && dev_wr_ack,6)) && ($past(dev_wr_req
+          && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req
+          && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(mem_wr_valid
+          && mem_wr_ready,5)) && ($past(mem_wr_valid && mem_wr_ready))) || host_wr_done)
+        sby_guard: uc_past_valid
+        sby_trigger: 1'b1
+    - id: FC-QUOTA-ZERO
+      description: 对应 R04、R09；仅在 len=0 命令接受后紧接唯一 mem 拍和四个连续 device 拍的固定窗口中检查完成边界；不添加强迫连续握手的
+        Assume，任意背压配额由 native 模型承担。
+      check_points:
+      - id: CK-QUOTA-RD-ZERO
+        style: Seq
+        description: 对应 R04、R09；固定窗口为过去接受 host_rd_len=0、下一拍唯一 mem 读、随后四拍连续 device
+          读，当前期望 done；该局部窗口不声称覆盖任意等待。
+        sva_body: host_rd_done
+        sby_guard: (($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)))
+          && ($past(host_rd_req && host_rd_ack,6)) && ($past(host_rd_len == 0,6))
+          && ($past(mem_rd_valid && mem_rd_ready,5)) && ($past(dev_rd_req && dev_rd_ack,4))
+          && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2))
+          && ($past(dev_rd_req && dev_rd_ack))
+        sby_trigger: 1'b1
+      - id: CK-QUOTA-WR-ZERO
+        style: Seq
+        description: 对应 R04、R09；固定窗口为过去接受 host_wr_len=0、随后四拍连续 device 写、再下一拍唯一 mem
+          写握手，当前期望 done；该局部窗口不声称覆盖任意等待。
+        sva_body: host_wr_done
+        sby_guard: (($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)))
+          && ($past(host_wr_req && host_wr_ack,6)) && ($past(host_wr_len == 0,6))
+          && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4))
+          && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2))
+          && ($past(mem_wr_valid && mem_wr_ready))
+        sby_trigger: 1'b1
+    - id: FC-QUOTA-LONG
+      description: 对应 R04、R12；仅在 len=1 命令的两拍 mem 与八拍 device 均落入明确连续窗口时检查首字边界不提前完成及第二字完成；任意背压和
+        33 位全空间由 NCK-R04-COUNT 与 NCK-R09-DONE 负责。
+      check_points:
+      - id: CK-QUOTA-RD-LEN1
+        style: Seq
+        description: 对应 R04、R09；以过去接受沿 host_rd_len=1 关联两拍连续 mem 读和随后八拍连续 device 读的固定窗口，检查首字边界无
+          done、第二字边界后 done；不约束环境必须形成该窗口。
+        sva_body: (host_rd_done) && (!$past(host_rd_done,4))
+        sby_guard: (($past(uc_past_valid,9)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))
+          && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10)))
+          && ($past(host_rd_req && host_rd_ack,10)) && ($past(host_rd_len == 1,10))
+          && ($past(mem_rd_valid && mem_rd_ready,9)) && ($past(mem_rd_valid && mem_rd_ready,8))
+          && ($past(dev_rd_req && dev_rd_ack,8)) && ($past(dev_rd_req && dev_rd_ack,7))
+          && ($past(dev_rd_req && dev_rd_ack,6)) && ($past(dev_rd_req && dev_rd_ack,5))
+          && ($past(dev_rd_req && dev_rd_ack,4)) && ($past(dev_rd_req && dev_rd_ack,3))
+          && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack))
+        sby_trigger: 1'b1
+      - id: CK-QUOTA-WR-LEN1
+        style: Seq
+        description: 对应 R04、R09；以过去接受沿 host_wr_len=1 关联八拍连续 device 写及两个固定位置 mem 写握手的有限窗口，检查首字提交无
+          done、第二字提交后 done；任意等待由 native 模型负责。
+        sva_body: (host_wr_done) && (!$past(host_wr_done,4))
+        sby_guard: (($past(uc_past_valid,9)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))
+          && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10)))
+          && ($past(host_wr_req && host_wr_ack,10)) && ($past(host_wr_len == 1,10))
+          && ($past(dev_wr_req && dev_wr_ack,9)) && ($past(dev_wr_req && dev_wr_ack,8))
+          && ($past(dev_wr_req && dev_wr_ack,7)) && ($past(dev_wr_req && dev_wr_ack,6))
+          && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4))
+          && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2))
+          && ($past(mem_wr_valid && mem_wr_ready,5)) && ($past(mem_wr_valid && mem_wr_ready))
+        sby_trigger: 1'b1
+  - id: FG-DATA
+    name: 数据拆分、拼接与顺序
+    description: 对应 R06、R07；在有效数据握手及四个片段边界场景，期望每个 64 位字按 [15:0]、[31:16]、[47:32]、[63:48]
+      的顺序拆分或拼接；guided 只检查过去接受沿可唯一关联的固定连续窗口，不以猜测或空洞断言替代 native 完整队列和全顺序证明。
+    functions:
+    - id: FC-DATA-READ-FIRST
+      description: 对应 R06；在过去接受 len=0、下一拍唯一 mem 读、再下一拍首个 device 读的无积压固定窗口中，期望交付该字
+        [15:0]；任意 FIFO 积压由 NCK-R06-RD-DATA 负责。
+      check_points:
+      - id: CK-DATA-RD-LOW-FIRST
+        style: Seq
+        description: 对应 R06；固定三拍窗口由过去 host_rd_req&&host_rd_ack 且 host_rd_len=0、下一拍
+          mem_rd_valid&&mem_rd_ready、当前首个 dev_rd_req&&dev_rd_ack 组成，期望当前 dev_rd_data
+          等于该 mem 字 [15:0]。
+        sva_body: dev_rd_data == ($past(mem_rd_data) & 64'hffff)
+        sby_guard: (($past(uc_past_valid)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)))
+          && ($past(host_rd_req && host_rd_ack && host_rd_len == 0,2)) && ($past(mem_rd_valid
+          && mem_rd_ready)) && (dev_rd_req && dev_rd_ack)
+        sby_trigger: 1'b1
+    - id: FC-DATA-READ-LANES
+      description: 对应 R06；仅在过去接受 len=0、唯一 mem 读后连续四拍有效 device 握手的固定窗口中，期望依次匹配四个 16
+        位片段；不声明覆盖等待或积压数据。
+      check_points:
+      - id: CK-DATA-RD-FOUR-LANES
+        style: Seq
+        description: 对应 R06；固定窗口由过去接受 len=0、唯一 mem 读及随后四拍连续 dev_rd_req&&dev_rd_ack
+          构成，期望四拍数据依次为该 mem 字 [15:0]、[31:16]、[47:32]、[63:48]；深历史须充分有效。
+        sva_body: ($past(dev_rd_data,3) == (($past(mem_rd_data,4) >> 0) & 64'hffff))
+          && ($past(dev_rd_data,2) == (($past(mem_rd_data,4) >> 16) & 64'hffff)) &&
+          ($past(dev_rd_data) == (($past(mem_rd_data,4) >> 32) & 64'hffff)) && (dev_rd_data
+          == (($past(mem_rd_data,4) >> 48) & 64'hffff))
+        sby_guard: (($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_rd_req
+          && host_rd_ack,5)) && ($past(host_rd_len == 0,5)) && ($past(mem_rd_valid
+          && mem_rd_ready,4)) && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req
+          && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack)) && (dev_rd_req &&
+          dev_rd_ack)
+        sby_trigger: 1'b1
+    - id: FC-DATA-WRITE-PACK
+      description: 对应 R07；仅在过去接受 len=0 后连续四拍 device 写并在下一拍出现首个 mem 写字的固定窗口中，期望低片段优先拼接；任意等待与积压由
+        NCK-R07-WR-DATA 负责。
+      check_points:
+      - id: CK-DATA-WR-FOUR-LANES
+        style: Seq
+        description: 对应 R07；固定窗口由过去 host_wr_req&&host_wr_ack 且 len=0、随后四拍连续 dev_wr_req&&dev_wr_ack、当前首个
+          mem_wr_valid 构成，期望 mem_wr_data 四个片段按四次接收先后映射。
+        sva_body: mem_wr_data == {$past(dev_wr_data),$past(dev_wr_data,2),$past(dev_wr_data,3),$past(dev_wr_data,4)}
+        sby_guard: (($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_wr_req
+          && host_wr_ack,5)) && ($past(host_wr_len == 0,5)) && ($past(dev_wr_req &&
+          dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req
+          && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack)) && (mem_wr_valid)
+        sby_trigger: 1'b1
+    - id: FC-DATA-ORDER-BOUNDARY
+      description: 对应 R06、R07；仅在过去接受 len=1 且两个完整字按预定连续握手窗口传输时检查两个字的局部先后及数据映射；任意等待、积压与完整无损顺序保持为
+        native 义务。
+      check_points:
+      - id: CK-DATA-RD-TWO-WORD-LOCAL-ORDER
+        style: Seq
+        description: 对应 R06；固定窗口由过去接受 len=1、两拍连续 mem 读及随后八拍连续 device 读构成，期望前四片段来自先接收字、后四片段来自后接收字；不覆盖任意
+          FIFO 积压。
+        sva_body: ($past(dev_rd_data,7) == (($past(mem_rd_data,8) >> 0) & 64'hffff))
+          && ($past(dev_rd_data,6) == (($past(mem_rd_data,8) >> 16) & 64'hffff)) &&
+          ($past(dev_rd_data,5) == (($past(mem_rd_data,8) >> 32) & 64'hffff)) && ($past(dev_rd_data,4)
+          == (($past(mem_rd_data,8) >> 48) & 64'hffff)) && ($past(dev_rd_data,3) ==
+          (($past(mem_rd_data,7) >> 0) & 64'hffff)) && ($past(dev_rd_data,2) == (($past(mem_rd_data,7)
+          >> 16) & 64'hffff)) && ($past(dev_rd_data) == (($past(mem_rd_data,7) >>
+          32) & 64'hffff)) && (dev_rd_data == (($past(mem_rd_data,7) >> 48) & 64'hffff))
+        sby_guard: (($past(uc_past_valid,8)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))
+          && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9))) && ($past(host_rd_req
+          && host_rd_ack,9)) && ($past(host_rd_len == 1,9)) && ($past(mem_rd_valid
+          && mem_rd_ready,8)) && ($past(mem_rd_valid && mem_rd_ready,7)) && ($past(dev_rd_req
+          && dev_rd_ack,7)) && ($past(dev_rd_req && dev_rd_ack,6)) && ($past(dev_rd_req
+          && dev_rd_ack,5)) && ($past(dev_rd_req && dev_rd_ack,4)) && ($past(dev_rd_req
+          && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req
+          && dev_rd_ack)) && (dev_rd_req && dev_rd_ack)
+        sby_trigger: 1'b1
+      - id: CK-DATA-WR-TWO-WORD-LOCAL-ORDER
+        style: Seq
+        description: 对应 R07；固定窗口由过去接受 len=1、八拍连续 device 写及两个固定位置 mem 写字构成，期望第一组四片段字先提交、第二组后提交；任意积压由
+          NCK-R07-WR-DATA 负责。
+        sva_body: (mem_wr_data == {$past(dev_wr_data),$past(dev_wr_data,2),$past(dev_wr_data,3),$past(dev_wr_data,4)})
+          && ($past(mem_wr_data,4) == {$past(dev_wr_data,5),$past(dev_wr_data,6),$past(dev_wr_data,7),$past(dev_wr_data,8)})
+        sby_guard: (($past(uc_past_valid,8)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))
+          && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9))) && ($past(host_wr_req
+          && host_wr_ack,9)) && ($past(host_wr_len == 1,9)) && ($past(dev_wr_req &&
+          dev_wr_ack,8)) && ($past(dev_wr_req && dev_wr_ack,7)) && ($past(dev_wr_req
+          && dev_wr_ack,6)) && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req
+          && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req
+          && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(mem_wr_valid
+          && mem_wr_ready,4)) && (mem_wr_valid && mem_wr_ready)
+        sby_trigger: 1'b1
+  - id: FG-FLOW
+    name: 背压流控与缓冲行为
+    description: 对应 R05、R08；在 mem ready 低、device 请求等待、缓冲空满影响外部握手及连续流动场景，期望 valid、地址、写数据稳定且不发生可见丢拍或越权确认；guided
+      仅检查默认深度 2 的顶层可见后果，FIFO 指针、计数、全部数据顺序及深度 1/3 参数证明保持为 native 白盒义务。
+    functions:
+    - id: FC-FLOW-READ-STALL
+      description: 对应 R05；当 mem_rd_valid 高而 mem_rd_ready 低时触发，期望 valid 保持且 mem_rd_addr
+        稳定直至握手或复位；guided 直接检查顶层信号，不限制背压长度。
+      check_points:
+      - id: CK-FLOW-RD-VALID-ADDRESS-HOLD
+        style: Seq
+        description: 对应 R05；当前一采样 mem_rd_valid 高且 mem_rd_ready 低、期间未复位时触发，期望本采样 mem_rd_valid
+          仍高且 mem_rd_addr 稳定；任意长背压逐拍适用。
+        sva_body: (mem_rd_valid) && ($stable(mem_rd_addr))
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_rd_valid
+          && !mem_rd_ready))
+        sby_trigger: 1'b1
+    - id: FC-FLOW-WRITE-STALL
+      description: 对应 R05；当 mem_wr_valid 高而 mem_wr_ready 低时触发，期望 valid、mem_wr_addr
+        和 mem_wr_data 均稳定直至握手或复位；guided 可完整表达此顶层安全义务。
+      check_points:
+      - id: CK-FLOW-WR-VALID-ADDRESS-DATA-HOLD
+        style: Seq
+        description: 对应 R05；当前一采样 mem_wr_valid 高且 mem_wr_ready 低、期间未复位时触发，期望本采样 mem_wr_valid
+          仍高，mem_wr_addr 与 mem_wr_data 均稳定；不限制背压持续时间。
+        sva_body: (mem_wr_valid) && ($stable(mem_wr_addr)) && ($stable(mem_wr_data))
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid
+          && !mem_wr_ready))
+        sby_trigger: 1'b1
+    - id: FC-FLOW-DEVICE-GATING
+      description: 对应 R01、R08；当 device req 低或命令无可见传输资格时触发，期望对应 ack 不形成脱离请求的传输；guided
+        检查 req/ack 关系，不以内部 FIFO 空满作为属性前提。
+      check_points:
+      - id: CK-FLOW-DEV-RD-ACK-GATED
+        style: Comb
+        description: 对应 R01、R08；当 dev_rd_req 为低或 rst_n 为低时触发，期望 dev_rd_ack 为低；不以内层
+          FIFO valid 作为前提。
+        sva_body: (dev_rd_req && rst_n) || !dev_rd_ack
+        sby_guard: 1'b1
+        sby_trigger: '!dev_rd_req || !rst_n'
+      - id: CK-FLOW-DEV-WR-ACK-GATED
+        style: Comb
+        description: 对应 R01、R08；当 dev_wr_req 为低或 rst_n 为低时触发，期望 dev_wr_ack 为低；不以内层配额或
+          FIFO ready 作为前提。
+        sva_body: (dev_wr_req && rst_n) || !dev_wr_ack
+        sby_guard: 1'b1
+        sby_trigger: '!dev_wr_req || !rst_n'
+    - id: FC-FLOW-BUFFER-BOUNDARY
+      description: 对应 R08；当读预取或写提交遭遇连续不对称背压时触发，期望顶层不会覆盖被阻塞的有效写拍或产生无请求设备握手；guided 仅检查可见后果，FIFO
+        容量、同拍替换、指针和深度 1/3 由 NCK-R08 系列负责。
+      check_points:
+      - id: CK-FLOW-BUFFER-WR-VISIBLE-HOLD
+        style: Seq
+        description: 对应 R08；当外部可见 mem 写队首遭遇背压时触发，期望地址和数据保持而不被后续 device 片段覆盖；只判定顶层后果。
+        sva_body: mem_wr_valid && $stable(mem_wr_addr) && $stable(mem_wr_data)
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid
+          && !mem_wr_ready))
+        sby_trigger: 1'b1
+      - id: CK-FLOW-BUFFER-NO-SPURIOUS-DEV-ACK
+        style: Comb
+        description: 对应 R08；当任一 device req 无效时触发，期望其 ack 无效，不因内部同拍 FIFO 入出队或替换产生可见伪传输；内部
+          FIFO 行为由 NCK-R08 系列另证。
+        sva_body: (dev_rd_req || !dev_rd_ack) && (dev_wr_req || !dev_wr_ack)
+        sby_guard: 1'b1
+        sby_trigger: '!dev_rd_req || !dev_wr_req'
+  - id: FG-RESET
+    name: 异步复位与事务中断
+    description: 对应 R10、R13；在初始低有效复位以及读写传输、部分片段或背压期间再次拉低 rst_n 的场景，期望接口立即静默、被中断命令不产生
+      done 且复位后可开始无残留的新命令；guided 检查顶层可见清零和恢复，内部 FIFO、计数及部分拼接彻底清除由 native 义务补足。
+    functions:
+    - id: FC-RESET-SILENCE
+      description: 对应 R10；只要 rst_n 为低即触发，期望 host ack/done、mem valid 和 device ack 均为低；guided
+        不通过 disable 条件跳过复位周期，而是直接检查顶层复位行为。
+      check_points:
+      - id: CK-RESET-HOST-SILENCE
+        style: Comb
+        description: 对应 R10；任一采样或组合观察中 rst_n 为低时触发，期望 host_rd_ack、host_wr_ack、host_rd_done、host_wr_done
+          全部为低。
+        sva_body: '!host_rd_ack && !host_wr_ack && !host_rd_done && !host_wr_done'
+        sby_guard: '!rst_n'
+        sby_trigger: '!rst_n'
+      - id: CK-RESET-DATA-CHANNEL-SILENCE
+        style: Comb
+        description: 对应 R10；任一采样或组合观察中 rst_n 为低时触发，期望 mem_rd_valid、mem_wr_valid、dev_rd_ack、dev_wr_ack
+          全部为低。
+        sva_body: '!mem_rd_valid && !mem_wr_valid && !dev_rd_ack && !dev_wr_ack'
+        sby_guard: '!rst_n'
+        sby_trigger: '!rst_n'
+    - id: FC-RESET-INTERRUPT
+      description: 对应 R10；当读写活动、mem 背压或设备部分片段期间 rst_n 再次拉低时触发，期望当前命令立即中断且接口静默；guided
+        用顶层历史和 Cover 检查中断，内部状态清除由 NCK-R10-RESET 补足。
+      check_points:
+      - id: CK-RESET-INTERRUPT-RD-STALL
+        style: Seq
+        description: 对应 R10；当前一采样 mem_rd_valid 高且被背压、随后 rst_n 拉低时触发，期望复位采样的 mem_rd_valid
+          与读侧 ack/done 均为低。
+        sva_body: (!mem_rd_valid) && (!host_rd_ack) && (!host_rd_done)
+        sby_guard: (uc_past_valid) && (!rst_n) && ($past(rst_n && mem_rd_valid &&
+          !mem_rd_ready))
+        sby_trigger: 1'b1
+      - id: CK-RESET-INTERRUPT-WR-STALL
+        style: Seq
+        description: 对应 R10；当前一采样 mem_wr_valid 高且被背压、随后 rst_n 拉低时触发，期望复位采样的 mem_wr_valid
+          与写侧 ack/done 均为低。
+        sva_body: (!mem_wr_valid) && (!host_wr_ack) && (!host_wr_done)
+        sby_guard: (uc_past_valid) && (!rst_n) && ($past(rst_n && mem_wr_valid &&
+          !mem_wr_ready))
+        sby_trigger: 1'b1
+      - id: CK-RESET-INTERRUPT-DEVICE-PARTIAL
+        style: Seq
+        description: 对应 R10；固定两拍窗口中前一拍发生任一 device 握手而当前 rst_n 拉低时，期望当前两个 device ack
+          和两个 done 均为低；内部 lane 与部分拼接清除留给 NCK-R10-RESET。
+        sva_body: '!dev_rd_ack && !dev_wr_ack && !host_rd_done && !host_wr_done'
+        sby_guard: (uc_past_valid) && (!rst_n) && ($past(rst_n && ((dev_rd_req &&
+          dev_rd_ack) || (dev_wr_req && dev_wr_ack))))
+        sby_trigger: 1'b1
+    - id: FC-RESET-NO-DONE
+      description: 对应 R09、R10；当命令在最终目标握手前被复位中断时触发，期望复位期间及释放后的旧命令不产生 done；guided 检查可见
+        done 因果窗口，完整命令身份隔离由 native 模型承担。
+      check_points:
+      - id: CK-RESET-RD-DONE-CLEAR
+        style: Seq
+        description: 对应 R09、R10；当当前 rst_n 低，或前一拍 rst_n 低而当前已释放且尚未接受新读命令时，期望 host_rd_done
+          为低；旧命令不得在释放后一拍补发完成。
+        sva_body: '!host_rd_done'
+        sby_guard: (uc_past_valid) && (!rst_n || !$past(rst_n))
+        sby_trigger: 1'b1
+      - id: CK-RESET-WR-DONE-CLEAR
+        style: Seq
+        description: 对应 R09、R10；当当前 rst_n 低，或前一拍 rst_n 低而当前已释放且尚未接受新写命令时，期望 host_wr_done
+          为低；旧命令不得在释放后一拍补发完成。
+        sva_body: '!host_wr_done'
+        sby_guard: (uc_past_valid) && (!rst_n || !$past(rst_n))
+        sby_trigger: 1'b1
+    - id: FC-RESET-RESTART
+      description: 对应 R10、R12；仅在复位释放后紧接新命令接受及无等待首地址窗口中检查使用新 haddr 且旧 done 不残留；任意等待及完整旧数据隔离由
+        native 数据模型证明。
+      check_points:
+      - id: CK-RESET-RD-RESTART-ADDRESS
+        style: Seq
+        description: 对应 R10；过去两拍依次为复位低、接受新读命令，当前紧邻出现 mem_rd_valid 时，期望 mem_rd_addr
+          使用该接受沿的新 host_rd_haddr 且旧 host_rd_done 未出现。
+        sva_body: (mem_rd_addr == $past(host_rd_haddr)) && (!host_rd_done)
+        sby_guard: (((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_rd_req
+          && host_rd_ack))) && ($past(uc_past_valid)) && (!$past(rst_n,2))
+        sby_trigger: 1'b1
+      - id: CK-RESET-WR-RESTART-ADDRESS
+        style: Seq
+        description: 对应 R10；复位释放后接受新写命令，紧接四拍连续 device 写并在下一拍出现 mem_wr_valid 的固定窗口中，期望
+          mem_wr_addr 使用接受沿的新 host_wr_haddr 且旧 done 未出现。
+        sva_body: (mem_wr_addr == $past(host_wr_haddr,5)) && (!host_wr_done)
+        sby_guard: ((($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_wr_req
+          && host_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(dev_wr_req
+          && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req
+          && dev_wr_ack,4)) && (mem_wr_valid)) && ($past(uc_past_valid,5)) && (!$past(rst_n,6))
+        sby_trigger: 1'b1
+  - id: FG-CONCURRENT
+    name: 双向并发与相互独立
+    description: 对应 R01、R11；在读写同时请求、同时接受、同时传输、单侧背压和同时完成场景，期望两方向可并发且顶层控制互不阻塞；guided
+      的同时传输项只作可达 Cover，外部进度安全由各方向属性检查，完整跨通道独立性由 native oracle 与 RD/WR_PROGRESS 证明。
+    functions:
+    - id: FC-CONCURRENT-ACCEPT
+      description: 对应 R01、R11；当复位释放后的空闲边界读写 host req 同时有效时，期望两个方向可在同一拍各自 ack；guided
+        检查该固定边界，不以另一方向为约束。
+      check_points:
+      - id: CK-CONCURRENT-ACCEPT-AFTER-RESET
+        style: Seq
+        description: 对应 R01、R11；当前一采样处于复位、释放后读写 req 同时有效且两个 done 均低时触发，期望 host_rd_ack
+          与 host_wr_ack 同拍均为高，检查接受路径不互斥。
+        sva_body: host_rd_ack && host_wr_ack
+        sby_guard: (uc_past_valid) && (rst_n) && (!$past(rst_n)) && (host_rd_req &&
+          host_wr_req && !host_rd_done && !host_wr_done)
+        sby_trigger: 1'b1
+    - id: FC-CONCURRENT-TRANSFER
+      description: 对应 R11；分别探测 mem 侧和 device 侧读写握手同拍成立的可达性；这些 Cover 不证明互不干扰，跨通道安全由各方向进度属性及独立
+        native oracle 负责。
+      check_points:
+      - id: CK-CONCURRENT-MEM-TRANSFER
+        style: Cover
+        description: 对应 R11；以 mem_rd_valid&&mem_rd_ready 与 mem_wr_valid&&mem_wr_ready
+          同拍成立为触发场景，期望获得两个 64 位 mem 传输并发可达见证；Cover 不证明互不干扰。
+        sva_body: rst_n && mem_rd_valid && mem_rd_ready && mem_wr_valid && mem_wr_ready
+        sby_guard: 1'b1
+        sby_trigger: 1'b1
+      - id: CK-CONCURRENT-DEVICE-TRANSFER
+        style: Cover
+        description: 对应 R11；以 dev_rd_req&&dev_rd_ack 与 dev_wr_req&&dev_wr_ack 同拍成立为触发场景，期望获得两个
+          16 位 device 传输并发可达见证；Cover 不证明互不干扰。
+        sva_body: rst_n && dev_rd_req && dev_rd_ack && dev_wr_req && dev_wr_ack
+        sby_guard: 1'b1
+        sby_trigger: 1'b1
+    - id: FC-CONCURRENT-STALL
+      description: 对应 R01、R11；在一侧 mem valid 被背压且另一侧同拍已具备完整握手的局部窗口，检查被阻塞侧保持并记录另一侧实际握手；不要求背压解除，完整无跨通道约束行为由
+        native RD/WR_PROGRESS oracle 负责。
+      check_points:
+      - id: CK-CONCURRENT-RD-STALL-WR-HANDSHAKE
+        style: Seq
+        description: 对应 R01、R11；当前拍写 mem 握手成立且前一拍读 mem valid 被 ready 低阻塞、两拍未复位时，期望读
+          valid 和地址保持；写握手本身只作为观察条件，不作同义后件。
+        sva_body: mem_rd_valid && $stable(mem_rd_addr)
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_rd_valid
+          && !mem_rd_ready)) && (mem_wr_valid && mem_wr_ready)
+        sby_trigger: 1'b1
+      - id: CK-CONCURRENT-WR-STALL-RD-HANDSHAKE
+        style: Seq
+        description: 对应 R01、R11；当前拍读 mem 握手成立且前一拍写 mem valid 被 ready 低阻塞、两拍未复位时，期望写
+          valid、地址和数据保持；读握手本身只作为观察条件。
+        sva_body: mem_wr_valid && $stable(mem_wr_addr) && $stable(mem_wr_data)
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid
+          && !mem_wr_ready)) && (mem_rd_valid && mem_rd_ready)
+        sby_trigger: 1'b1
+    - id: FC-CONCURRENT-DONE
+      description: 对应 R09、R11；在可由固定 len=0 窗口确认读最终 device 握手与写最终 mem 握手同沿发生时，期望下一拍两个
+        done 同时呈现；任意长度最终身份由 NCK-R11-DUPLEX 负责。
+      check_points:
+      - id: CK-CONCURRENT-SIMULTANEOUS-DONE
+        style: Seq
+        description: 对应 R09、R11；当前两个 done 同时为高时检查前一拍读 dev 与写 mem 目标握手均成立；并发完成的固定窗口可达性另由
+          Cover 检查，任意长度最终身份由 native 双模型补足。
+        sva_body: $past(rst_n && dev_rd_req && dev_rd_ack) && $past(rst_n && mem_wr_valid
+          && mem_wr_ready)
+        sby_guard: uc_past_valid && host_rd_done && host_wr_done
+        sby_trigger: host_rd_done && host_wr_done
+  - id: FG-DONE
+    name: 完成时序与命令边界
+    description: 对应 R02、R09；在读方向最后一个 device 握手、写方向最后一个 mem 握手、done 周期及后续命令场景，期望 done
+      在最终目标端握手后一拍呈现单周期脉冲、期间不 ack 且不得提前或重复；guided 检查顶层局部时序，任意长度下一命令一完成的全配额证明由 native
+      模型承担。
+    functions:
+    - id: FC-DONE-PULSE
+      description: 对应 R09；当 host_rd_done 或 host_wr_done 置位时触发，期望下一采样周期回落，不连续保持或重复；guided
+        可直接检查脉冲宽度，命令级唯一性由 native 序号模型补足。
+      check_points:
+      - id: CK-DONE-RD-ONE-CYCLE
+        style: Seq
+        description: 对应 R09；当前一采样 host_rd_done 为高且本采样未复位时触发，期望 host_rd_done 已回落，禁止连续两个周期保持读完成。
+        sva_body: '!host_rd_done'
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_rd_done))
+        sby_trigger: 1'b1
+      - id: CK-DONE-WR-ONE-CYCLE
+        style: Seq
+        description: 对应 R09；当前一采样 host_wr_done 为高且本采样未复位时触发，期望 host_wr_done 已回落，禁止连续两个周期保持写完成。
+        sva_body: '!host_wr_done'
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_wr_done))
+        sby_trigger: 1'b1
+    - id: FC-DONE-READ-CAUSE
+      description: 对应 R09；当 host_rd_done 置位时触发，期望前一采样沿发生 dev_rd_req&&dev_rd_ack；guided
+        证明可见目标端因果，任意长度最终拍身份由 NCK-R09-DONE 负责。
+      check_points:
+      - id: CK-DONE-RD-PREV-DEV-HANDSHAKE
+        style: Seq
+        description: 对应 R09；当 host_rd_done 为高时触发，期望前一采样沿 dev_rd_req&&dev_rd_ack 成立且
+          rst_n 为高；不把后件直接用作 guard，最终配额身份由 NCK-R09-DONE 证明。
+        sva_body: $past(dev_rd_req && dev_rd_ack && rst_n)
+        sby_guard: (uc_past_valid) && (host_rd_done)
+        sby_trigger: host_rd_done
+    - id: FC-DONE-WRITE-CAUSE
+      description: 对应 R09；当 host_wr_done 置位时触发，期望前一采样沿发生 mem_wr_valid&&mem_wr_ready；guided
+        证明可见目标端因果，完整任意长度因果由 native 配额模型负责。
+      check_points:
+      - id: CK-DONE-WR-PREV-MEM-HANDSHAKE
+        style: Seq
+        description: 对应 R09；当 host_wr_done 为高时触发，期望前一采样沿 mem_wr_valid&&mem_wr_ready
+          成立且 rst_n 为高；不把后件直接用作 guard，最终配额身份由 NCK-R09-DONE 证明。
+        sva_body: $past(mem_wr_valid && mem_wr_ready && rst_n)
+        sby_guard: (uc_past_valid) && (host_wr_done)
+        sby_trigger: host_wr_done
+    - id: FC-DONE-ACK-GAP
+      description: 对应 R02、R09；当某方向 done 为高且 host req 等待时触发，期望同方向 ack 为低，随后空闲周期方可接受；guided
+        直接检查顶层 ack/done 边界，不要求请求在复位时保持。
+      check_points:
+      - id: CK-DONE-RD-NO-ACK
+        style: Comb
+        description: 对应 R02、R09；当 host_rd_done 为高时触发，期望 host_rd_ack 为低，无论 host_rd_req
+          是否等待。
+        sva_body: '!host_rd_done || !host_rd_ack'
+        sby_guard: 1'b1
+        sby_trigger: host_rd_done
+      - id: CK-DONE-WR-NO-ACK
+        style: Comb
+        description: 对应 R02、R09；当 host_wr_done 为高时触发，期望 host_wr_ack 为低，无论 host_wr_req
+          是否等待。
+        sva_body: '!host_wr_done || !host_wr_ack'
+        sby_guard: 1'b1
+        sby_trigger: host_wr_done
+      - id: CK-DONE-RD-NEXT-ACK
+        style: Seq
+        description: 对应 R02、R09；当读 req 按协议跨越前一拍 done 保持且当前未复位时，期望当前 host_rd_done 已低并由
+          host_rd_ack 接受新命令。
+        sva_body: host_rd_ack && !host_rd_done
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_rd_req)
+          && ($past(host_rd_done && host_rd_req))
+        sby_trigger: 1'b1
+      - id: CK-DONE-WR-NEXT-ACK
+        style: Seq
+        description: 对应 R02、R09；当写 req 按协议跨越前一拍 done 保持且当前未复位时，期望当前 host_wr_done 已低并由
+          host_wr_ack 接受新命令。
+        sva_body: host_wr_ack && !host_wr_done
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_wr_req)
+          && ($past(host_wr_done && host_wr_req))
+        sby_trigger: 1'b1
+  - id: FG-COVERAGE
+    name: 业务场景可达性
+    description: 对应 R03、R04、R10、R11、R12；在非对齐地址、零长度、较长长度、固定连续三命令窗口、等待请求、传输中复位、并发握手及同时完成场景，期望获得独立业务
+      Cover 见证；Cover 不添加连续握手 Assume，且不是 COI、正确性证明、完整空洞性检查或无界活性证明。
+    functions:
+    - id: FC-COVER-NONALIGNED
+      description: 对应 R03、R12；读侧探测接受后紧邻首 valid，写侧探测接受后四拍连续 device 写再出现首 valid，且接受沿
+        haddr 低三位非零并原样呈现；不将非对齐或连续握手作为 Assume。
+      check_points:
+      - id: CK-COVER-RD-NONALIGNED
+        style: Cover
+        description: 对应 R03、R12；固定两拍窗口中先接受 host_rd_haddr[2:0] 非零的读命令，当前首个 mem_rd_valid
+          使用该接受沿地址，期望获得非对齐读见证。
+        sva_body: (mem_rd_valid) && (mem_rd_addr == $past(host_rd_haddr))
+        sby_guard: (((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_rd_req
+          && host_rd_ack))) && ($past(host_rd_haddr[2:0] != 3'b0))
+        sby_trigger: 1'b1
+      - id: CK-COVER-WR-NONALIGNED
+        style: Cover
+        description: 对应 R03、R12；固定六拍窗口中先接受 host_wr_haddr[2:0] 非零的写命令，随后四拍连续 device
+          写，当前首个 mem_wr_valid 使用接受沿地址，期望获得非对齐写见证。
+        sva_body: (mem_wr_valid) && (mem_wr_addr == $past(host_wr_haddr,5))
+        sby_guard: ((($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_wr_req
+          && host_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(dev_wr_req
+          && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req
+          && dev_wr_ack,4)) && (mem_wr_valid)) && ($past(host_wr_haddr[2:0] != 3'b0,5))
+        sby_trigger: 1'b1
+    - id: FC-COVER-ZERO
+      description: 对应 R04、R09、R12；探测 len=0 接受后无等待形成完整固定事务窗口；不添加连续握手 Assume，Cover 也不替代任意背压安全判定。
+      check_points:
+      - id: CK-COVER-RD-LEN0-COMPLETE
+        style: Cover
+        description: 对应 R04、R09、R12；固定七拍窗口依次为接受 host_rd_len=0、唯一 mem 读、四拍连续 device
+          读、当前 host_rd_done，期望获得读见证。
+        sva_body: host_rd_done
+        sby_guard: (($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)))
+          && ($past(host_rd_req && host_rd_ack,6)) && ($past(host_rd_len == 0,6))
+          && ($past(mem_rd_valid && mem_rd_ready,5)) && ($past(dev_rd_req && dev_rd_ack,4))
+          && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2))
+          && ($past(dev_rd_req && dev_rd_ack))
+        sby_trigger: 1'b1
+      - id: CK-COVER-WR-LEN0-COMPLETE
+        style: Cover
+        description: 对应 R04、R09、R12；固定七拍窗口依次为接受 host_wr_len=0、四拍连续 device 写、唯一 mem
+          写、当前 host_wr_done，期望获得写见证。
+        sva_body: host_wr_done
+        sby_guard: (($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)))
+          && ($past(host_wr_req && host_wr_ack,6)) && ($past(host_wr_len == 0,6))
+          && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4))
+          && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2))
+          && ($past(mem_wr_valid && mem_wr_ready))
+        sby_trigger: 1'b1
+    - id: FC-COVER-LONG
+      description: 对应 R04、R12；探测 len=1 完整连续窗口，以及 len>1 的固定连续多拍前缀；不限制其他输入，也不将有限见证称为全长度或任意背压证明。
+      check_points:
+      - id: CK-COVER-RD-LEN1
+        style: Cover
+        description: 对应 R04、R12；固定窗口中由过去接受沿 host_rd_len=1 关联两拍连续 mem 读、八拍连续 device
+          读及当前完成，期望获得两字读见证。
+        sva_body: host_rd_done
+        sby_guard: (($past(uc_past_valid,9)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))
+          && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10)))
+          && ($past(host_rd_req && host_rd_ack,10)) && ($past(host_rd_len == 1,10))
+          && ($past(mem_rd_valid && mem_rd_ready,9)) && ($past(mem_rd_valid && mem_rd_ready,8))
+          && ($past(dev_rd_req && dev_rd_ack,8)) && ($past(dev_rd_req && dev_rd_ack,7))
+          && ($past(dev_rd_req && dev_rd_ack,6)) && ($past(dev_rd_req && dev_rd_ack,5))
+          && ($past(dev_rd_req && dev_rd_ack,4)) && ($past(dev_rd_req && dev_rd_ack,3))
+          && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack))
+        sby_trigger: 1'b1
+      - id: CK-COVER-WR-LEN1
+        style: Cover
+        description: 对应 R04、R12；固定窗口中由过去接受沿 host_wr_len=1 关联八拍连续 device 写、两个固定位置 mem
+          写及当前完成，期望获得两字写见证。
+        sva_body: host_wr_done
+        sby_guard: (($past(uc_past_valid,9)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))
+          && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10)))
+          && ($past(host_wr_req && host_wr_ack,10)) && ($past(host_wr_len == 1,10))
+          && ($past(dev_wr_req && dev_wr_ack,9)) && ($past(dev_wr_req && dev_wr_ack,8))
+          && ($past(dev_wr_req && dev_wr_ack,7)) && ($past(dev_wr_req && dev_wr_ack,6))
+          && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4))
+          && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2))
+          && ($past(mem_wr_valid && mem_wr_ready,5)) && ($past(mem_wr_valid && mem_wr_ready))
+        sby_trigger: 1'b1
+      - id: CK-COVER-RD-LONGER-PROGRESS
+        style: Cover
+        description: 对应 R04、R12；固定窗口中接受沿 host_rd_len>1 后出现三拍连续 mem 读及连续 device 读前缀，期望展示更长读事务局部进度；不要求完成任意
+          len。
+        sva_body: (mem_rd_valid && mem_rd_ready) && ($past(mem_rd_valid && mem_rd_ready,3))
+          && ($past(mem_rd_valid && mem_rd_ready,4)) && ($past(dev_rd_req && dev_rd_ack))
+          && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack,3))
+          && (dev_rd_req && dev_rd_ack)
+        sby_guard: (($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_rd_req
+          && host_rd_ack && host_rd_len > 1,5))
+        sby_trigger: 1'b1
+      - id: CK-COVER-WR-LONGER-PROGRESS
+        style: Cover
+        description: 对应 R04、R12；固定窗口中接受沿 host_wr_len>1 后出现十二拍连续 device 写及三个固定位置 mem
+          写，期望展示更长写事务局部进度；不要求完成任意 len。
+        sva_body: (($past(uc_past_valid,12)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))
+          && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))
+          && ($past(rst_n,11)) && ($past(rst_n,12)) && ($past(rst_n,13))) && ($past(host_wr_req
+          && host_wr_ack && host_wr_len > 1,13)) && ($past(dev_wr_req && dev_wr_ack))
+          && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack,3))
+          && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,5))
+          && ($past(dev_wr_req && dev_wr_ack,6)) && ($past(dev_wr_req && dev_wr_ack,7))
+          && ($past(dev_wr_req && dev_wr_ack,8)) && ($past(dev_wr_req && dev_wr_ack,9))
+          && ($past(dev_wr_req && dev_wr_ack,10)) && ($past(dev_wr_req && dev_wr_ack,11))
+          && ($past(dev_wr_req && dev_wr_ack,12)) && ($past(mem_wr_valid && mem_wr_ready,8))
+          && ($past(mem_wr_valid && mem_wr_ready,4)) && (mem_wr_valid && mem_wr_ready)
+        sby_guard: 1'b1
+        sby_trigger: 1'b1
+    - id: FC-COVER-THREE-COMMANDS
+      description: 对应 R02、R12；在深度 40 内探测同方向三条 len=0 命令各按固定无等待七拍节奏接受和完成；这是特定连续窗口 Cover，不证明任意等待或无限持续服务。
+      check_points:
+      - id: CK-COVER-RD-THREE-COMMANDS
+        style: Cover
+        description: 对应 R02、R12；固定 21 拍窗口中三次接受沿均携带 host_rd_len=0，且按接受、唯一 mem 读、四拍
+          device 读、done、下一拍接受的节奏连续出现，期望获得三读命令见证。
+        sva_body: (($past(uc_past_valid,19)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))
+          && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))
+          && ($past(rst_n,11)) && ($past(rst_n,12)) && ($past(rst_n,13)) && ($past(rst_n,14))
+          && ($past(rst_n,15)) && ($past(rst_n,16)) && ($past(rst_n,17)) && ($past(rst_n,18))
+          && ($past(rst_n,19)) && ($past(rst_n,20))) && (host_rd_done) && ($past(host_rd_done,7))
+          && ($past(host_rd_done,14)) && ($past(host_rd_req && host_rd_ack && host_rd_len
+          == 0,6)) && ($past(host_rd_req && host_rd_ack && host_rd_len == 0,13)) &&
+          ($past(host_rd_req && host_rd_ack && host_rd_len == 0,20))
+        sby_guard: 1'b1
+        sby_trigger: 1'b1
+      - id: CK-COVER-WR-THREE-COMMANDS
+        style: Cover
+        description: 对应 R02、R12；固定 21 拍窗口中三次接受沿均携带 host_wr_len=0，且按接受、四拍 device 写、唯一
+          mem 写、done、下一拍接受的节奏连续出现，期望获得三写命令见证。
+        sva_body: (($past(uc_past_valid,19)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))
+          && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))
+          && ($past(rst_n,11)) && ($past(rst_n,12)) && ($past(rst_n,13)) && ($past(rst_n,14))
+          && ($past(rst_n,15)) && ($past(rst_n,16)) && ($past(rst_n,17)) && ($past(rst_n,18))
+          && ($past(rst_n,19)) && ($past(rst_n,20))) && (host_wr_done) && ($past(host_wr_done,7))
+          && ($past(host_wr_done,14)) && ($past(host_wr_req && host_wr_ack && host_wr_len
+          == 0,6)) && ($past(host_wr_req && host_wr_ack && host_wr_len == 0,13)) &&
+          ($past(host_wr_req && host_wr_ack && host_wr_len == 0,20))
+        sby_guard: 1'b1
+        sby_trigger: 1'b1
+    - id: FC-COVER-PENDING
+      description: 对应 R02、R12；探测 req 在前一拍 done 周期保持等待并于紧邻下一拍获 ack 的两拍窗口；环境等待保持 Assume
+        仍不限制此前等待长度。
+      check_points:
+      - id: CK-COVER-RD-PENDING-NEXT
+        style: Cover
+        description: 对应 R02、R12；固定两拍窗口中 host_rd_req 在前一拍 host_rd_done 时有效且无 ack，当前仍有效并获得
+          host_rd_ack，期望获得等待读命令见证。
+        sva_body: host_rd_ack
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_rd_req)
+          && ($past(host_rd_done && host_rd_req))
+        sby_trigger: 1'b1
+      - id: CK-COVER-WR-PENDING-NEXT
+        style: Cover
+        description: 对应 R02、R12；固定两拍窗口中 host_wr_req 在前一拍 host_wr_done 时有效且无 ack，当前仍有效并获得
+          host_wr_ack，期望获得等待写命令见证。
+        sva_body: host_wr_ack
+        sby_guard: ((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_wr_req)
+          && ($past(host_wr_done && host_wr_req))
+        sby_trigger: 1'b1
+    - id: FC-COVER-RESET-REENTRY
+      description: 对应 R10、R12；以紧邻采样的背压或 device 握手、再次复位及释放后新命令接受组成有限窗口，覆盖中断与恢复；不假定初始样本后复位保持高。
+      check_points:
+      - id: CK-COVER-RESET-RD-STALL
+        style: Cover
+        description: 对应 R10、R12；固定四拍窗口依次观察读 mem 背压、rst_n 再次拉低、释放并接受新读命令，期望获得读背压中断恢复见证。
+        sva_body: ($past(uc_past_valid)) && (rst_n) && (!$past(rst_n)) && ($past(rst_n
+          && mem_rd_valid && !mem_rd_ready,2)) && (host_rd_req && host_rd_ack)
+        sby_guard: 1'b1
+        sby_trigger: 1'b1
+      - id: CK-COVER-RESET-WR-STALL
+        style: Cover
+        description: 对应 R10、R12；固定四拍窗口依次观察写 mem 背压、rst_n 再次拉低、释放并接受新写命令，期望获得写背压中断恢复见证。
+        sva_body: ($past(uc_past_valid)) && (rst_n) && (!$past(rst_n)) && ($past(rst_n
+          && mem_wr_valid && !mem_wr_ready,2)) && (host_wr_req && host_wr_ack)
+        sby_guard: 1'b1
+        sby_trigger: 1'b1
+      - id: CK-COVER-RESET-PARTIAL-FRAGMENT
+        style: Cover
+        description: 对应 R10、R12；固定四拍窗口依次观察任一 device 握手、rst_n 再次拉低、释放并接受同方向新命令，期望获得部分进度中断见证。
+        sva_body: ($past(uc_past_valid)) && (rst_n) && (!$past(rst_n)) && ($past(rst_n
+          && ((dev_rd_req && dev_rd_ack) || (dev_wr_req && dev_wr_ack)),2)) && ((host_rd_req
+          && host_rd_ack) || (host_wr_req && host_wr_ack))
+        sby_guard: 1'b1
+        sby_trigger: 1'b1
+    - id: FC-COVER-DUPLEX
+      description: 对应 R11、R12；以读写同拍接受并在固定短窗口中出现同拍读写有效握手为目标，期望获得双向并发见证；Cover 不证明内部双队列数据独立。
+      check_points:
+      - id: CK-COVER-DUPLEX-OVERLAP
+        style: Cover
+        description: 对应 R11、R12；固定短窗口由过去读写命令同拍接受及当前读写 mem 或 device 握手同拍成立构成，期望获得双向并发传输见证。
+        sva_body: (($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))
+          && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past((host_rd_req
+          && host_rd_ack) && (host_wr_req && host_wr_ack),5)) && (mem_rd_valid &&
+          mem_rd_ready) && (dev_wr_req && dev_wr_ack)
+        sby_guard: 1'b1
+        sby_trigger: 1'b1
+    - id: FC-COVER-SIMULTANEOUS-DONE
+      description: 对应 R09、R11、R12；以两个方向当前 host done 同拍为触发目标，期望获得同时完成见证；命中只表明场景可达，不证明完成配额正确。
+      check_points:
+      - id: CK-COVER-SIMULTANEOUS-DONE
+        style: Cover
+        description: 对应 R09、R11、R12；以 host_rd_done 与 host_wr_done 同一采样周期均为高为触发场景，期望获得双向同时完成见证；Cover
+          命中不证明完成配额正确。
+        sva_body: rst_n && host_rd_done && host_wr_done
+        sby_guard: 1'b1
+        sby_trigger: 1'b1
+run_results:
+  timestamp: '2026-10-04T19:07:47.106053+00:00'
+  log_hash: b86a333d69a9e938058a2b3f55ab1aeff779998565ed4b0b5aaf388edfe77309
+  stats:
+    pass_count: 0
+    fail_count: 0
+    tt_count: 0
+    cover_pass_count: 75
+    cover_fail_count: 7
+    undecided_count: 63
+  failing_properties: []
+  tt_properties: []
+  undecided_properties:
+  - A_CK_HOST_RD_ACK_REQ
+  - A_CK_HOST_WR_ACK_REQ
+  - A_CK_HOST_RD_LATCH_ADDRESS
+  - A_CK_HOST_WR_LATCH_ADDRESS
+  - A_CK_HOST_RD_NO_IMMEDIATE_REACK
+  - A_CK_HOST_WR_NO_IMMEDIATE_REACK
+  - A_CK_HOST_RD_DONE_NO_ACK
+  - A_CK_HOST_WR_DONE_NO_ACK
+  - A_CK_HOST_RD_PENDING_AFTER_DONE
+  - A_CK_HOST_WR_PENDING_AFTER_DONE
+  - A_CK_READ_MEM_FIRST_AFTER_ACCEPT
+  - A_CK_READ_DEV_ACK_REQ
+  - A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ
+  - A_CK_READ_DEV_FRAGMENT_HOLD
+  - A_CK_WRITE_DEV_ACK_REQ
+  - A_CK_WRITE_MEM_VALID_AFTER_WORD
+  - A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ
+  - A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN
+  - A_CK_ADDRESS_RD_FIRST
+  - A_CK_ADDRESS_WR_FIRST
+  - A_CK_ADDRESS_RD_STEP
+  - A_CK_ADDRESS_WR_STEP
+  - A_CK_ADDRESS_RD_HOLD
+  - A_CK_ADDRESS_WR_HOLD
+  - A_CK_ADDRESS_RD_WRAP
+  - A_CK_ADDRESS_WR_WRAP
+  - A_CK_QUOTA_ENCODING_BOUNDARY
+  - A_CK_QUOTA_RD_ZERO
+  - A_CK_QUOTA_WR_ZERO
+  - A_CK_QUOTA_RD_LEN1
+  - A_CK_QUOTA_WR_LEN1
+  - A_CK_DATA_RD_LOW_FIRST
+  - A_CK_DATA_RD_FOUR_LANES
+  - A_CK_DATA_WR_FOUR_LANES
+  - A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER
+  - A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER
+  - A_CK_FLOW_RD_VALID_ADDRESS_HOLD
+  - A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD
+  - A_CK_FLOW_DEV_RD_ACK_GATED
+  - A_CK_FLOW_DEV_WR_ACK_GATED
+  - A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD
+  - A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK
+  - A_CK_RESET_HOST_SILENCE
+  - A_CK_RESET_DATA_CHANNEL_SILENCE
+  - A_CK_RESET_INTERRUPT_RD_STALL
+  - A_CK_RESET_INTERRUPT_WR_STALL
+  - A_CK_RESET_INTERRUPT_DEVICE_PARTIAL
+  - A_CK_RESET_RD_DONE_CLEAR
+  - A_CK_RESET_WR_DONE_CLEAR
+  - A_CK_RESET_RD_RESTART_ADDRESS
+  - A_CK_RESET_WR_RESTART_ADDRESS
+  - A_CK_CONCURRENT_ACCEPT_AFTER_RESET
+  - A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE
+  - A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE
+  - A_CK_CONCURRENT_SIMULTANEOUS_DONE
+  - A_CK_DONE_RD_ONE_CYCLE
+  - A_CK_DONE_WR_ONE_CYCLE
+  - A_CK_DONE_RD_PREV_DEV_HANDSHAKE
+  - A_CK_DONE_WR_PREV_MEM_HANDSHAKE
+  - A_CK_DONE_RD_NO_ACK
+  - A_CK_DONE_WR_NO_ACK
+  - A_CK_DONE_RD_NEXT_ACK
+  - A_CK_DONE_WR_NEXT_ACK
+  uncovered_signals: []
+  iteration_history: []
+analysis:
+  tt_entries: []
+  fa_entries:
+  - id: FA-A_CK_HOST_RD_ACK_REQ
+    prop_name: A_CK_HOST_RD_ACK_REQ
+    analysis: 对应 R02；当 host_rd_ack 为高时触发，期望同拍 host_rd_req 与 rst_n 均为高，禁止无请求或复位中确认读命令。
+      当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_HOST_WR_ACK_REQ
+    prop_name: A_CK_HOST_WR_ACK_REQ
+    analysis: 对应 R02；当 host_wr_ack 为高时触发，期望同拍 host_wr_req 与 rst_n 均为高，禁止无请求或复位中确认写命令。
+      当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_HOST_RD_LATCH_ADDRESS
+    prop_name: A_CK_HOST_RD_LATCH_ADDRESS
+    analysis: 对应 R02、R03；读命令接受后的紧邻周期出现首个 mem_rd_valid 且两拍 rst_n 均高时，期望 mem_rd_addr
+      等于接受沿 host_rd_haddr；只检查无等待的一拍固定窗口。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_HOST_WR_LATCH_ADDRESS
+    prop_name: A_CK_HOST_WR_LATCH_ADDRESS
+    analysis: 对应 R02、R03；写命令接受后紧接四拍连续 device 写握手，并在再下一拍首次出现 mem_wr_valid 的固定窗口中，期望
+      mem_wr_addr 等于接受沿 host_wr_haddr；任意等待下的锁存归 native 模型。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_HOST_RD_NO_IMMEDIATE_REACK
+    prop_name: A_CK_HOST_RD_NO_IMMEDIATE_REACK
+    analysis: 对应 R02；当前一采样沿接受读命令、本采样尚未复位且不可能已完成时触发，期望 host_rd_ack 为低，即使 host_rd_req
+      继续为高也不重复接受。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_HOST_WR_NO_IMMEDIATE_REACK
+    prop_name: A_CK_HOST_WR_NO_IMMEDIATE_REACK
+    analysis: 对应 R02；当前一采样沿接受写命令、本采样尚未复位且不可能已完成时触发，期望 host_wr_ack 为低，即使 host_wr_req
+      继续为高也不重复接受。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_HOST_RD_DONE_NO_ACK
+    prop_name: A_CK_HOST_RD_DONE_NO_ACK
+    analysis: 对应 R02；当 host_rd_done 为高时触发，期望 host_rd_ack 同拍为低，完成报告周期不得接受下一读命令。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_HOST_WR_DONE_NO_ACK
+    prop_name: A_CK_HOST_WR_DONE_NO_ACK
+    analysis: 对应 R02；当 host_wr_done 为高时触发，期望 host_wr_ack 同拍为低，完成报告周期不得接受下一写命令。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_HOST_RD_PENDING_AFTER_DONE
+    prop_name: A_CK_HOST_RD_PENDING_AFTER_DONE
+    analysis: 对应 R02、R12；当读 req 按协议保持跨越前一拍 host_rd_done、前后两拍 rst_n 均高时，期望当前空闲拍 host_rd_ack
+      为高并接受等待命令。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_HOST_WR_PENDING_AFTER_DONE
+    prop_name: A_CK_HOST_WR_PENDING_AFTER_DONE
+    analysis: 对应 R02、R12；当写 req 按协议保持跨越前一拍 host_wr_done、前后两拍 rst_n 均高时，期望当前空闲拍 host_wr_ack
+      为高并接受等待命令。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_READ_MEM_FIRST_AFTER_ACCEPT
+    prop_name: A_CK_READ_MEM_FIRST_AFTER_ACCEPT
+    analysis: 对应 R01、R03；读命令在前一拍接受且当前未复位时，期望当前拍呈现以接受地址为首地址的 mem_rd_valid；若当前 ready
+      为高则同沿接收 mem_rd_data。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_READ_DEV_ACK_REQ
+    prop_name: A_CK_READ_DEV_ACK_REQ
+    analysis: 对应 R01、R06；当 dev_rd_ack 为高时触发，期望同拍 dev_rd_req 与 rst_n 为高；该沿的 dev_rd_data
+      才解释为一个有效 16 位交付。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ
+    prop_name: A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ
+    analysis: 对应 R01、R08；当 dev_rd_req 为低时触发，期望 dev_rd_ack 为低，无论 memory 是否正在预取，禁止无
+      device 请求交付。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_READ_DEV_FRAGMENT_HOLD
+    prop_name: A_CK_READ_DEV_FRAGMENT_HOLD
+    analysis: 对应 R06；当无积压歧义的 len=0 读命令接受、下一拍完成唯一 mem 读，并在再下一拍发生首个 device 交付的固定三拍窗口中，期望首片段等于该
+      mem 字的低 16 位；完整读数据顺序仍由 NCK-R06-RD-DATA 负责。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_WRITE_DEV_ACK_REQ
+    prop_name: A_CK_WRITE_DEV_ACK_REQ
+    analysis: 对应 R01、R07；当 dev_wr_ack 为高时触发，期望同拍 dev_wr_req 与 rst_n 为高；仅该沿采样 dev_wr_data。
+      当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_WRITE_MEM_VALID_AFTER_WORD
+    prop_name: A_CK_WRITE_MEM_VALID_AFTER_WORD
+    analysis: 对应 R01、R07；写命令接受后紧接四拍连续 dev_wr_req&&dev_wr_ack，在再下一拍的固定窗口中期望 mem_wr_valid
+      呈现所拼完整字；只判定该连续窗口，不要求环境总是连续请求。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ
+    prop_name: A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ
+    analysis: 对应 R01、R08；当 dev_wr_req 为低时触发，期望 dev_wr_ack 为低，禁止无 device 请求采样写片段。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN
+    prop_name: A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN
+    analysis: 对应 R05、R08；当前一采样 mem_wr_valid 高且 mem_wr_ready 低、期间未复位时触发，期望本采样仍呈现同一
+      mem_wr_valid、地址和数据，即使 device 侧继续具备局部收集条件。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_ADDRESS_RD_FIRST
+    prop_name: A_CK_ADDRESS_RD_FIRST
+    analysis: 对应 R03；读命令接受后的紧邻周期出现首个 mem_rd_valid 且两拍 rst_n 均高时，期望 mem_rd_addr 等于接受沿
+      host_rd_haddr，包括低三位非零值。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_ADDRESS_WR_FIRST
+    prop_name: A_CK_ADDRESS_WR_FIRST
+    analysis: 对应 R03；写命令接受后紧接四拍连续 device 写握手，并在再下一拍出现首个 mem_wr_valid 时，期望 mem_wr_addr
+      等于接受沿 host_wr_haddr，包括低三位非零值。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_ADDRESS_RD_STEP
+    prop_name: A_CK_ADDRESS_RD_STEP
+    analysis: 对应 R03；当前一采样沿 mem_rd_valid&&mem_rd_ready 且下一读拍仍有效、期间未复位时触发，期望 mem_rd_addr
+      等于前一地址按 32 位加 8。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_ADDRESS_WR_STEP
+    prop_name: A_CK_ADDRESS_WR_STEP
+    analysis: 对应 R03；当前一采样沿 mem_wr_valid&&mem_wr_ready 且下一写拍仍有效、期间未复位时触发，期望 mem_wr_addr
+      等于前一地址按 32 位加 8。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_ADDRESS_RD_HOLD
+    prop_name: A_CK_ADDRESS_RD_HOLD
+    analysis: 对应 R03、R05；当前一采样 mem_rd_valid 高且 mem_rd_ready 低、期间未复位时触发，期望 mem_rd_valid
+      继续为高且 mem_rd_addr 不变。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_ADDRESS_WR_HOLD
+    prop_name: A_CK_ADDRESS_WR_HOLD
+    analysis: 对应 R03、R05；当前一采样 mem_wr_valid 高且 mem_wr_ready 低、期间未复位时触发，期望 mem_wr_valid
+      继续为高且 mem_wr_addr 不变。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_ADDRESS_RD_WRAP
+    prop_name: A_CK_ADDRESS_RD_WRAP
+    analysis: 对应 R03；当前一读地址位于 32 位上界附近并完成握手、下一读拍有效时触发，期望下一 mem_rd_addr 为前值加 8 的低 32
+      位。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_ADDRESS_WR_WRAP
+    prop_name: A_CK_ADDRESS_WR_WRAP
+    analysis: 对应 R03；当前一写地址位于 32 位上界附近并完成握手、下一写拍有效时触发，期望下一 mem_wr_addr 为前值加 8 的低 32
+      位。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_QUOTA_ENCODING_BOUNDARY
+    prop_name: A_CK_QUOTA_ENCODING_BOUNDARY
+    analysis: 对应 R04；当固定窗口内可由过去的 host req&&ack 明确归属 len=0 或 len=1 命令时，检查窗口中的 mem/device
+      拍数按 1:4 编码；不使用完成时当前 host_len，任意等待和全长度由 NCK-R04-COUNT 证明。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_QUOTA_RD_ZERO
+    prop_name: A_CK_QUOTA_RD_ZERO
+    analysis: 对应 R04、R09；固定窗口为过去接受 host_rd_len=0、下一拍唯一 mem 读、随后四拍连续 device 读，当前期望
+      done；该局部窗口不声称覆盖任意等待。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_QUOTA_WR_ZERO
+    prop_name: A_CK_QUOTA_WR_ZERO
+    analysis: 对应 R04、R09；固定窗口为过去接受 host_wr_len=0、随后四拍连续 device 写、再下一拍唯一 mem 写握手，当前期望
+      done；该局部窗口不声称覆盖任意等待。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_QUOTA_RD_LEN1
+    prop_name: A_CK_QUOTA_RD_LEN1
+    analysis: 对应 R04、R09；以过去接受沿 host_rd_len=1 关联两拍连续 mem 读和随后八拍连续 device 读的固定窗口，检查首字边界无
+      done、第二字边界后 done；不约束环境必须形成该窗口。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为uncovered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_QUOTA_WR_LEN1
+    prop_name: A_CK_QUOTA_WR_LEN1
+    analysis: 对应 R04、R09；以过去接受沿 host_wr_len=1 关联八拍连续 device 写及两个固定位置 mem 写握手的有限窗口，检查首字提交无
+      done、第二字提交后 done；任意等待由 native 模型负责。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为uncovered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DATA_RD_LOW_FIRST
+    prop_name: A_CK_DATA_RD_LOW_FIRST
+    analysis: 对应 R06；固定三拍窗口由过去 host_rd_req&&host_rd_ack 且 host_rd_len=0、下一拍 mem_rd_valid&&mem_rd_ready、当前首个
+      dev_rd_req&&dev_rd_ack 组成，期望当前 dev_rd_data 等于该 mem 字 [15:0]。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DATA_RD_FOUR_LANES
+    prop_name: A_CK_DATA_RD_FOUR_LANES
+    analysis: 对应 R06；固定窗口由过去接受 len=0、唯一 mem 读及随后四拍连续 dev_rd_req&&dev_rd_ack 构成，期望四拍数据依次为该
+      mem 字 [15:0]、[31:16]、[47:32]、[63:48]；深历史须充分有效。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DATA_WR_FOUR_LANES
+    prop_name: A_CK_DATA_WR_FOUR_LANES
+    analysis: 对应 R07；固定窗口由过去 host_wr_req&&host_wr_ack 且 len=0、随后四拍连续 dev_wr_req&&dev_wr_ack、当前首个
+      mem_wr_valid 构成，期望 mem_wr_data 四个片段按四次接收先后映射。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER
+    prop_name: A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER
+    analysis: 对应 R06；固定窗口由过去接受 len=1、两拍连续 mem 读及随后八拍连续 device 读构成，期望前四片段来自先接收字、后四片段来自后接收字；不覆盖任意
+      FIFO 积压。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER
+    prop_name: A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER
+    analysis: 对应 R07；固定窗口由过去接受 len=1、八拍连续 device 写及两个固定位置 mem 写字构成，期望第一组四片段字先提交、第二组后提交；任意积压由
+      NCK-R07-WR-DATA 负责。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_FLOW_RD_VALID_ADDRESS_HOLD
+    prop_name: A_CK_FLOW_RD_VALID_ADDRESS_HOLD
+    analysis: 对应 R05；当前一采样 mem_rd_valid 高且 mem_rd_ready 低、期间未复位时触发，期望本采样 mem_rd_valid
+      仍高且 mem_rd_addr 稳定；任意长背压逐拍适用。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD
+    prop_name: A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD
+    analysis: 对应 R05；当前一采样 mem_wr_valid 高且 mem_wr_ready 低、期间未复位时触发，期望本采样 mem_wr_valid
+      仍高，mem_wr_addr 与 mem_wr_data 均稳定；不限制背压持续时间。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_FLOW_DEV_RD_ACK_GATED
+    prop_name: A_CK_FLOW_DEV_RD_ACK_GATED
+    analysis: 对应 R01、R08；当 dev_rd_req 为低或 rst_n 为低时触发，期望 dev_rd_ack 为低；不以内层 FIFO valid
+      作为前提。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_FLOW_DEV_WR_ACK_GATED
+    prop_name: A_CK_FLOW_DEV_WR_ACK_GATED
+    analysis: 对应 R01、R08；当 dev_wr_req 为低或 rst_n 为低时触发，期望 dev_wr_ack 为低；不以内层配额或 FIFO
+      ready 作为前提。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD
+    prop_name: A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD
+    analysis: 对应 R08；当外部可见 mem 写队首遭遇背压时触发，期望地址和数据保持而不被后续 device 片段覆盖；只判定顶层后果。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK
+    prop_name: A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK
+    analysis: 对应 R08；当任一 device req 无效时触发，期望其 ack 无效，不因内部同拍 FIFO 入出队或替换产生可见伪传输；内部
+      FIFO 行为由 NCK-R08 系列另证。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_RESET_HOST_SILENCE
+    prop_name: A_CK_RESET_HOST_SILENCE
+    analysis: 对应 R10；任一采样或组合观察中 rst_n 为低时触发，期望 host_rd_ack、host_wr_ack、host_rd_done、host_wr_done
+      全部为低。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_RESET_DATA_CHANNEL_SILENCE
+    prop_name: A_CK_RESET_DATA_CHANNEL_SILENCE
+    analysis: 对应 R10；任一采样或组合观察中 rst_n 为低时触发，期望 mem_rd_valid、mem_wr_valid、dev_rd_ack、dev_wr_ack
+      全部为低。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_RESET_INTERRUPT_RD_STALL
+    prop_name: A_CK_RESET_INTERRUPT_RD_STALL
+    analysis: 对应 R10；当前一采样 mem_rd_valid 高且被背压、随后 rst_n 拉低时触发，期望复位采样的 mem_rd_valid
+      与读侧 ack/done 均为低。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_RESET_INTERRUPT_WR_STALL
+    prop_name: A_CK_RESET_INTERRUPT_WR_STALL
+    analysis: 对应 R10；当前一采样 mem_wr_valid 高且被背压、随后 rst_n 拉低时触发，期望复位采样的 mem_wr_valid
+      与写侧 ack/done 均为低。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_RESET_INTERRUPT_DEVICE_PARTIAL
+    prop_name: A_CK_RESET_INTERRUPT_DEVICE_PARTIAL
+    analysis: 对应 R10；固定两拍窗口中前一拍发生任一 device 握手而当前 rst_n 拉低时，期望当前两个 device ack 和两个 done
+      均为低；内部 lane 与部分拼接清除留给 NCK-R10-RESET。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_RESET_RD_DONE_CLEAR
+    prop_name: A_CK_RESET_RD_DONE_CLEAR
+    analysis: 对应 R09、R10；当当前 rst_n 低，或前一拍 rst_n 低而当前已释放且尚未接受新读命令时，期望 host_rd_done
+      为低；旧命令不得在释放后一拍补发完成。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_RESET_WR_DONE_CLEAR
+    prop_name: A_CK_RESET_WR_DONE_CLEAR
+    analysis: 对应 R09、R10；当当前 rst_n 低，或前一拍 rst_n 低而当前已释放且尚未接受新写命令时，期望 host_wr_done
+      为低；旧命令不得在释放后一拍补发完成。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_RESET_RD_RESTART_ADDRESS
+    prop_name: A_CK_RESET_RD_RESTART_ADDRESS
+    analysis: 对应 R10；过去两拍依次为复位低、接受新读命令，当前紧邻出现 mem_rd_valid 时，期望 mem_rd_addr 使用该接受沿的新
+      host_rd_haddr 且旧 host_rd_done 未出现。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_RESET_WR_RESTART_ADDRESS
+    prop_name: A_CK_RESET_WR_RESTART_ADDRESS
+    analysis: 对应 R10；复位释放后接受新写命令，紧接四拍连续 device 写并在下一拍出现 mem_wr_valid 的固定窗口中，期望 mem_wr_addr
+      使用接受沿的新 host_wr_haddr 且旧 done 未出现。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_CONCURRENT_ACCEPT_AFTER_RESET
+    prop_name: A_CK_CONCURRENT_ACCEPT_AFTER_RESET
+    analysis: 对应 R01、R11；当前一采样处于复位、释放后读写 req 同时有效且两个 done 均低时触发，期望 host_rd_ack 与 host_wr_ack
+      同拍均为高，检查接受路径不互斥。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE
+    prop_name: A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE
+    analysis: 对应 R01、R11；当前拍写 mem 握手成立且前一拍读 mem valid 被 ready 低阻塞、两拍未复位时，期望读 valid
+      和地址保持；写握手本身只作为观察条件，不作同义后件。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE
+    prop_name: A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE
+    analysis: 对应 R01、R11；当前拍读 mem 握手成立且前一拍写 mem valid 被 ready 低阻塞、两拍未复位时，期望写 valid、地址和数据保持；读握手本身只作为观察条件。
+      当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_CONCURRENT_SIMULTANEOUS_DONE
+    prop_name: A_CK_CONCURRENT_SIMULTANEOUS_DONE
+    analysis: 对应 R09、R11；当前两个 done 同时为高时检查前一拍读 dev 与写 mem 目标握手均成立；并发完成的固定窗口可达性另由 Cover
+      检查，任意长度最终身份由 native 双模型补足。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DONE_RD_ONE_CYCLE
+    prop_name: A_CK_DONE_RD_ONE_CYCLE
+    analysis: 对应 R09；当前一采样 host_rd_done 为高且本采样未复位时触发，期望 host_rd_done 已回落，禁止连续两个周期保持读完成。
+      当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DONE_WR_ONE_CYCLE
+    prop_name: A_CK_DONE_WR_ONE_CYCLE
+    analysis: 对应 R09；当前一采样 host_wr_done 为高且本采样未复位时触发，期望 host_wr_done 已回落，禁止连续两个周期保持写完成。
+      当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DONE_RD_PREV_DEV_HANDSHAKE
+    prop_name: A_CK_DONE_RD_PREV_DEV_HANDSHAKE
+    analysis: 对应 R09；当 host_rd_done 为高时触发，期望前一采样沿 dev_rd_req&&dev_rd_ack 成立且 rst_n
+      为高；不把后件直接用作 guard，最终配额身份由 NCK-R09-DONE 证明。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DONE_WR_PREV_MEM_HANDSHAKE
+    prop_name: A_CK_DONE_WR_PREV_MEM_HANDSHAKE
+    analysis: 对应 R09；当 host_wr_done 为高时触发，期望前一采样沿 mem_wr_valid&&mem_wr_ready 成立且 rst_n
+      为高；不把后件直接用作 guard，最终配额身份由 NCK-R09-DONE 证明。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DONE_RD_NO_ACK
+    prop_name: A_CK_DONE_RD_NO_ACK
+    analysis: 对应 R02、R09；当 host_rd_done 为高时触发，期望 host_rd_ack 为低，无论 host_rd_req 是否等待。
+      当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DONE_WR_NO_ACK
+    prop_name: A_CK_DONE_WR_NO_ACK
+    analysis: 对应 R02、R09；当 host_wr_done 为高时触发，期望 host_wr_ack 为低，无论 host_wr_req 是否等待。
+      当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DONE_RD_NEXT_ACK
+    prop_name: A_CK_DONE_RD_NEXT_ACK
+    analysis: 对应 R02、R09；当读 req 按协议跨越前一拍 done 保持且当前未复位时，期望当前 host_rd_done 已低并由 host_rd_ack
+      接受新命令。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-A_CK_DONE_WR_NEXT_ACK
+    prop_name: A_CK_DONE_WR_NEXT_ACK
+    analysis: 对应 R02、R09；当写 req 按协议跨越前一拍 done 保持且当前未复位时，期望当前 host_wr_done 已低并由 host_wr_ack
+      接受新命令。 当前证据：此安全属性在depth12的实际BMC运行未发现反例，但状态是inconclusive；主任务prove和联合prove均240秒超时，无逐属性证明。对应guard
+      witness实际为covered，可达不等于该断言已被无界证明。采样历史及复位连续条件以当前生成checker为准；固定历史窗口不能扩张为所有命令或任意积压情形。
+      native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-G_A_CK_QUOTA_RD_LEN1
+    prop_name: G_A_CK_QUOTA_RD_LEN1
+    analysis: 对应 R04、R09；以过去接受沿 host_rd_len=1 关联两拍连续 mem 读和随后八拍连续 device 读的固定窗口，检查首字边界无
+      done、第二字边界后 done；不约束环境必须形成该窗口。 当前证据：该guard_witness在当前depth12 Cover运行未命中，只报告uncovered；没有不可达证明，不能登记为RTL_BUG。需要独立增加覆盖深度或检查触发轨迹；不增加公平性、长度限制或默认disable
+      iff来取得命中。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-G_A_CK_QUOTA_WR_LEN1
+    prop_name: G_A_CK_QUOTA_WR_LEN1
+    analysis: 对应 R04、R09；以过去接受沿 host_wr_len=1 关联八拍连续 device 写及两个固定位置 mem 写握手的有限窗口，检查首字提交无
+      done、第二字提交后 done；任意等待由 native 模型负责。 当前证据：该guard_witness在当前depth12 Cover运行未命中，只报告uncovered；没有不可达证明，不能登记为RTL_BUG。需要独立增加覆盖深度或检查触发轨迹；不增加公平性、长度限制或默认disable
+      iff来取得命中。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-C_CK_COVER_RD_LEN1
+    prop_name: C_CK_COVER_RD_LEN1
+    analysis: 对应 R04、R12；固定窗口中由过去接受沿 host_rd_len=1 关联两拍连续 mem 读、八拍连续 device 读及当前完成，期望获得两字读见证。
+      当前证据：该cover在当前depth12 Cover运行未命中，只报告uncovered；没有不可达证明，不能登记为RTL_BUG。需要独立增加覆盖深度或检查触发轨迹；不增加公平性、长度限制或默认disable
+      iff来取得命中。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-C_CK_COVER_WR_LEN1
+    prop_name: C_CK_COVER_WR_LEN1
+    analysis: 对应 R04、R12；固定窗口中由过去接受沿 host_wr_len=1 关联八拍连续 device 写、两个固定位置 mem 写及当前完成，期望获得两字写见证。
+      当前证据：该cover在当前depth12 Cover运行未命中，只报告uncovered；没有不可达证明，不能登记为RTL_BUG。需要独立增加覆盖深度或检查触发轨迹；不增加公平性、长度限制或默认disable
+      iff来取得命中。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-C_CK_COVER_WR_LONGER_PROGRESS
+    prop_name: C_CK_COVER_WR_LONGER_PROGRESS
+    analysis: 对应 R04、R12；固定窗口中接受沿 host_wr_len>1 后出现十二拍连续 device 写及三个固定位置 mem 写，期望展示更长写事务局部进度；不要求完成任意
+      len。 当前证据：该cover在当前depth12 Cover运行未命中，只报告uncovered；没有不可达证明，不能登记为RTL_BUG。需要独立增加覆盖深度或检查触发轨迹；不增加公平性、长度限制或默认disable
+      iff来取得命中。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-C_CK_COVER_RD_THREE_COMMANDS
+    prop_name: C_CK_COVER_RD_THREE_COMMANDS
+    analysis: 对应 R02、R12；固定 21 拍窗口中三次接受沿均携带 host_rd_len=0，且按接受、唯一 mem 读、四拍 device
+      读、done、下一拍接受的节奏连续出现，期望获得三读命令见证。 当前证据：该cover在当前depth12 Cover运行未命中，只报告uncovered；没有不可达证明，不能登记为RTL_BUG。需要独立增加覆盖深度或检查触发轨迹；不增加公平性、长度限制或默认disable
+      iff来取得命中。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+  - id: FA-C_CK_COVER_WR_THREE_COMMANDS
+    prop_name: C_CK_COVER_WR_THREE_COMMANDS
+    analysis: 对应 R02、R12；固定 21 拍窗口中三次接受沿均携带 host_wr_len=0，且按接受、四拍 device 写、唯一 mem
+      写、done、下一拍接受的节奏连续出现，期望获得三写命令见证。 当前证据：该cover在当前depth12 Cover运行未命中，只报告uncovered；没有不可达证明，不能登记为RTL_BUG。需要独立增加覆盖深度或检查触发轨迹；不增加公平性、长度限制或默认disable
+      iff来取得命中。 native辅助工程的具体义务、参数和run见06及08报告，其独立结果不改写本条guided状态。
+    action_detail: ''
+    resolution: INCONCLUSIVE
+bugs: []
+extra_config:
+  sby:
+    sources:
+    - dmac/rtl/dmac_fifo.sv
+    - dmac/rtl/dmac.sv
+    mode: bmc
+    depth: 12
+    timeout_seconds: 240
+    reset_policy: unconstrained
+    filelists: []
+    include_dirs: []
+    defines:
+    - SYNTHESIS
+    reset_active: 0
+    review:
+      input_sha256: fce2c3069ac3096abbfa9e4340c84b40bf787a604d067f46695d02a6bbb8b51c
+      assumptions:
+        M_CK_API_RESET_INITIAL: 对应 R10、R13；仅在形式时间零的首个采样点触发，要求 rst_n 为低以建立确定初态；此 Assume
+          不约束后续采样，必须允许运行中再次复位。 实际表达式：!rst_n；不限制地址、len、数据取值或背压持续时间。
+        M_CK_API_HOST_RD_WAIT: 对应 R02、R13；当前一采样沿 host_rd_req 有效且 host_rd_ack 无效、期间未复位时触发，要求本采样沿
+          host_rd_req、host_rd_haddr、host_rd_len 保持；不限制其数值或等待周期数。 实际表达式：host_rd_req
+          && $stable(host_rd_haddr) && $stable(host_rd_len)；不限制地址、len、数据取值或背压持续时间。
+        M_CK_API_HOST_WR_WAIT: 对应 R02、R13；当前一采样沿 host_wr_req 有效且 host_wr_ack 无效、期间未复位时触发，要求本采样沿
+          host_wr_req、host_wr_haddr、host_wr_len 保持；不限制其数值或等待周期数。 实际表达式：host_wr_req
+          && $stable(host_wr_haddr) && $stable(host_wr_len)；不限制地址、len、数据取值或背压持续时间。
+        M_CK_API_DEV_RD_WAIT: 对应 R01、R13；当前一采样沿 dev_rd_req 有效且 dev_rd_ack 无效、期间未复位时触发，要求本采样沿
+          dev_rd_req 保持；不要求 device 在空闲时发起请求。 实际表达式：dev_rd_req；不限制地址、len、数据取值或背压持续时间。
+        M_CK_API_DEV_WR_WAIT_REQ: 对应 R01、R13；当前一采样沿 dev_wr_req 有效且 dev_wr_ack 无效、期间未复位时触发，要求本采样沿
+          dev_wr_req 保持。 实际表达式：dev_wr_req；不限制地址、len、数据取值或背压持续时间。
+        M_CK_API_DEV_WR_WAIT_DATA: 对应 R01、R13；当前一采样沿 dev_wr_req 有效且 dev_wr_ack 无效、期间未复位时触发，要求本采样沿
+          dev_wr_data 保持；不限制数据内容。 实际表达式：dev_wr_req && $stable(dev_wr_data)；不限制地址、len、数据取值或背压持续时间。
+      limitations: 'COI: unsupported；vacuity: not_established；liveness: not_established。主任务默认ADDR_W/LEN_W/FIFO_DEPTH=32/32/2，BMC深度12；63条安全断言未获无界证明，主任务prove与联合prove均240秒超时。固定连续窗口只检查所列len0/len1局部行为，不替代任意长度、任意积压的完整模型。guard
+        witness只表明触发可达；7个未命中目标仍未决，不声称不可达。永久背压合法，无公平性约束或最终完成结论。native独立证明仅涵盖32/32/2、32/8/1、16/8/3、32/1/4四个实际参数实例，不是全部参数量化。reset_policy=unconstrained，仅M_CK_API_RESET_INITIAL约束首采样rst_n=0，后续复位自由；深历史需有效历史与逐拍复位边界。复位结论限数字采样RTL模型，未验证模拟毛刺、恢复/移除时序。没有真实FormalMC/VCS运行。'
+summary:
+  core_function: 独立双通道DMAC：mem为64位、device为16位；N=len+1，任意haddr逐mem握手加8，低16位先传，支持背压与复位中断。
+  overall_result: inconclusive
+  acceptance_conclusion: 本轮已执行需求规划、FG/FC/CK分解、属性实现、实际SBY运行、环境和覆盖分析、启用的反例分支、缺陷报告与静态审查，使用原生门禁完成流程。主任务12FG/48FC/88CK，63条安全断言在depth12无反例但未获无界证明，覆盖75/82；主任务与联合prove均240秒超时。四组native具体参数安全证明、两个DMAC及三个FIFO覆盖运行、七项故障对照、19次Icarus回放作为独立辅助证据保留。当前原始DUT没有已确认缺陷，不能据此宣称所有要求已证明或无缺陷。COI不支持，完整空洞性和无界活性未建立，FormalMC/VCS尚未实测。内置Agent与工程师协作完成；长YAML输出和Agent上下文限制使工程师补齐环境及最终审查，不冒称全自主Agent验收。

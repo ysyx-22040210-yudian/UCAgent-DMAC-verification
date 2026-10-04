@@ -1,0 +1,40 @@
+profiles:
+  synopsys_o2018:
+    display_name: Synopsys O-2018.09-SP2
+    tools:
+      make: /usr/local/bin/make
+      picker: /home/ucagent-lab/picker-install/bin/picker
+      vcs: /home/synopsys/vcs-mx/O-2018.09-SP2/bin/vcs
+      urg: /home/synopsys/vcs-mx/O-2018.09-SP2/bin/urg
+      vcf: /home/synopsys/vcs-mx/O-2018.09-SP2/vcfca/bin/vcf
+      verdi: /home/synopsys/verdi/Verdi_O-2018.09-SP2/bin/verdi
+      verilator: /usr/local/bin/verilator
+      python: /home/ucagent-lab/current/venv/bin/python
+    environment:
+      # VCS O-2018 must resolve the CentOS 7 system linker before devtoolset-11.
+      PATH: /home/ucagent-lab/current/venv/bin:/usr/bin:/bin:/usr/local/bin:/home/synopsys/vcs-mx/O-2018.09-SP2/bin:/home/synopsys/vcs-mx/O-2018.09-SP2/vcfca/bin:/home/synopsys/verdi/Verdi_O-2018.09-SP2/bin:/opt/rh/devtoolset-11/root/usr/bin
+      LD_LIBRARY_PATH: /opt/rh/devtoolset-11/root/usr/lib64:/opt/rh/devtoolset-11/root/usr/lib
+      TMPDIR: /home/ucagent-lab/tmp
+      TMP: /home/ucagent-lab/tmp
+      TEMP: /home/ucagent-lab/tmp
+      VCS_HOME: /home/synopsys/vcs-mx/O-2018.09-SP2
+      VCS_TARGET_ARCH: linux64
+      VC_STATIC_HOME: /home/synopsys/vcs-mx/O-2018.09-SP2/vcfca
+      VERDI_HOME: /home/synopsys/verdi/Verdi_O-2018.09-SP2
+    versions:
+      vcs: O-2018.09-SP2
+      urg: O-2018.09-SP2
+      vcf: O-2018.09-SP2
+      verdi: O-2018.09-SP2
+      uvm: "1.2"
+    fsdb_pli:
+      table: /home/synopsys/verdi/Verdi_O-2018.09-SP2/share/PLI/VCS/linux64/novas.tab
+      library: /home/synopsys/verdi/Verdi_O-2018.09-SP2/share/PLI/VCS/linux64/pli.a
+      runtime_library_dirs:
+        - /home/synopsys/verdi/Verdi_O-2018.09-SP2/share/PLI/lib/linux64
+    license_environment_names:
+      - SNPSLMD_LICENSE_FILE
+      - LM_LICENSE_FILE
+    max_concurrency: 1
+    minimum_free_bytes: 10737418240
+    execution_user: ucagent

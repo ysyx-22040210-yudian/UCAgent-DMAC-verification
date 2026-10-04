@@ -1,0 +1,1074 @@
+# -*- coding: utf-8 -*-
+
+import os
+import re
+import yaml
+from pathlib import Path
+from typing import Dict, Any, Optional, Union, List
+from yaml.constructor import SafeConstructor
+from .functions import (
+    render_template,
+    dump_as_json,
+    replace_bash_var,
+    get_abs_path_cwd_ucagent,
+    load_json_file,
+    save_json_file,
+)
+from .log import info
+import base64
+
+
+_NEGATED_BOOL_PATTERN = re.compile(
+    r"^(?:not[ \t]+|-)(?:yes|no|true|false|on|off)$",
+    re.IGNORECASE,
+)
+_DELETE_OVERRIDE = object()
+RUNTIME_CONFIG_FILENAME = "runtime_config.json"
+CURRENT_TEST_REPORT_FILENAME = "current_test_report.json"
+CURRENT_TEST_REPORT_SCHEMA_VERSION = 1
+CURRENT_TEST_REPORT_RELATIVE_PATH = f".ucagent/{CURRENT_TEST_REPORT_FILENAME}"
+REQUIRED_RUNTIME_BOOL_OPTIONS = (
+    "need_ref_model",
+    "mock_components_enabled",
+)
+
+
+def _current_ucagent_python_path() -> Path:
+    """Return the import root containing this loaded UCAgent package."""
+    return Path(__file__).resolve().parents[2]
+
+
+class UCAgentConfigLoader(yaml.SafeLoader):
+    """Safe YAML loader with support for negated boolean scalars."""
+
+
+def _construct_negated_bool(loader, node):
+    scalar_value = loader.construct_scalar(node).strip()
+    if scalar_value.startswith('-'):
+        bool_value = scalar_value[1:]
+    else:
+        bool_value = re.sub(r"^not[ \t]+", "", scalar_value, count=1, flags=re.IGNORECASE)
+    return not SafeConstructor.bool_values[bool_value.lower()]
+
+
+UCAgentConfigLoader.add_implicit_resolver('!negated_bool', _NEGATED_BOOL_PATTERN, ['-', 'n', 'N'])
+UCAgentConfigLoader.add_constructor('!negated_bool', _construct_negated_bool)
+
+class Config:
+    """Configuration class for UCAgent settings."""
+
+    def __init__(self, data: Optional[Dict[str, Any]] = None) -> None:
+        """Initialize configuration object.
+
+        Args:
+            data: Dictionary containing configuration data.
+        """
+        self._freeze = False
+        self.from_dict(data)
+
+    def from_dict(self, data: Optional[Dict[str, Any]]) -> None:
+        """Load configuration from a dictionary.
+
+        Args:
+            data: Dictionary containing configuration.
+        """
+        if data is None:
+            return self
+        for key, value in data.items():
+            if isinstance(value, dict):
+                setattr(self, key, Config(value))
+            elif isinstance(value, list):
+                # If the value is a list, convert each item to Config if it's a dict
+                setattr(self, key, [Config(item) if isinstance(item, dict) else item for item in value])
+            else:
+                setattr(self, key, value)
+        return self
+
+    def empty(self) -> bool:
+        """Check if the configuration is empty.
+
+        Returns:
+            True if configuration is empty, False otherwise.
+        """
+        return len(self.as_dict()) <= 1
+
+    def as_dict(self) -> Dict[str, Any]:
+        """Convert the configuration to a dictionary.
+
+        Returns:
+            Dictionary representation of the configuration.
+        """
+        result = {}
+        for key, value in self.__dict__.items():
+            if key in {"_freeze", "_loaded_config_files"}:
+                continue
+            if isinstance(value, Config):
+                result[key] = value.as_dict()
+            elif isinstance(value, list):
+                # If the value is a list, convert each item to dict if it's a Config
+                result[key] = [item.as_dict() if isinstance(item, Config) else item for item in value]
+            else:
+                result[key] = value
+        return result
+
+    def __str__(self):
+        return "Config(" + dump_as_json(self.as_dict()) + ")"
+
+    def update_template(self, template_dict):
+        """
+        Update the configuration with a template.
+        :param template (dict): Template to update the configuration with.
+        :return: self
+        eg:
+        template = {
+            "OUT": "my_path_to_output",
+        }
+        """
+        self.un_freeze()  # Ensure the configuration is mutable
+        def _update_list(list_val):
+            for i, itm in enumerate(list_val):
+                if isinstance(itm, Config):
+                    itm.update_template(template_dict)
+                elif isinstance(itm, str):
+                    nval = render_template(itm, template_dict)
+                    if nval != itm:
+                        list_val[i] = nval
+                elif isinstance(itm, list):
+                    _update_list(itm)
+                else:
+                    assert False, (
+                        f"Unsupported list item type: {type(itm)}. "
+                        "Supported types are: str, Config, str, and list."
+                    )
+        for key, value in self.__dict__.items():
+            if isinstance(value, Config):
+                value.update_template(template_dict)
+            elif isinstance(value, list):
+                _update_list(value)
+            elif isinstance(value, str):
+                nval = render_template(value, template_dict)
+                if nval != value:
+                    setattr(self, key, nval)
+        self.freeze()  # Freeze the configuration after updating
+        return self
+
+    def dump_str(self, indent=2):
+        """
+        Dump the configuration as a YAML string.
+        :param indent: Indentation level for YAML formatting.
+        :return: YAML formatted string of the configuration.
+        """
+        return yaml.dump(self.as_dict(),
+                         default_flow_style=False,
+                         indent=indent, allow_unicode=True)
+
+    def freeze(self):
+        """
+        Freeze the configuration, making it immutable.
+        :return: self
+        """
+        for _, value in self.__dict__.items():
+            if isinstance(value, Config):
+                value.freeze()
+            elif isinstance(value, list):
+                for v in value:
+                    if isinstance(v, Config):
+                        v.freeze()
+        self._freeze = True
+        return self
+
+    def un_freeze(self):
+        """
+        Unfreeze the configuration, making it mutable again.
+        :return: self
+        """
+        for _, value in self.__dict__.items():
+            if isinstance(value, Config):
+                value.un_freeze()
+            elif isinstance(value, list):
+                for v in value:
+                    if isinstance(v, Config):
+                        v.un_freeze()
+        self._freeze = False
+        return self
+
+
+    def __setattr__(self, name, value):
+        """
+        Set an attribute of the configuration.
+        :param name: Name of the attribute.
+        :param value: Value to set.
+        :return: None
+        """
+        if name != "_freeze":
+            if getattr(self, "_freeze", False) == True:
+                raise RuntimeError("Configuration is frozen, cannot modify.")
+        super().__setattr__(name, value)
+
+    def __getattr__(self, name):
+        """
+        Get an attribute of the configuration.
+        :param name: Name of the attribute.
+        :return: Value of the attribute.
+        """
+        if name in self.__dict__:
+            return self.__dict__[name]
+        return Config()  # Return an empty Config object if the attribute does not exist
+
+    def has_attr(self, name):
+        return name in self.__dict__
+
+    def merge_from(self, other):
+        """
+        Merge another Config object into this one.
+        :param other: Another Config object to merge from.
+        :return: self
+        """
+        if not isinstance(other, Config):
+            raise TypeError("Can only merge from another Config instance.")
+        return self.merge_from_dict(other.as_dict())
+
+    def merge_from_dict(self, data, skip_include=False):
+        """
+        Merge configuration from a dictionary.
+        :param data: Dictionary containing configuration.
+        :param skip_include: Whether to treat top-level include as a loader directive.
+        :return: self
+        """
+        if not isinstance(data, dict):
+            raise TypeError("Can only merge from a dictionary.")
+        for key, value in data.items():
+            if skip_include and key == "include":
+                continue
+            if self._should_apply_merge_override(key, value):
+                self.set_value(key, value)
+            elif isinstance(value, dict):
+                if self.has_attr(key) and isinstance(getattr(self, key), Config):
+                    getattr(self, key).merge_from_dict(value)
+                else:
+                    setattr(self, key, Config().merge_from_dict(value))
+            else:
+                setattr(self, key, self._to_config_value(value))
+        return self
+
+    def _should_apply_merge_override(self, key, value):
+        if not isinstance(key, str):
+            return False
+        if "[" in key or "]" in key:
+            return True
+        if value == "@delete":
+            return self._override_target_exists(key)
+        if isinstance(value, str):
+            if (value.startswith("@@") or value.startswith("@base64:")) and self._override_target_exists(key):
+                return True
+            if value.startswith("+") and self._override_target_is_list(key):
+                return True
+        return False
+
+    def _override_target_exists(self, key):
+        try:
+            tokens = self._parse_override_key(key)
+            current = self
+            for token in tokens[:-1]:
+                if isinstance(token, str):
+                    if not isinstance(current, Config) or not current.has_attr(token):
+                        return False
+                    current = getattr(current, token)
+                else:
+                    if not isinstance(current, list):
+                        return False
+                    index = self._normalize_list_index(token["index"], len(current), False)
+                    if token["size"] != 1:
+                        return False
+                    current = current[index]
+
+            target = tokens[-1]
+            if isinstance(target, str):
+                return isinstance(current, Config) and current.has_attr(target)
+            if not isinstance(current, list):
+                return False
+            self._normalize_list_index(target["index"], len(current), target["size"] == 0)
+            return True
+        except Exception:
+            return False
+
+    def _override_target_is_list(self, key):
+        try:
+            tokens = self._parse_override_key(key)
+            current = self
+            for token in tokens[:-1]:
+                if isinstance(token, str):
+                    if not isinstance(current, Config) or not current.has_attr(token):
+                        return False
+                    current = getattr(current, token)
+                else:
+                    if not isinstance(current, list):
+                        return False
+                    index = self._normalize_list_index(token["index"], len(current), False)
+                    if token["size"] != 1:
+                        return False
+                    current = current[index]
+            target = tokens[-1]
+            return isinstance(target, str) and isinstance(current, Config) and current.has_attr(target) and isinstance(getattr(current, target), list)
+        except Exception:
+            return False
+
+    def set_value(self, key, value):
+        """
+        Set a value in the configuration. Support extending list with string value
+            if the original value is a list and the new value is a string with '+' prefix.
+        Also support list item overrides with ``path[index[:size]]`` syntax.
+        :param key: Key of the value to set. eg a.b.c
+        :param value: Value to set.
+        :return: self
+        """
+        if getattr(self, "_freeze", False) == True:
+            raise RuntimeError("Configuration is frozen, cannot modify.")
+        tokens = self._parse_override_key(key)
+        value = self._decode_override_value(value)
+        self._set_value_by_tokens(tokens, value)
+        return self
+
+    def _set_value_by_tokens(self, tokens, value):
+        current = self
+        for token in tokens[:-1]:
+            if isinstance(token, str):
+                current = self._get_config_attr(current, token)
+            else:
+                current = self._get_list_item(current, token, allow_insert=False)
+
+        target = tokens[-1]
+        if isinstance(target, str):
+            self._set_attr_value(current, target, value)
+        elif value is _DELETE_OVERRIDE:
+            self._delete_list_items(current, target)
+        else:
+            self._set_list_items(current, target, value)
+
+    def _set_attr_value(self, current, target_key, value):
+        if not isinstance(current, Config):
+            raise TypeError(f"Cannot set attribute '{target_key}' on non-Config value.")
+        if value is _DELETE_OVERRIDE:
+            if not current.has_attr(target_key):
+                raise AttributeError(f"Configuration does not have attribute '{target_key}'")
+            delattr(current, target_key)
+            return
+        old_value = getattr(current, target_key, None)
+        if isinstance(old_value, list) and isinstance(value, str):
+            if value.startswith('+'):
+                value = old_value + [value[1:]]
+        setattr(current, target_key, self._to_config_value(value))
+
+    def _get_config_attr(self, current, attr_name):
+        if not isinstance(current, Config):
+            raise TypeError(f"Cannot access attribute '{attr_name}' on non-Config value.")
+        if not current.has_attr(attr_name):
+            raise AttributeError(f"Configuration does not have attribute '{attr_name}'")
+        return getattr(current, attr_name)
+
+    def _get_list_item(self, current, index_token, allow_insert):
+        if not isinstance(current, list):
+            raise TypeError("Configuration override target is not a list.")
+        index = self._normalize_list_index(index_token["index"], len(current), allow_insert)
+        if index_token["size"] != 1:
+            raise ValueError("Only single list indexes can be used before the final override path token.")
+        return current[index]
+
+    def _set_list_items(self, current, index_token, value):
+        if not isinstance(current, list):
+            raise TypeError("Configuration override target is not a list.")
+        index = self._normalize_list_index(index_token["index"], len(current), index_token["size"] == 0)
+        if index_token["size"] == 0:
+            current.insert(index, self._to_config_value(value))
+            return
+        end = index + index_token["size"]
+        if end > len(current):
+            raise IndexError("List override range is out of range.")
+        current[index:end] = [self._to_config_value(value) for _ in range(index_token["size"])]
+
+    def _delete_list_items(self, current, index_token):
+        if not isinstance(current, list):
+            raise TypeError("Configuration override target is not a list.")
+        index = self._normalize_list_index(index_token["index"], len(current), False)
+        if index_token["size"] == 0:
+            return
+        end = index + index_token["size"]
+        if end > len(current):
+            raise IndexError("List override range is out of range.")
+        del current[index:end]
+
+    def _normalize_list_index(self, index, list_len, allow_end):
+        if index < 0:
+            index += list_len
+        max_index = list_len if allow_end else list_len - 1
+        if index < 0 or index > max_index:
+            raise IndexError("List override index is out of range.")
+        return index
+
+    def _to_config_value(self, value):
+        if isinstance(value, dict):
+            return Config(value)
+        if isinstance(value, list):
+            return [self._to_config_value(item) for item in value]
+        return value
+
+    def _parse_override_key(self, key):
+        if not isinstance(key, str) or not key.strip():
+            raise ValueError("Configuration override key must be a non-empty string.")
+        tokens = []
+        for part in key.split('.'):
+            if not part:
+                raise ValueError(f"Invalid configuration override key '{key}'.")
+            name, selectors = self._parse_override_key_part(part, key)
+            if name:
+                tokens.append(name)
+            tokens.extend(selectors)
+        return tokens
+
+    def _parse_override_key_part(self, part, full_key):
+        match = re.match(r"^([^\[\]]*)", part)
+        name = match.group(1)
+        rest = part[len(name):]
+        selectors = []
+        while rest:
+            match = re.match(r"^\[(-?\d+)(?::(\d*))?\]", rest)
+            if not match:
+                raise ValueError(f"Invalid list override syntax in key '{full_key}'.")
+            size = 1 if match.group(2) is None or match.group(2) == "" else int(match.group(2))
+            selectors.append({"index": int(match.group(1)), "size": size})
+            rest = rest[match.end():]
+        if not name and not selectors:
+            raise ValueError(f"Invalid configuration override key '{full_key}'.")
+        return name, selectors
+
+    def _decode_override_value(self, value):
+        if not isinstance(value, str):
+            return value
+        if value == "@delete":
+            return _DELETE_OVERRIDE
+        if value.startswith("@base64:"):
+            return self._str_b64_decode(value[len("@base64:"):])
+        return self._unescape_override_string(value)
+
+    def _unescape_override_string(self, value):
+        result = []
+        index = 0
+        while index < len(value):
+            if value[index] != "@":
+                result.append(value[index])
+                index += 1
+                continue
+            if index + 1 < len(value) and value[index + 1] == "@":
+                result.append("@")
+                index += 2
+                continue
+            raise ValueError("Single '@' is reserved in override values; use '@@' for a literal '@'.")
+        return "".join(result)
+
+    def _str_b64_decode(self, value):
+        try:
+            decoded_bytes = base64.b64decode(value)
+            return decoded_bytes.decode('utf-8')
+        except Exception as e:
+            raise ValueError(f"Failed to decode base64 string: {e}")
+
+    def get_value(self, key, default=None):
+        """
+        Get a value from the configuration.
+        :param key: Key of the value to get. eg a.b.c
+        :param default: Default value to return if the key does not exist.
+        :return: Value of the key if it exists, otherwise default.
+        """
+        keys = key.split('.')
+        current = self
+        for k in keys[:-1]:
+            if not current.has_attr(k):
+                raise AttributeError(f"Configuration does not have attribute '{k}'")
+            current = getattr(current, k)
+        if not current.has_attr(keys[-1]):
+            return default
+        return getattr(current, keys[-1], default)
+
+    def __getitem__(self, key):
+        """
+        Get a value from the configuration using dictionary-like access.
+        :param key: Key of the value to get. eg a.b.c
+        :return: Value of the key if it exists, otherwise raises KeyError.
+        """
+        if not isinstance(key, str):
+            raise TypeError("Key must be a string.")
+        assert self.has_attr(key), f"Configuration does not have attribute '{key}'"
+        return self.get_value(key)
+
+    def set_values(self, values):
+        """
+        Set multiple values in the configuration.
+        :param values: Dictionary of key-value pairs to set.
+        :return: self
+        """
+        if values is None:
+            return self
+        if not isinstance(values, list):
+            values = [values]
+        for v in values:
+            if not isinstance(v, dict):
+                raise TypeError("Configuration override values must be a dict or a list of dicts.")
+            for key, value in v.items():
+                self.set_value(key, value)
+        return self
+
+
+def build_runtime_config(cfg: Config) -> Dict[str, Any]:
+    """Build the non-secret runtime snapshot shared with workspace consumers."""
+    if not isinstance(cfg, Config):
+        raise TypeError("Runtime config can only be built from a Config instance.")
+
+    runtime_options = cfg.get_value("runtime_options", None)
+    if runtime_options is None:
+        raise ValueError("Configuration is missing required 'runtime_options'.")
+    if isinstance(runtime_options, Config):
+        runtime_options = runtime_options.as_dict()
+    elif isinstance(runtime_options, dict):
+        runtime_options = dict(runtime_options)
+    else:
+        raise TypeError("Configuration value 'runtime_options' must be a mapping.")
+
+    for key in REQUIRED_RUNTIME_BOOL_OPTIONS:
+        if type(runtime_options.get(key)) is not bool:
+            raise ValueError(
+                f"Configuration value 'runtime_options.{key}' must be a boolean."
+            )
+
+    template_values = cfg.__dict__.get("_temp_cfg")
+    if not isinstance(template_values, dict):
+        raise ValueError("Configuration is missing resolved DUT/OUT template values.")
+    dut = template_values.get("DUT")
+    output = template_values.get("OUT")
+    if not isinstance(dut, str) or not dut.strip():
+        raise ValueError("Resolved configuration value 'DUT' must be a non-empty string.")
+    if not isinstance(output, str) or not output.strip():
+        raise ValueError("Resolved configuration value 'OUT' must be a non-empty string.")
+    try:
+        test_output_dir = cfg.get_value("tools.RunTestCases.test_dir", None)
+    except AttributeError:
+        test_output_dir = None
+    if not isinstance(test_output_dir, str) or not test_output_dir.strip():
+        raise ValueError(
+            "Resolved configuration value 'tools.RunTestCases.test_dir' must be a "
+            "non-empty string."
+        )
+    ucagent_python_path = str(_current_ucagent_python_path())
+    if not (Path(ucagent_python_path) / "ucagent" / "__init__.py").is_file():
+        raise ValueError(
+            "Cannot resolve the current UCAgent Python import path."
+        )
+
+    return {
+        "schema_version": 1,
+        "DUT": dut,
+        "OUT": output,
+        "test_output_dir": test_output_dir,
+        "ucagent_python_path": ucagent_python_path,
+        "current_test_report": CURRENT_TEST_REPORT_RELATIVE_PATH,
+        "runtime_options": runtime_options,
+    }
+
+
+def validate_runtime_config(data: Any) -> Dict[str, Any]:
+    """Validate a runtime snapshot before it is consumed."""
+    if not isinstance(data, dict):
+        raise ValueError("Resolved runtime config must be a JSON object.")
+    if data.get("schema_version") != 1:
+        raise ValueError("Resolved runtime config has an unsupported schema_version.")
+    for key in ("DUT", "OUT"):
+        if not isinstance(data.get(key), str) or not data[key].strip():
+            raise ValueError(
+                f"Resolved runtime config value '{key}' must be a non-empty string."
+            )
+    if not isinstance(data.get("test_output_dir"), str) or not data[
+        "test_output_dir"
+    ].strip():
+        raise ValueError(
+            "Resolved runtime config value 'test_output_dir' must be a non-empty string."
+        )
+    current_test_report = data.get("current_test_report")
+    if current_test_report != CURRENT_TEST_REPORT_RELATIVE_PATH:
+        raise ValueError(
+            "Resolved runtime config value 'current_test_report' must be "
+            f"'{CURRENT_TEST_REPORT_RELATIVE_PATH}'."
+        )
+    ucagent_python_path = data.get("ucagent_python_path")
+    if not isinstance(ucagent_python_path, str) or not ucagent_python_path.strip():
+        raise ValueError(
+            "Resolved runtime config value 'ucagent_python_path' must be a "
+            "non-empty string."
+        )
+    import_root = Path(ucagent_python_path)
+    if not import_root.is_absolute():
+        raise ValueError(
+            "Resolved runtime config value 'ucagent_python_path' must be an "
+            "absolute path."
+        )
+    if not (import_root / "ucagent" / "__init__.py").is_file():
+        raise ValueError(
+            "Resolved runtime config value 'ucagent_python_path' does not contain "
+            "an importable ucagent package. Restart UCAgent for this workspace to "
+            "regenerate .ucagent/runtime_config.json."
+        )
+    if import_root.resolve() != _current_ucagent_python_path():
+        raise ValueError(
+            "Resolved runtime config value 'ucagent_python_path' does not match the "
+            "currently running UCAgent package. Restart UCAgent for this workspace "
+            "to regenerate .ucagent/runtime_config.json."
+        )
+
+    runtime_options = data.get("runtime_options")
+    if not isinstance(runtime_options, dict):
+        raise ValueError("Resolved runtime config has no runtime_options mapping.")
+    if "formal_engine" in runtime_options:
+        if runtime_options["formal_engine"] not in {"formalmc", "sby"}:
+            raise ValueError("runtime_options.formal_engine must be formalmc or sby.")
+        profile_id = runtime_options.get("formal_toolchain")
+        if not isinstance(profile_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", profile_id):
+            raise ValueError("runtime_options.formal_toolchain must name an administrator toolchain profile.")
+    for key in REQUIRED_RUNTIME_BOOL_OPTIONS:
+        if type(runtime_options.get(key)) is not bool:
+            raise ValueError(
+                f"Resolved config value runtime_options.{key} must be a boolean."
+            )
+    platform = data.get("verification_platform")
+    if platform is not None:
+        if not isinstance(platform, dict):
+            raise ValueError("Resolved config value verification_platform must be a mapping.")
+        required_platform_fields = {
+            "workspace",
+            "project_config",
+            "run_id",
+            "output_dir",
+            "resolved_project",
+            "toolchain",
+        }
+        if set(platform) != required_platform_fields:
+            raise ValueError(
+                "Resolved config verification_platform must contain exactly: "
+                + ", ".join(sorted(required_platform_fields))
+            )
+        if not isinstance(platform["workspace"], str) or not Path(platform["workspace"]).is_absolute():
+            raise ValueError("Resolved platform workspace must be an absolute path.")
+        if platform["project_config"] != ".ucagent/project.yaml":
+            raise ValueError("Resolved platform project_config must be '.ucagent/project.yaml'.")
+        for key in ("run_id", "output_dir"):
+            if not isinstance(platform[key], str) or not platform[key]:
+                raise ValueError(f"Resolved platform {key} must be a non-empty string.")
+        if not isinstance(platform["resolved_project"], dict):
+            raise ValueError("Resolved platform resolved_project must be a mapping.")
+        toolchain = platform["toolchain"]
+        if not isinstance(toolchain, dict) or "environment" in toolchain or "setup_scripts" in toolchain:
+            raise ValueError("Resolved platform toolchain must not contain environment or setup scripts.")
+        if not isinstance(toolchain.get("tools"), dict) or not toolchain["tools"]:
+            raise ValueError("Resolved platform toolchain.tools must be a non-empty mapping.")
+    return data
+
+
+def save_runtime_config(workspace: str, cfg: Config) -> Path:
+    """Persist resolved runtime values for skills and other workspace consumers."""
+    runtime_path = Path(
+        get_abs_path_cwd_ucagent(workspace, RUNTIME_CONFIG_FILENAME)
+    )
+    runtime_data = validate_runtime_config(build_runtime_config(cfg))
+    save_json_file(str(runtime_path), runtime_data)
+    return runtime_path
+
+
+def save_platform_runtime_config(
+    workspace: str,
+    *,
+    dut: str,
+    output_dir: str,
+    run_id: str,
+    project_config: Dict[str, Any],
+    toolchain: Dict[str, Any],
+) -> Path:
+    """Publish the resolved, non-secret visual-platform runtime snapshot.
+
+    The legacy runtime fields remain present because workspace Skills consume
+    them, while ``verification_platform`` carries the canonical project, run,
+    output, and administrator-resolved tool aliases. Environment values and
+    setup scripts are deliberately outside this contract.
+    """
+
+    workspace_path = Path(workspace).resolve(strict=True)
+    if not isinstance(dut, str) or not dut.strip():
+        raise ValueError("Platform runtime DUT must be a non-empty string.")
+    if not isinstance(output_dir, str) or not output_dir.strip():
+        raise ValueError("Platform runtime output_dir must be a non-empty string.")
+    output_path = Path(output_dir)
+    if output_path.is_absolute() or any(part in {"", ".", ".."} for part in output_path.parts):
+        raise ValueError("Platform runtime output_dir must be workspace-relative.")
+    if not isinstance(run_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", run_id):
+        raise ValueError("Platform runtime run_id must be filesystem-safe.")
+    if not isinstance(project_config, dict):
+        raise TypeError("Platform runtime project_config must be a mapping.")
+    pending_values: List[Any] = [project_config]
+    while pending_values:
+        current = pending_values.pop()
+        if isinstance(current, dict):
+            for key, value in current.items():
+                normalized_key = str(key).casefold()
+                if normalized_key in {
+                    "access_key",
+                    "api_key",
+                    "license",
+                    "license_value",
+                    "lm_license_file",
+                    "passwd",
+                    "password",
+                    "private_key",
+                    "secret",
+                    "ssh_password",
+                    "token",
+                } or normalized_key.endswith(
+                    ("_api_key", "_password", "_private_key", "_secret", "_token")
+                ):
+                    raise ValueError(
+                        f"Platform runtime project_config contains forbidden field: {key}"
+                    )
+                pending_values.append(value)
+        elif isinstance(current, (list, tuple)):
+            pending_values.extend(current)
+    if not isinstance(toolchain, dict):
+        raise TypeError("Platform runtime toolchain must be a mapping.")
+    allowed_toolchain_keys = {
+        "id",
+        "tools",
+        "versions",
+        "max_concurrency",
+        "minimum_free_bytes",
+        "license_environment_names",
+        "fsdb_pli",
+    }
+    unknown_toolchain_keys = sorted(set(toolchain) - allowed_toolchain_keys)
+    if unknown_toolchain_keys:
+        raise ValueError(
+            "Platform runtime toolchain contains forbidden fields: "
+            + ", ".join(unknown_toolchain_keys)
+        )
+    tools = toolchain.get("tools")
+    if not isinstance(tools, dict) or not tools:
+        raise ValueError("Platform runtime toolchain.tools must be a non-empty mapping.")
+    for alias, executable in tools.items():
+        if not isinstance(alias, str) or not re.fullmatch(r"[A-Za-z0-9_.-]+", alias):
+            raise ValueError("Platform runtime tool aliases must be safe identifiers.")
+        if not isinstance(executable, str) or not executable or "\x00" in executable:
+            raise ValueError("Platform runtime tool paths must be non-empty strings.")
+    license_names = toolchain.get("license_environment_names", [])
+    if not isinstance(license_names, list) or any(
+        not isinstance(name, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name)
+        for name in license_names
+    ):
+        raise ValueError(
+            "Platform runtime license_environment_names must contain environment names only."
+        )
+    fsdb_pli = toolchain.get("fsdb_pli")
+    if fsdb_pli is not None:
+        if not isinstance(fsdb_pli, dict) or set(fsdb_pli) != {
+            "table",
+            "library",
+            "runtime_library_dirs",
+        }:
+            raise ValueError(
+                "Platform runtime fsdb_pli must contain table, library, and runtime_library_dirs."
+            )
+        for path_name in ("table", "library"):
+            path_value = fsdb_pli[path_name]
+            if (
+                not isinstance(path_value, str)
+                or not Path(path_value).is_absolute()
+                or any(character in path_value for character in ("\x00", "\r", "\n"))
+            ):
+                raise ValueError(
+                    f"Platform runtime fsdb_pli.{path_name} must be an absolute single-line path."
+                )
+        runtime_library_dirs = fsdb_pli["runtime_library_dirs"]
+        if not isinstance(runtime_library_dirs, list) or not runtime_library_dirs:
+            raise ValueError(
+                "Platform runtime fsdb_pli.runtime_library_dirs must be a non-empty path list."
+            )
+        for path_value in runtime_library_dirs:
+            if (
+                not isinstance(path_value, str)
+                or not Path(path_value).is_absolute()
+                or any(character in path_value for character in ("\x00", "\r", "\n"))
+            ):
+                raise ValueError(
+                    "Platform runtime fsdb_pli.runtime_library_dirs must contain absolute single-line paths."
+                )
+
+    runtime_data = {
+        "schema_version": 1,
+        "DUT": dut,
+        "OUT": output_path.as_posix(),
+        "test_output_dir": output_path.as_posix(),
+        "ucagent_python_path": str(_current_ucagent_python_path()),
+        "current_test_report": CURRENT_TEST_REPORT_RELATIVE_PATH,
+        "runtime_options": {
+            "need_ref_model": bool(
+                (project_config.get("simulation") or {}).get("reference_model")
+            ),
+            "mock_components_enabled": False,
+        },
+        "verification_platform": {
+            "workspace": str(workspace_path),
+            "project_config": ".ucagent/project.yaml",
+            "run_id": run_id,
+            "output_dir": output_path.as_posix(),
+            "resolved_project": project_config,
+            "toolchain": toolchain,
+        },
+    }
+    runtime_data = validate_runtime_config(runtime_data)
+    runtime_path = workspace_path / ".ucagent" / RUNTIME_CONFIG_FILENAME
+    runtime_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = runtime_path.with_suffix(runtime_path.suffix + ".tmp")
+    save_json_file(str(temporary), runtime_data)
+    os.replace(temporary, runtime_path)
+    return runtime_path
+
+
+def load_runtime_config(workspace: str) -> Dict[str, Any]:
+    """Load the shared resolved runtime snapshot from a workspace."""
+    runtime_path = Path(workspace) / ".ucagent" / RUNTIME_CONFIG_FILENAME
+    if not runtime_path.is_file():
+        raise FileNotFoundError(
+            f"Resolved runtime config not found: {runtime_path}. "
+            "Start UCAgent for this workspace before using runtime consumers."
+        )
+    return validate_runtime_config(load_json_file(str(runtime_path)))
+
+
+def _current_test_report_path(workspace: str) -> Path:
+    """Return the workspace-local report shared by test consumers and Skills."""
+    runtime_config = load_runtime_config(workspace)
+    return Path(workspace) / runtime_config["current_test_report"]
+
+
+def clear_current_test_report(workspace: str) -> None:
+    """Invalidate a previous stage's report when a stage becomes active."""
+    target = Path(workspace) / CURRENT_TEST_REPORT_RELATIVE_PATH
+    try:
+        target.unlink()
+    except FileNotFoundError:
+        pass
+
+
+def save_current_test_report(
+    workspace: str,
+    report: Dict[str, Any],
+    context: Optional[Dict[str, Any]] = None,
+) -> Path:
+    """Publish the latest structured Unity test report for runtime consumers.
+
+    The report is deliberately kept outside the DUT output directory so a Skill
+    cannot accidentally bind itself to a stage-private or historical report.
+    ``context`` is diagnostic metadata only; the actual test report remains under
+    the stable ``report`` key.
+    """
+    if not isinstance(report, dict):
+        raise TypeError("Current test report must be a mapping.")
+    if context is not None and not isinstance(context, dict):
+        raise TypeError("Current test report context must be a mapping.")
+    target = _current_test_report_path(workspace)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "schema_version": CURRENT_TEST_REPORT_SCHEMA_VERSION,
+        "report": report,
+        "context": context or {},
+    }
+    temporary = target.with_suffix(target.suffix + ".tmp")
+    save_json_file(str(temporary), payload)
+    os.replace(temporary, target)
+    return target
+
+
+def load_current_test_report(workspace: str) -> Dict[str, Any]:
+    """Load and validate the latest structured test report for a workspace."""
+    target = _current_test_report_path(workspace)
+    if not target.is_file():
+        raise FileNotFoundError(
+            f"Current test report not found: {target}. Run the current stage's "
+            "real test cases with Check or RunTestCases before using a test-report Skill."
+        )
+    payload = load_json_file(str(target))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Current test report {target} must be a JSON object.")
+    if payload.get("schema_version") != CURRENT_TEST_REPORT_SCHEMA_VERSION:
+        raise ValueError(
+            f"Current test report {target} has an unsupported schema_version."
+        )
+    report = payload.get("report")
+    if not isinstance(report, dict):
+        raise ValueError(f"Current test report {target} has no report object.")
+    context = payload.get("context", {})
+    if not isinstance(context, dict):
+        raise ValueError(f"Current test report {target} has invalid context metadata.")
+    return payload
+
+
+def find_file_in_paths(filename, search_paths):
+    """
+    Search for a file in a list of directories.
+    :param filename: Name of the file to search for.
+    :param search_paths: List of directories to search in.
+    :return: Full path to the file if found, otherwise None.
+    """
+    if filename.startswith('/'):
+        # If the filename is an absolute path, return it directly
+        if os.path.isfile(filename):
+            return filename
+        else:
+            return None
+    for path in search_paths:
+        full_path = os.path.join(path, filename)
+        if os.path.isfile(full_path):
+            return full_path
+    return None
+
+
+def load_yaml_with_env_vars(file_path):
+    """Load YAML after environment-variable substitution.
+
+    Supports negated boolean scalars like ``not true`` and ``-false``.
+    """
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+        rendered_content = replace_bash_var(content, os.environ)
+        return yaml.load(rendered_content, Loader=UCAgentConfigLoader)
+
+
+def _normalize_include_value(include_value, config_file):
+    if include_value is None:
+        return []
+    if isinstance(include_value, str):
+        return [include_value]
+    if not isinstance(include_value, list):
+        raise TypeError(f"Config include in '{config_file}' must be a string or a list of strings.")
+    for include_file in include_value:
+        if not isinstance(include_file, str) or not include_file.strip():
+            raise TypeError(f"Config include in '{config_file}' must be a string or a list of strings.")
+    return include_value
+
+
+def _resolve_include_file(include_file, parent_config_file):
+    include_file = os.path.expanduser(include_file)
+    if os.path.isabs(include_file):
+        if os.path.isfile(include_file):
+            return os.path.abspath(include_file)
+        raise FileNotFoundError(f"Included config file '{include_file}' not found.")
+
+    parent_dir = os.path.dirname(os.path.abspath(parent_config_file))
+    found_file = find_file_in_paths(include_file, [parent_dir, os.getcwd()])
+    if found_file is not None:
+        return os.path.abspath(found_file)
+    raise FileNotFoundError(
+        f"Included config file '{include_file}' not found relative to "
+        f"'{parent_dir}' or current working directory '{os.getcwd()}'."
+    )
+
+
+def _merge_config_file(cfg, config_file, loaded_configs, loading_stack=None):
+    config_file = os.path.abspath(config_file)
+    if config_file in loaded_configs:
+        info(f"Config file '{config_file}' already loaded, ignore.")
+        return cfg
+    if loading_stack is None:
+        loading_stack = []
+    if config_file in loading_stack:
+        cycle = loading_stack[loading_stack.index(config_file):] + [config_file]
+        raise ValueError(f"Config include cycle detected: {' -> '.join(cycle)}")
+
+    loading_stack.append(config_file)
+    try:
+        data = load_yaml_with_env_vars(config_file) or {}
+        if not isinstance(data, dict):
+            raise TypeError(f"Config file '{config_file}' must contain a YAML mapping.")
+
+        for include_file in _normalize_include_value(data.get("include"), config_file):
+            include_config_file = _resolve_include_file(include_file, config_file)
+            _merge_config_file(cfg, include_config_file, loaded_configs, loading_stack)
+
+        cfg.merge_from_dict(data, skip_include=True)
+        loaded_configs.append(config_file)
+        info(f"Load config from '{config_file}' completed.")
+        return cfg
+    finally:
+        loading_stack.pop()
+
+
+def get_config(config_file=None, cfg_override=None, workspace=None):
+    """
+    Get the configuration for the agent.
+    :param config_file: Path to the configuration file.
+    :return: Configuration dictionary.
+    """
+    # ignore repeated loaded configs
+    loaded_configs = []
+
+    # 1. load default config
+    default_config_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "../setting.yaml"))
+    assert os.path.isfile(default_config_file), f"Default configuration file '{default_config_file}' not found."
+    cfg = Config()
+    _merge_config_file(cfg, default_config_file, loaded_configs)
+
+    # 2. load user config
+    user_home = os.path.expanduser('~')
+    user_config_file = os.path.abspath(os.path.join(user_home, '.ucagent/setting.yaml'))
+    if os.path.isfile(user_config_file):
+        _merge_config_file(cfg, user_config_file, loaded_configs)
+    else:
+        info(f"User config file '{user_config_file}' not found, touch an empty one.")
+        os.makedirs(os.path.dirname(user_config_file), exist_ok=True)
+        with open(user_config_file, 'w') as f:
+            f.write("# UCAgent user configuration file\n")
+        loaded_configs.append(user_config_file)
+
+    # 3. load lang config
+    lang = cfg.get_value('lang', 'zh')
+    lang_config_file = os.path.abspath(os.path.join(os.path.dirname(__file__), f"../lang/{lang}/config/default.yaml"))
+    info(f"Load config from '{lang_config_file}'")
+    assert os.path.isfile(lang_config_file), f"Language configuration file '{lang_config_file}' not found."
+    _merge_config_file(cfg, lang_config_file, loaded_configs)
+
+    # 4. load workspace config
+    if workspace is not None:
+        cwd_setting_file = get_abs_path_cwd_ucagent(workspace, "setting.yaml")
+        if os.path.isfile(cwd_setting_file):
+            _merge_config_file(cfg, cwd_setting_file, loaded_configs)
+        else:
+            info(f"Workspace config file '{cwd_setting_file}' not found, ignore.")
+
+    # 5. find user specified config file
+    target_file = config_file
+    if config_file is None:
+        target_file = 'config.yaml'  # Default configuration file
+    user_config_file_path = find_file_in_paths(target_file, [os.getcwd(),
+                                                             os.path.join(user_home, '.ucagent/'),
+                                                             os.path.join(os.path.dirname(__file__), f"../lang/{lang}/config/")
+                                                      ])
+    if config_file is not None:
+        assert user_config_file_path is not None, f"Config file '{config_file}' not found in current directory or default config path."
+    if user_config_file_path is None:
+        info(f"Default user config file '{config_file}' not found, ignore.")
+    else:
+        user_config_file_path = os.path.abspath(user_config_file_path)
+        _merge_config_file(cfg, user_config_file_path, loaded_configs)
+
+    # set override values
+    cfg.set_values(cfg_override)
+    if cfg.get_value("runtime_options.formal_engine", None) is not None:
+        from ucagent.eda.formal_workflow import select_formal_engine
+
+        cfg = Config(select_formal_engine(cfg.as_dict()))
+        # Engine defaults specialize the built-in workflow; explicit CLI overrides remain last.
+        cfg.set_values(cfg_override)
+    object.__setattr__(cfg, "_loaded_config_files", list(loaded_configs))
+    return cfg.freeze()

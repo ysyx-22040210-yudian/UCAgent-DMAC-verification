@@ -1,0 +1,2 @@
+PASS replay 9 input vectors
+/home/ucagent-lab/development/20261004-formalmc-migration/delivery/DMAC-fullflow-20261005/replay/fault_fifo_pop_mutant/replay_tb.sv:411: $finish called at 56 (1ns)

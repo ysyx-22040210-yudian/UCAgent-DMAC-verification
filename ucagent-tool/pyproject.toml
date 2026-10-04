@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools>=80", "setuptools-scm>=8", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "UCAgent"
+description = "UnityChip Verification Agent - AI-powered hardware verification tool"
+authors = [
+    {name = "XS-MLVP", email = "unitychip@bosc.ac.cn"},
+]
+license = {text = "MIT"}
+readme = "README.en.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "langchain>=1.2.15",
+    "langchain_community>=0.3.31",
+    "openai>=1.109.1",
+    "langgraph>=1.0.5",
+    "langchain_openai>=1.1.6",
+    "langmem>=0.0.30",
+    "mem0ai>=0.1.118",
+    "langchain_mcp_adapters>=0.1.11",
+    "mcp>=1.26.0,<2.0.0",
+    "psutil>=7.1.0",
+    "langfuse>=3.9.1",
+    "gitpython>=3.1.43",
+    "pytoffee@git+https://gitlink.org.cn/XS-MLVP/toffee@master",
+    "toffee-test@git+https://gitlink.org.cn/XS-MLVP/toffee-test@master",
+    "textual>=7.3.0",
+    "Jinja2>=3.1.6",
+    "fastapi>=0.135.0",
+    "uvicorn[standard]>=0.42.0",
+    "docker>=7.1.0",
+    "kubernetes>=33.1.0",
+    "wavekit>=0.7.0,<0.8.0",
+    "regex>=2024.11.6",
+    "PyYAML>=6.0.2",
+    "python-multipart>=0.0.20",
+]
+dynamic = ["version"]
+
+[project.scripts]
+ucagent = "ucagent.cli:main"
+ucagent-platform = "ucagent.server.platform_main:main"
+
+[project.urls]
+Homepage = "https://github.com/XS-MLVP/UCAgent"
+
+[tool.setuptools_scm]
+fallback_version = "0.9.1"
+version_file = "ucagent/_version.py"
+version_scheme = "guess-next-dev"
+local_scheme = "node-and-date"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["ucagent*"]
+
+[tool.setuptools.package-data]
+ucagent = [
+    "setting.yaml",
+    "lang/**/*.yaml",
+    "lang/**/*.yml",
+    "lang/**/*.md",
+    "lang/**/*.json",
+    "lang/**/*.jinja2",
+    "lang/**/*.j2",
+    "lang/**/*.txt",
+    "lang/**/*.ini",
+    "lang/**/*.sv",
+    "lang/**/*.tcl",
+    "lang/**/*.py",
+    "server/templates/*.html",
+    "server/static/**/*",
+]

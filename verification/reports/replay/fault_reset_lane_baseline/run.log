@@ -1,0 +1,2 @@
+FATAL: /home/ucagent-lab/development/20261004-formalmc-migration/delivery/DMAC-fullflow-20261005/replay/fault_reset_lane_baseline/replay_tb.sv:56: VECTOR_MISMATCH step=0 signal=dut.rd_lane_q
+       Time: 4  Scope: replay_tb

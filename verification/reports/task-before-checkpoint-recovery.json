@@ -1,0 +1,20 @@
+{
+  "project_id": "b6fcf378761140e9b80c9c6aa990873d",
+  "session_id": "e266f8230d2140f184854271dcf7d864",
+  "workspace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/e266f8230d2140f184854271dcf7d864",
+  "source_root": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-20261005",
+  "execution_mode": "built_in_agent_with_engineer_review",
+  "options": {
+    "project_id": "b6fcf378761140e9b80c9c6aa990873d",
+    "dut": "dmac",
+    "engine": "sby",
+    "toolchain": "sby",
+    "cex_replay": true,
+    "static_review": true,
+    "human_review": false
+  },
+  "source_sha256": {
+    "dmac.sv": "45b7898ce7eb5458c886189747ef703696365a02692810ef4aae879970895340",
+    "dmac_fifo.sv": "1e3c2eb8d75487f52920695db28db03b5b06d7b08b5ae8d453f8dfb8defacc61"
+  }
+}

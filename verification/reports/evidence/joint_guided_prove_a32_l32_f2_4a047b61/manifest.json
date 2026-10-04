@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "run_id": "6fe692e2e61d49f78a3caf1103bab687.formal",
+  "toolchain_id": "sby",
+  "tool": "sby",
+  "tool_version": null,
+  "execution_host": "unknown",
+  "execution_user": null,
+  "command": [
+    "/home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/sby",
+    "-d",
+    "proof",
+    "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-joint-20261005-4a047b61/.ucagent/platform-inputs/6fe692e2e61d49f78a3caf1103bab687/run.sby"
+  ],
+  "started_at": "2026-10-04T18:17:54.920222+00:00",
+  "completed_at": "2026-10-04T18:22:08.788388+00:00",
+  "execution_status": "timeout",
+  "verification_status": "unknown",
+  "return_code": 8,
+  "input_hashes": {
+    ".ucagent/platform-inputs/6fe692e2e61d49f78a3caf1103bab687/run.sby": "1f3f21f5e1cb7b85ebda05f6f41e61fa6232f7ec2092838e5412798f9c2e6d38",
+    "formal": "d8617b5b665b979c70b0e811beba8344ca8f66186b139375d39d8d6ea72c5d66",
+    "formal/dmac_checker.sv": "e244cb52a4ad141602cefa002318a7f6e4db74e8d8c4df704c871ac2c9b15f69",
+    "formal/dmac_monitor.svh": "fd9ff27ef0d78f31e9aceda0ba735d203aa1ad8df0aaa0246d664cd40c7ddfe9",
+    "formal/dmac_wrapper.sv": "6208de04dd076a46efde5296a0d8f272c21e4eddf765598a4a3ccbcac0b7e0a2",
+    "formal/fifo_monitor.svh": "cb29540b331cced8fa7dcca12566b9d8ae901ce20fef40e85b7fd9dc53ad1ebc",
+    "rtl/dmac.sv": "2b28ffc93daf393a234c303571fd3a17450d554fe788378df7d3d1704c8d0fc3",
+    "rtl/dmac_fifo.sv": "30c6023684d19c3a850d80b28f4628960df7ef24eebb1e6c03b8d61d0e2fd5a8"
+  },
+  "prepared_input_hashes": {
+    ".ucagent/platform-inputs/6fe692e2e61d49f78a3caf1103bab687/run.sby": "1f3f21f5e1cb7b85ebda05f6f41e61fa6232f7ec2092838e5412798f9c2e6d38"
+  },
+  "input_hash_excludes": [
+    ".ucagent",
+    ".ucagent/platform-runs/6fe692e2e61d49f78a3caf1103bab687/formal"
+  ],
+  "input_fingerprint": "df2a92923a8d01fee110dc7c6045a27b497b3716dc98128b509f6c931848fa3a",
+  "session_inputs": [
+    {
+      "source": "formal",
+      "destination": "inputs/formal"
+    },
+    {
+      "source": "rtl/dmac.sv",
+      "destination": "inputs/rtl/dmac.sv"
+    },
+    {
+      "source": "rtl/dmac_fifo.sv",
+      "destination": "inputs/rtl/dmac_fifo.sv"
+    }
+  ],
+  "cache_hit": false,
+  "source_manifest": null,
+  "test": null,
+  "suite": null,
+  "seed": null,
+  "property_set": null,
+  "metadata": {
+    "adapter": "sby",
+    "engine": "sby/smtbmc/z3",
+    "mode": "prove",
+    "depth": 12,
+    "cacheable": false
+  },
+  "tests": [],
+  "coverage": [],
+  "properties": [],
+  "diagnostics": [
+    {
+      "error_code": "sby_timeout",
+      "error": "SBY could not finish verification.",
+      "next_action": "Inspect proof/logfile.txt for RTL, solver or resource errors."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "cd40af07b6df427ab3eb05e92c881007",
+      "run_id": "6fe692e2e61d49f78a3caf1103bab687.formal",
+      "path": ".",
+      "kind": "proof_directory",
+      "is_directory": true,
+      "size_bytes": 9001869,
+      "sha256": "5121cb03b5c0b717e31d4112620a94d68ea435ac65a5769c081976f8d25d29f5",
+      "media_type": "application/x-directory",
+      "hash_excludes": [
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "3cee47f1b6d24a299e4a0630a7d22012",
+      "run_id": "6fe692e2e61d49f78a3caf1103bab687.formal",
+      "path": "events.ndjson",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 15787,
+      "sha256": "b1adda5d6b56b07ba2b6e5777273e053ab755019a4cb6fac794c8ba48721b55d",
+      "media_type": "application/octet-stream",
+      "hash_excludes": []
+    },
+    {
+      "id": "3a30f0b738d54dcb9e477d980996d2b8",
+      "run_id": "6fe692e2e61d49f78a3caf1103bab687.formal",
+      "path": "proof/logfile.txt",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 5436,
+      "sha256": "955e0f4d0a2db6d7f1f3df981eb1cd74e8dbf1f523412395d8ec5b17704367bd",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    },
+    {
+      "id": "a369224265ed49caa8fcb2636f2b3e47",
+      "run_id": "6fe692e2e61d49f78a3caf1103bab687.formal",
+      "path": "proof/status",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 12,
+      "sha256": "dc235b4a6818a54e86e90eca41e91fc0daa61e017e8b72d90b41d8f065e6607f",
+      "media_type": "application/octet-stream",
+      "hash_excludes": []
+    },
+    {
+      "id": "c4e259c14e464c4399b491c6351f6bba",
+      "run_id": "6fe692e2e61d49f78a3caf1103bab687.formal",
+      "path": "stderr.log",
+      "kind": "log",
+      "is_directory": false,
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    },
+    {
+      "id": "f091de2c4d5f4927bd41249ce42d9563",
+      "run_id": "6fe692e2e61d49f78a3caf1103bab687.formal",
+      "path": "stdout.log",
+      "kind": "log",
+      "is_directory": false,
+      "size_bytes": 5436,
+      "sha256": "955e0f4d0a2db6d7f1f3df981eb1cd74e8dbf1f523412395d8ec5b17704367bd",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    }
+  ],
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "digest": "835a5e90816fcd6a65996d9387c616de30cd329b9a5de18abf321a9e8ee6521a"
+  }
+}

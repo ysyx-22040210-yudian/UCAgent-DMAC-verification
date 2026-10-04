@@ -1,0 +1,9 @@
+{
+  "predecessor": "e266f8230d2140f184854271dcf7d864",
+  "recovery": "5081ad7183fe40ef84bec88043a12d95",
+  "reason": "Non-serializable transient cache aborted native checkpoint; original version guard correctly refused stale resume",
+  "source_functional_RTL": "unchanged",
+  "imported": "Reviewed planning/spec/property/analysis authoring only",
+  "excluded": "Stage checkpoints, run_results, prior guided proofs, settings, control files",
+  "final_action": "Re-execute all original stage gates and fresh SBY jobs"
+}

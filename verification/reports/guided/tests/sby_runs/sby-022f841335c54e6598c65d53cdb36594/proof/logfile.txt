@@ -1,0 +1,82 @@
+SBY  2:20:03 [proof] Copy '/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/e266f8230d2140f184854271dcf7d864/formal_out/tests/sby_runs/.sby-022f841335c54e6598c65d53cdb36594.mnqh_wwq.tmp/inputs' to '/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/e266f8230d2140f184854271dcf7d864/formal_out/tests/sby_runs/.sby-022f841335c54e6598c65d53cdb36594.mnqh_wwq.tmp/proof/src/inputs'.
+SBY  2:20:03 [proof] engine_0: smtbmc z3
+SBY  2:20:03 [proof] base: starting process "cd proof/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  2:20:03 [proof] base: Warning: Replacing memory \storage with list of registers. See inputs/dmac/rtl/dmac_fifo.sv:41
+SBY  2:20:03 [proof] base: finished (returncode=0)
+SBY  2:20:03 [proof] prep: starting process "cd proof/model; yosys -ql design_prep.log design_prep.ys"
+SBY  2:20:04 [proof] prep: finished (returncode=0)
+SBY  2:20:04 [proof] smt2: starting process "cd proof/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY  2:20:04 [proof] smt2: finished (returncode=0)
+SBY  2:20:04 [proof] engine_0.basecase: starting process "cd proof; yosys-smtbmc -s z3 --presat --noprogress -t 40  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY  2:20:04 [proof] engine_0.induction: starting process "cd proof; yosys-smtbmc -s z3 --presat -i --noprogress -t 40  --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-yw engine_0/trace_induct.yw --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2"
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Solver: z3
+SBY  2:20:04 [proof] engine_0.induction: ##   0:00:00  Solver: z3
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 0..
+SBY  2:20:04 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 40..
+SBY  2:20:04 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 39..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 0..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 1..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 1..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 2..
+SBY  2:20:04 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 38..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 2..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 3..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 3..
+SBY  2:20:04 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 37..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 4..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 4..
+SBY  2:20:04 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 36..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 5..
+SBY  2:20:04 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 35..
+SBY  2:20:04 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 5..
+SBY  2:20:05 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 6..
+SBY  2:20:05 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 34..
+SBY  2:20:05 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 6..
+SBY  2:20:05 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 33..
+SBY  2:20:05 [proof] engine_0.basecase: ##   0:00:01  Checking assumptions in step 7..
+SBY  2:20:05 [proof] engine_0.induction: ##   0:00:01  Trying induction in step 32..
+SBY  2:20:05 [proof] engine_0.basecase: ##   0:00:01  Checking assertions in step 7..
+SBY  2:20:05 [proof] engine_0.induction: ##   0:00:01  Trying induction in step 31..
+SBY  2:20:06 [proof] engine_0.induction: ##   0:00:02  Trying induction in step 30..
+SBY  2:20:06 [proof] engine_0.induction: ##   0:00:02  Trying induction in step 29..
+SBY  2:20:07 [proof] engine_0.induction: ##   0:00:02  Trying induction in step 28..
+SBY  2:20:08 [proof] engine_0.induction: ##   0:00:03  Trying induction in step 27..
+SBY  2:20:08 [proof] engine_0.induction: ##   0:00:04  Trying induction in step 26..
+SBY  2:20:09 [proof] engine_0.basecase: ##   0:00:04  Checking assumptions in step 8..
+SBY  2:20:09 [proof] engine_0.basecase: ##   0:00:05  Checking assertions in step 8..
+SBY  2:20:10 [proof] engine_0.induction: ##   0:00:05  Trying induction in step 25..
+SBY  2:20:15 [proof] engine_0.induction: ##   0:00:11  Trying induction in step 24..
+SBY  2:20:17 [proof] engine_0.induction: ##   0:00:13  Trying induction in step 23..
+SBY  2:20:19 [proof] engine_0.basecase: ##   0:00:15  Checking assumptions in step 9..
+SBY  2:20:20 [proof] engine_0.basecase: ##   0:00:15  Checking assertions in step 9..
+SBY  2:20:20 [proof] engine_0.induction: ##   0:00:15  Trying induction in step 22..
+SBY  2:20:23 [proof] engine_0.induction: ##   0:00:18  Trying induction in step 21..
+SBY  2:20:25 [proof] engine_0.induction: ##   0:00:20  Trying induction in step 20..
+SBY  2:20:30 [proof] engine_0.induction: ##   0:00:25  Trying induction in step 19..
+SBY  2:20:30 [proof] engine_0.basecase: ##   0:00:25  Checking assumptions in step 10..
+SBY  2:20:31 [proof] engine_0.basecase: ##   0:00:27  Checking assertions in step 10..
+SBY  2:20:43 [proof] engine_0.basecase: ##   0:00:39  Checking assumptions in step 11..
+SBY  2:20:45 [proof] engine_0.basecase: ##   0:00:41  Checking assertions in step 11..
+SBY  2:21:32 [proof] engine_0.induction: ##   0:01:28  waiting for solver (1 minute)
+SBY  2:21:33 [proof] engine_0.basecase: ##   0:01:28  Checking assumptions in step 12..
+SBY  2:21:34 [proof] engine_0.induction: ##   0:01:30  Trying induction in step 18..
+SBY  2:21:37 [proof] engine_0.basecase: ##   0:01:32  Checking assertions in step 12..
+SBY  2:22:30 [proof] engine_0.basecase: ##   0:02:25  Checking assumptions in step 13..
+SBY  2:22:33 [proof] engine_0.basecase: ##   0:02:29  Checking assertions in step 13..
+SBY  2:22:36 [proof] engine_0.induction: ##   0:02:31  waiting for solver (1 minute)
+SBY  2:22:46 [proof] engine_0.induction: ##   0:02:41  Trying induction in step 17..
+SBY  2:22:48 [proof] engine_0.induction: ##   0:02:44  Trying induction in step 16..
+SBY  2:23:32 [proof] engine_0.basecase: ##   0:03:28  Checking assumptions in step 14..
+SBY  2:23:33 [proof] engine_0.induction: ##   0:03:28  Trying induction in step 15..
+SBY  2:23:36 [proof] engine_0.basecase: ##   0:03:31  Checking assertions in step 14..
+SBY  2:23:36 [proof] engine_0.induction: ##   0:03:32  Trying induction in step 14..
+SBY  2:24:05 [proof] engine_0.induction: ##   0:04:01  Trying induction in step 13..
+SBY  2:24:12 [proof] engine_0.induction: ##   0:04:08  Trying induction in step 12..
+SBY  2:24:12 [proof] Reached TIMEOUT (240 seconds). Terminating all subprocesses.
+SBY  2:24:12 [proof] engine_0.basecase: terminating process
+SBY  2:24:12 [proof] engine_0.induction: terminating process
+SBY  2:24:12 [proof] summary: Elapsed clock time [H:MM:SS (secs)]: 0:04:01 (241)
+SBY  2:24:12 [proof] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:01 (1)
+SBY  2:24:12 [proof] summary: engine_0 (smtbmc z3) did not return a status
+SBY  2:24:12 [proof] summary: engine_0 did not produce any traces
+SBY  2:24:12 [proof] DONE (TIMEOUT, rc=8)

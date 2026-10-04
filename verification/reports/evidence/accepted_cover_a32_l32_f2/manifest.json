@@ -1,0 +1,1755 @@
+{
+  "schema_version": 1,
+  "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+  "toolchain_id": "sby",
+  "tool": "sby",
+  "tool_version": null,
+  "execution_host": "unknown",
+  "execution_user": null,
+  "command": [
+    "/home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/sby",
+    "-d",
+    "proof",
+    "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-native-20261005/.ucagent/platform-inputs/6bd1ef7edf434402ae0cff36679bdc70/run.sby"
+  ],
+  "started_at": "2026-10-04T16:59:28.152809+00:00",
+  "completed_at": "2026-10-04T17:00:06.145578+00:00",
+  "execution_status": "completed",
+  "verification_status": "passed",
+  "return_code": 0,
+  "input_hashes": {
+    ".ucagent/platform-inputs/6bd1ef7edf434402ae0cff36679bdc70/run.sby": "363233400e3f747833c3fa64ef70e9dea6723ade3c70b33cbdc9c370c57796c7",
+    "formal": "1088ab76d82319c3ed1786e1301a09452fd80f5174eb90c01596bb21af38cb83",
+    "formal/dmac_harness.sv": "3d7f91408cb50b2effb4519564e7c444abd5609504b1e6e0e0cd7fce9100d080",
+    "formal/dmac_monitor.svh": "fd9ff27ef0d78f31e9aceda0ba735d203aa1ad8df0aaa0246d664cd40c7ddfe9",
+    "formal/fifo_monitor.svh": "cb29540b331cced8fa7dcca12566b9d8ae901ce20fef40e85b7fd9dc53ad1ebc",
+    "rtl/dmac.sv": "2b28ffc93daf393a234c303571fd3a17450d554fe788378df7d3d1704c8d0fc3",
+    "rtl/dmac_fifo.sv": "30c6023684d19c3a850d80b28f4628960df7ef24eebb1e6c03b8d61d0e2fd5a8"
+  },
+  "prepared_input_hashes": {
+    ".ucagent/platform-inputs/6bd1ef7edf434402ae0cff36679bdc70/run.sby": "363233400e3f747833c3fa64ef70e9dea6723ade3c70b33cbdc9c370c57796c7"
+  },
+  "input_hash_excludes": [
+    ".ucagent",
+    ".ucagent/platform-runs/6bd1ef7edf434402ae0cff36679bdc70/formal"
+  ],
+  "input_fingerprint": "cb33e33bc9adb6ae50f7626839bb000a41e06eac3d56106eb094d674045fd131",
+  "session_inputs": [
+    {
+      "source": "formal",
+      "destination": "inputs/formal"
+    },
+    {
+      "source": "rtl/dmac.sv",
+      "destination": "inputs/rtl/dmac.sv"
+    },
+    {
+      "source": "rtl/dmac_fifo.sv",
+      "destination": "inputs/rtl/dmac_fifo.sv"
+    }
+  ],
+  "cache_hit": false,
+  "source_manifest": null,
+  "test": null,
+  "suite": null,
+  "seed": null,
+  "property_set": null,
+  "metadata": {
+    "adapter": "sby",
+    "engine": "sby/smtbmc/z3",
+    "mode": "cover",
+    "depth": 24,
+    "cacheable": false
+  },
+  "tests": [],
+  "coverage": [],
+  "properties": [
+    {
+      "name": "Property COVER in dmac_harness at inputs/formal/dmac_harness.sv:25.9-25.84",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_RESET_ABORT_RD",
+        "location": "inputs/formal/dmac_harness.sv:25.9-25.84",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace3.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness at inputs/formal/dmac_harness.sv:26.9-26.84",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_RESET_ABORT_WR",
+        "location": "inputs/formal/dmac_harness.sv:26.9-26.84",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace10.vcd"
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:84.5-84.93",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_ACK_ADMISSION",
+        "location": "inputs/formal/dmac_monitor.svh:84.5-84.93",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:60.5-60.54",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_ACTIVE",
+        "location": "inputs/formal/dmac_monitor.svh:60.5-60.54",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:80.5-80.82",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_ADDRESS",
+        "location": "inputs/formal/dmac_monitor.svh:80.5-80.82",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:70.5-70.69",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_BUSY_QUOTA",
+        "location": "inputs/formal/dmac_monitor.svh:70.5-70.69",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:93.5-93.102",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_COMPLETE_COUNTS",
+        "location": "inputs/formal/dmac_monitor.svh:93.5-93.102",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:91.5-91.105",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_DATA",
+        "location": "inputs/formal/dmac_monitor.svh:91.5-91.105",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:63.5-63.83",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_DELIVER_LEFT",
+        "location": "inputs/formal/dmac_monitor.svh:63.5-63.83",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:82.5-82.53",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_DONE",
+        "location": "inputs/formal/dmac_monitor.svh:82.5-82.53",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:62.5-62.72",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_FETCH_LEFT",
+        "location": "inputs/formal/dmac_monitor.svh:62.5-62.72",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:95.5-95.68",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_HEAD_VALID",
+        "location": "inputs/formal/dmac_monitor.svh:95.5-95.68",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:86.5-86.82",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_IDLE_EMPTY",
+        "location": "inputs/formal/dmac_monitor.svh:86.5-86.82",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:66.5-66.54",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_LANE",
+        "location": "inputs/formal/dmac_monitor.svh:66.5-66.54",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:74.5-74.69",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_NO_EXTRA",
+        "location": "inputs/formal/dmac_monitor.svh:74.5-74.69",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:75.5-75.73",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_NO_EXTRA_DEV",
+        "location": "inputs/formal/dmac_monitor.svh:75.5-75.73",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:72.5-72.71",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_OCCUPANCY",
+        "location": "inputs/formal/dmac_monitor.svh:72.5-72.71",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:78.5-78.104",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_PROGRESS",
+        "location": "inputs/formal/dmac_monitor.svh:78.5-78.104",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:68.5-68.77",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_QUOTA",
+        "location": "inputs/formal/dmac_monitor.svh:68.5-68.77",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:58.9-58.61",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_STALL_ADDRESS",
+        "location": "inputs/formal/dmac_monitor.svh:58.9-58.61",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:57.9-57.51",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RD_STALL_VALID",
+        "location": "inputs/formal/dmac_monitor.svh:57.9-57.51",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:85.5-85.93",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_ACK_ADMISSION",
+        "location": "inputs/formal/dmac_monitor.svh:85.5-85.93",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:61.5-61.54",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_ACTIVE",
+        "location": "inputs/formal/dmac_monitor.svh:61.5-61.54",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:81.5-81.82",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_ADDRESS",
+        "location": "inputs/formal/dmac_monitor.svh:81.5-81.82",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:90.5-90.75",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_ASSEMBLY",
+        "location": "inputs/formal/dmac_monitor.svh:90.5-90.75",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:71.5-71.69",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_BUSY_QUOTA",
+        "location": "inputs/formal/dmac_monitor.svh:71.5-71.69",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:64.5-64.83",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_COLLECT_LEFT",
+        "location": "inputs/formal/dmac_monitor.svh:64.5-64.83",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:65.5-65.74",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_COMMIT_LEFT",
+        "location": "inputs/formal/dmac_monitor.svh:65.5-65.74",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:94.5-94.102",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_COMPLETE_COUNTS",
+        "location": "inputs/formal/dmac_monitor.svh:94.5-94.102",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:92.5-92.68",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_DATA",
+        "location": "inputs/formal/dmac_monitor.svh:92.5-92.68",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:83.5-83.53",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_DONE",
+        "location": "inputs/formal/dmac_monitor.svh:83.5-83.53",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:96.5-96.68",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_HEAD_VALID",
+        "location": "inputs/formal/dmac_monitor.svh:96.5-96.68",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:87.5-87.82",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_IDLE_EMPTY",
+        "location": "inputs/formal/dmac_monitor.svh:87.5-87.82",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:67.5-67.54",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_LANE",
+        "location": "inputs/formal/dmac_monitor.svh:67.5-67.54",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:76.5-76.69",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_NO_EXTRA",
+        "location": "inputs/formal/dmac_monitor.svh:76.5-76.69",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:77.5-77.73",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_NO_EXTRA_MEM",
+        "location": "inputs/formal/dmac_monitor.svh:77.5-77.73",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:73.5-73.71",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_OCCUPANCY",
+        "location": "inputs/formal/dmac_monitor.svh:73.5-73.71",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:88.5-88.47",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_PACK",
+        "location": "inputs/formal/dmac_monitor.svh:88.5-88.47",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:89.5-89.75",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_PACK_UNUSED_ZERO",
+        "location": "inputs/formal/dmac_monitor.svh:89.5-89.75",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:79.5-79.104",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_PROGRESS",
+        "location": "inputs/formal/dmac_monitor.svh:79.5-79.104",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:69.5-69.77",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_QUOTA",
+        "location": "inputs/formal/dmac_monitor.svh:69.5-69.77",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:53.9-53.61",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_STALL_ADDRESS",
+        "location": "inputs/formal/dmac_monitor.svh:53.9-53.61",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:54.9-54.58",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_STALL_DATA",
+        "location": "inputs/formal/dmac_monitor.svh:54.9-54.58",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:52.9-52.51",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WR_STALL_VALID",
+        "location": "inputs/formal/dmac_monitor.svh:52.9-52.51",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:99.5-99.59",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_DUPLEX_DONE",
+        "location": "inputs/formal/dmac_monitor.svh:99.5-99.59",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace11.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:106.9-106.67",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_HIGH_LEN_RD",
+        "location": "inputs/formal/dmac_monitor.svh:106.9-106.67",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace1.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:107.9-107.67",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_HIGH_LEN_WR",
+        "location": "inputs/formal/dmac_monitor.svh:107.9-107.67",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace8.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:109.5-109.84",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_PENDING_RD",
+        "location": "inputs/formal/dmac_monitor.svh:109.5-109.84",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace2.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:110.5-110.86",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_PENDING_WR",
+        "location": "inputs/formal/dmac_monitor.svh:110.5-110.86",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace6.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:100.5-100.87",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_READ_WRAP",
+        "location": "inputs/formal/dmac_monitor.svh:100.5-100.87",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace0.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:97.5-97.60",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_THREE_RD",
+        "location": "inputs/formal/dmac_monitor.svh:97.5-97.60",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace14.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:98.5-98.60",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_THREE_WR",
+        "location": "inputs/formal/dmac_monitor.svh:98.5-98.60",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace15.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:101.5-101.88",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_WRITE_WRAP",
+        "location": "inputs/formal/dmac_monitor.svh:101.5-101.88",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace9.vcd"
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:24.5-24.54",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_COUNT",
+        "location": "inputs/formal/fifo_monitor.svh:24.5-24.54",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:29.5-29.71",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_HEAD",
+        "location": "inputs/formal/fifo_monitor.svh:29.5-29.71",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:26.5-26.85",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_POINTER",
+        "location": "inputs/formal/fifo_monitor.svh:26.5-26.85",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:25.5-25.87",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_RANGE",
+        "location": "inputs/formal/fifo_monitor.svh:25.5-25.87",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:28.5-28.95",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_READY",
+        "location": "inputs/formal/fifo_monitor.svh:28.5-28.95",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:27.5-27.63",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_VALID",
+        "location": "inputs/formal/fifo_monitor.svh:27.5-27.63",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:32.5-32.55",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_FIFO_EMPTY",
+        "location": "inputs/formal/fifo_monitor.svh:32.5-32.55",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace0.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:31.5-31.58",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_FIFO_FULL",
+        "location": "inputs/formal/fifo_monitor.svh:31.5-31.58",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace4.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:30.5-30.73",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_FIFO_FULL_REPLACE",
+        "location": "inputs/formal/fifo_monitor.svh:30.5-30.73",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace7.vcd"
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_519]",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_519",
+        "location": "inputs/formal/fifo_monitor.svh:36.9-36.72",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_532]",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_532",
+        "location": "inputs/formal/fifo_monitor.svh:36.9-36.72",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:24.5-24.54",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_COUNT",
+        "location": "inputs/formal/fifo_monitor.svh:24.5-24.54",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:29.5-29.71",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_HEAD",
+        "location": "inputs/formal/fifo_monitor.svh:29.5-29.71",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:26.5-26.85",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_POINTER",
+        "location": "inputs/formal/fifo_monitor.svh:26.5-26.85",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:25.5-25.87",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_RANGE",
+        "location": "inputs/formal/fifo_monitor.svh:25.5-25.87",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:28.5-28.95",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_READY",
+        "location": "inputs/formal/fifo_monitor.svh:28.5-28.95",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:27.5-27.63",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FIFO_VALID",
+        "location": "inputs/formal/fifo_monitor.svh:27.5-27.63",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:32.5-32.55",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_FIFO_EMPTY",
+        "location": "inputs/formal/fifo_monitor.svh:32.5-32.55",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace5.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:31.5-31.58",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_FIFO_FULL",
+        "location": "inputs/formal/fifo_monitor.svh:31.5-31.58",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace12.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:30.5-30.73",
+      "status": "covered",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_FIFO_FULL_REPLACE",
+        "location": "inputs/formal/fifo_monitor.svh:30.5-30.73",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace13.vcd"
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_519]",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_519",
+        "location": "inputs/formal/fifo_monitor.svh:36.9-36.72",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_532]",
+      "status": "disabled",
+      "runtime_seconds": 40.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/run.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_532",
+        "location": "inputs/formal/fifo_monitor.svh:36.9-36.72",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    }
+  ],
+  "diagnostics": [],
+  "artifacts": [
+    {
+      "id": "0350481732f448e98fadb82bc6650202",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": ".",
+      "kind": "proof_directory",
+      "is_directory": true,
+      "size_bytes": 2533675,
+      "sha256": "097b87465ecce06af05ab50a235df76097f49f9edc5131ff90c5f27500d42df6",
+      "media_type": "application/x-directory",
+      "hash_excludes": [
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "dce1cd8298d44862ba820c0934dcd3b4",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "events.ndjson",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 40639,
+      "sha256": "dde5e7493d2ade3e1f8634c5c93e66edfce669f69255e28d507736c8dc2eeba7",
+      "media_type": "application/octet-stream",
+      "hash_excludes": []
+    },
+    {
+      "id": "2bd9d9ae31484b2298abb235af8922cf",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace0.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 28058,
+      "sha256": "b15de69b8dd229b028f0004a4439ddc613dcc20741bc2a25e0aedc90536ec860",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "4ecea698fc6044879c0f5eb21a288b98",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace1.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 28058,
+      "sha256": "00ed42c15be9acbcfd03268b6b2e763359b34f416c66e06bd295b55a2499fb2f",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "1cad11cb09804bb0bec6960e2e36d18c",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace10.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 51573,
+      "sha256": "d2d2d11a8080545981a1036aadae8c0921dabe69f79f6f94be32e2ba13a1d06d",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "fe58597665874832981faea32ee2b5dc",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace11.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 51573,
+      "sha256": "2d0b1ef2b64b74c9529b317c4fd0215d8010f85fab1c9c5328120cd4d18bbe2b",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "b49556eed4ce4d14b0e8d2fb514a890d",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace12.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 65687,
+      "sha256": "6c86ee0a96e860ed1b2aa57c7a31e66517e7a6779172414c4d99cf05ab25a626",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "8840971c893c42d1a2043c22a854cbb3",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace13.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 79802,
+      "sha256": "f4e9472bf7f1ab421e96c87fe12041a0b240ce045b00129b4c7a62a4eea13b24",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "754a866c379d43738ba80468e0445866",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace14.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 117442,
+      "sha256": "2fb36d54962d5f679362c66bc0d41a9966dda3aed168075ec583ad89f517adcf",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "eaf7dec4aeeb45e38fc93c42a42ad649",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace15.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 117442,
+      "sha256": "0671c141f536f3d28cb444098974b66cf3ac3d0776a624fcbcb1c6f1a950ba2a",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "e4655c3705dc4c09bf0e9a24188bc5e3",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace2.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 32761,
+      "sha256": "66777a3498bc53ba51dffa0c5d24689e326cba43b8d361df826dea0a01e13c36",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "f95dc27a7279401eabeb1f07b5f56d29",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace3.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 32761,
+      "sha256": "52d6625527282daa8c4dddedd33a33ec973b4933ed7857c05d5a2ed41aa0a4be",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "f04fa41f7b134e05a1a80a9d9dd4f2b2",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace4.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 37464,
+      "sha256": "c4a9049c150386289fc8425ed307179caab533ca49799825c66a02309b6f3ba9",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "103de363e4104c9790ac71eddf8f5b21",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace5.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 42167,
+      "sha256": "1eaa56257e34b5fde0e3a9960e2e60ed63a6a7f48101215a45782df289f8d6e5",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "990223d3d1b04e1e9320b41b44b918b0",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace6.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 46870,
+      "sha256": "3fc408a8ef4fec2b0f65776f69e0180f8692b7a0665717a47c852737ddede8c6",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "b04ccc7fbab6452dbda51d702e230dbd",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace7.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 46870,
+      "sha256": "dd1883c84a29d78ab2c64736c709966bd36996a6e7d239db45ff94239293629c",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "d9ad06863a864214a16a3aa84076e18b",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace8.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 46870,
+      "sha256": "52693ab02599f93c8746194f1c4470aa95fa1a483341a5e1adda60c30f3e5870",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "6b95f2e5b0a54f948cd115cab80eebd8",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/engine_0/trace9.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 46870,
+      "sha256": "2f0a97357cf607725a0ceea894ec5da295488527dd23b974e8934a18a9ae02d4",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "1c8f2d7b19274ee59699d622a07626a1",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/logfile.txt",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 14928,
+      "sha256": "67bf7b120a21812472a54824c645f99f70df18ec21d5a15351413f4250fb7e0d",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    },
+    {
+      "id": "1895451e709241798dedcf4129aae017",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/run.xml",
+      "kind": "report",
+      "is_directory": false,
+      "size_bytes": 34313,
+      "sha256": "cbacdb3d39308c353ff17f81948d8f0e9a43ca8f2e4a4d2d3fef40885e917a1c",
+      "media_type": "text/xml",
+      "hash_excludes": []
+    },
+    {
+      "id": "afcdbbf476c84197a3a78de714125eef",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "proof/status",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 10,
+      "sha256": "4f09b5ef2b0d2000dcc54b4410d3f668af30a6eae642a6067f533bc8b40b8196",
+      "media_type": "application/octet-stream",
+      "hash_excludes": []
+    },
+    {
+      "id": "850ca9db0d5d459c8a4c03923cf6a7e3",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "stderr.log",
+      "kind": "log",
+      "is_directory": false,
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    },
+    {
+      "id": "e490161452c14d868a682adca0a5db66",
+      "run_id": "6bd1ef7edf434402ae0cff36679bdc70.formal",
+      "path": "stdout.log",
+      "kind": "log",
+      "is_directory": false,
+      "size_bytes": 14928,
+      "sha256": "67bf7b120a21812472a54824c645f99f70df18ec21d5a15351413f4250fb7e0d",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    }
+  ],
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "digest": "c08a731f546c75e0172052fb4ef0aa79140bb2cea43efb61410c0c65b9d9013a"
+  }
+}

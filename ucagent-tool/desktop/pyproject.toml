@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61,<75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ucagent-desktop"
+version = "0.3.1"
+description = "Native Tk verification workbench client, independent of the UCAgent backend runtime"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.gui-scripts]
+ucagent-desktop = "ucagent_tk.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ucagent_tk*"]
+
+[tool.setuptools.package-data]
+ucagent_tk = ["lang/*.json"]

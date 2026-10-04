@@ -1,0 +1,45 @@
+[
+  {
+    "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+    "path": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json",
+    "current": true,
+    "mode": "cover",
+    "depth": 12,
+    "execution_status": "completed",
+    "verification_status": "inconclusive",
+    "property_states": {
+      "disabled": 63,
+      "covered": 75,
+      "uncovered": 7
+    },
+    "verification": "signature, artifact and staged-input hashes verified",
+    "current_source_inputs_verified": true,
+    "staged_input_sha256": {
+      "dmac/rtl/dmac.sv": "45b7898ce7eb5458c886189747ef703696365a02692810ef4aae879970895340",
+      "dmac/rtl/dmac_fifo.sv": "1e3c2eb8d75487f52920695db28db03b5b06d7b08b5ae8d453f8dfb8defacc61",
+      "formal_out/tests/dmac_checker.sv": "e244cb52a4ad141602cefa002318a7f6e4db74e8d8c4df704c871ac2c9b15f69",
+      "formal_out/tests/dmac_wrapper.sv": "6208de04dd076a46efde5296a0d8f272c21e4eddf765598a4a3ccbcac0b7e0a2"
+    }
+  },
+  {
+    "run_id": "sby-872c6e8dd8bc4642988787232188507c",
+    "path": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+    "current": true,
+    "mode": "bmc",
+    "depth": 12,
+    "execution_status": "completed",
+    "verification_status": "inconclusive",
+    "property_states": {
+      "inconclusive": 63,
+      "disabled": 82
+    },
+    "verification": "signature, artifact and staged-input hashes verified",
+    "current_source_inputs_verified": true,
+    "staged_input_sha256": {
+      "dmac/rtl/dmac.sv": "45b7898ce7eb5458c886189747ef703696365a02692810ef4aae879970895340",
+      "dmac/rtl/dmac_fifo.sv": "1e3c2eb8d75487f52920695db28db03b5b06d7b08b5ae8d453f8dfb8defacc61",
+      "formal_out/tests/dmac_checker.sv": "e244cb52a4ad141602cefa002318a7f6e4db74e8d8c4df704c871ac2c9b15f69",
+      "formal_out/tests/dmac_wrapper.sv": "6208de04dd076a46efde5296a0d8f272c21e4eddf765598a4a3ccbcac0b7e0a2"
+    }
+  }
+]

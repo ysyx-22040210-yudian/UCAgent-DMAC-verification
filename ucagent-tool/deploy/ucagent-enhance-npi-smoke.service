@@ -1,0 +1,16 @@
+# Isolated development acceptance; does not replace ucagent-platform.service.
+[Unit]
+Description=UCAgent NPI development acceptance
+After=network.target
+
+[Service]
+Type=oneshot
+User=ucagent
+Group=ucagent
+WorkingDirectory=/home/ucagent-lab/development/20260906-design-dv-r1
+Environment=PYTHONPATH=/home/ucagent-lab/development/20260906-design-dv-r1
+EnvironmentFile=/etc/ucagent/eda.env
+ExecStart=/home/ucagent-lab/current/venv/bin/python deploy/design_dv_vm_smoke.py --mode roundtrip --output acceptance/npi-roundtrip-5
+TimeoutStartSec=600
+KillMode=control-group
+UMask=0077

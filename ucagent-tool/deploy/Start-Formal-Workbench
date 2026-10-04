@@ -1,0 +1,4 @@
+#!/bin/sh
+# Start the tested Python 3.8 Tk client against the isolated VM formal-stage service.
+set -eu
+exec /usr/local/bin/python3.8 /home/ucagent-lab/desktop/UCAgent-Formal-Workbench-20260911.pyz --server http://127.0.0.1:8811

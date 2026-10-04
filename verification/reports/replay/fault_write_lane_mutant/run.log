@@ -1,0 +1,2 @@
+PASS replay 4 input vectors
+/home/ucagent-lab/development/20261004-formalmc-migration/delivery/DMAC-fullflow-20261005/replay/fault_write_lane_mutant/replay_tb.sv:200: $finish called at 26 (1ns)

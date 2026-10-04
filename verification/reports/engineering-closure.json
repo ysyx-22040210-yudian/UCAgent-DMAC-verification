@@ -1,0 +1,7 @@
+{
+  "all_completed": true,
+  "revision": 140,
+  "method": "Original public native gates; no stage or result mutation",
+  "reason": "Built-in Agent session reached context limit after actual planning, property and environment work",
+  "final_verification_status": "inconclusive"
+}

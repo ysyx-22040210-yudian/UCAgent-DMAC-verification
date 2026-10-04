@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "platform": "linux-x86_64",
+  "distribution": "OSS CAD Suite",
+  "version": "2026-07-27",
+  "url": "https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2026-07-27/oss-cad-suite-linux-x64-20260727.tgz",
+  "sha256": "d5cd8fb0276b51ae6b35945e70e03f222d82a863f2e3523b33b937be0ea416f4",
+  "size": 733399516,
+  "source": "https://github.com/YosysHQ/oss-cad-suite-build/tree/2026-07-27"
+}

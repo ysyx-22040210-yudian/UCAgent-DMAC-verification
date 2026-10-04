@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-05T02:26:29" hostname="IC_EDA" package="bmc" id="0" name="default" tests="145" errors="0" failures="0" time="74" skipped="82">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:158.94-158.161" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:158.94-158.161" id="A_CK_ADDRESS_RD_FIRST">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:182.97-182.168" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:182.97-182.168" id="A_CK_ADDRESS_RD_HOLD">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:170.114-170.188" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:170.114-170.188" id="A_CK_ADDRESS_RD_STEP">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:194.155-194.229" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:194.155-194.229" id="A_CK_ADDRESS_RD_WRAP">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:164.357-164.426" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:164.357-164.426" id="A_CK_ADDRESS_WR_FIRST">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:188.97-188.194" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:188.97-188.194" id="A_CK_ADDRESS_WR_HOLD">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:176.114-176.188" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:176.114-176.188" id="A_CK_ADDRESS_WR_STEP">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:200.155-200.229" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:200.155-200.229" id="A_CK_ADDRESS_WR_WRAP">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:356.120-356.191" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:356.120-356.191" id="A_CK_CONCURRENT_ACCEPT_AFTER_RESET">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:368.131-368.215" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:368.131-368.215" id="A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:380.54-380.186" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:380.54-380.186" id="A_CK_CONCURRENT_SIMULTANEOUS_DONE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:374.131-374.239" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:374.131-374.239" id="A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:242.404-242.706" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:242.404-242.706" id="A_CK_DATA_RD_FOUR_LANES">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:236.214-236.293" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:236.214-236.293" id="A_CK_DATA_RD_LOW_FIRST">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:254.683-254.1278" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:254.683-254.1278" id="A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:248.388-248.520" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:248.388-248.520" id="A_CK_DATA_WR_FOUR_LANES">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:260.683-260.942" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:260.683-260.942" id="A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:422.112-422.172" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:422.112-422.172" id="A_CK_DONE_RD_NEXT_ACK">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:410.13-410.72" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:410.13-410.72" id="A_CK_DONE_RD_NO_ACK">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:386.80-386.126" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:386.80-386.126" id="A_CK_DONE_RD_ONE_CYCLE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:398.42-398.124" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:398.42-398.124" id="A_CK_DONE_RD_PREV_DEV_HANDSHAKE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:428.112-428.172" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:428.112-428.172" id="A_CK_DONE_WR_NEXT_ACK">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:416.13-416.72" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:416.13-416.72" id="A_CK_DONE_WR_NO_ACK">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:392.80-392.126" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:392.80-392.126" id="A_CK_DONE_WR_ONE_CYCLE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:404.42-404.128" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:404.42-404.128" id="A_CK_DONE_WR_PREV_MEM_HANDSHAKE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:296.13-296.118" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:296.13-296.118" id="A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:290.97-290.200" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:290.97-290.200" id="A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:278.13-278.86" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:278.13-278.86" id="A_CK_FLOW_DEV_RD_ACK_GATED">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:284.13-284.86" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:284.13-284.86" id="A_CK_FLOW_DEV_WR_ACK_GATED">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:266.97-266.179" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:266.97-266.179" id="A_CK_FLOW_RD_VALID_ADDRESS_HOLD">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:272.97-272.210" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:272.97-272.210" id="A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:50.13-50.82" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:50.13-50.82" id="A_CK_HOST_RD_ACK_REQ">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:86.13-86.77" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:86.13-86.77" id="A_CK_HOST_RD_DONE_NO_ACK">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:62.93-62.165" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:62.93-62.165" id="A_CK_HOST_RD_LATCH_ADDRESS">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:74.77-74.131" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:74.77-74.131" id="A_CK_HOST_RD_NO_IMMEDIATE_REACK">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:98.112-98.182" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:98.112-98.182" id="A_CK_HOST_RD_PENDING_AFTER_DONE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:56.13-56.82" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:56.13-56.82" id="A_CK_HOST_WR_ACK_REQ">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:92.13-92.77" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:92.13-92.77" id="A_CK_HOST_WR_DONE_NO_ACK">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:68.344-68.419" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:68.344-68.419" id="A_CK_HOST_WR_LATCH_ADDRESS">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:80.77-80.131" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:80.77-80.131" id="A_CK_HOST_WR_NO_IMMEDIATE_REACK">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:104.112-104.182" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:104.112-104.182" id="A_CK_HOST_WR_PENDING_AFTER_DONE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:206.22-206.2417" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:206.22-206.2417" id="A_CK_QUOTA_ENCODING_BOUNDARY">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:224.715-224.786" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:224.715-224.786" id="A_CK_QUOTA_RD_LEN1">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:212.433-212.474" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:212.433-212.474" id="A_CK_QUOTA_RD_ZERO">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:230.715-230.786" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:230.715-230.786" id="A_CK_QUOTA_WR_LEN1">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:218.433-218.474" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:218.433-218.474" id="A_CK_QUOTA_WR_ZERO">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:116.13-116.81" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:116.13-116.81" id="A_CK_READ_DEV_ACK_REQ">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:128.214-128.298" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:128.214-128.298" id="A_CK_READ_DEV_FRAGMENT_HOLD">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:110.94-110.188" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:110.94-110.188" id="A_CK_READ_MEM_FIRST_AFTER_ACCEPT">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:122.13-122.86" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:122.13-122.86" id="A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:308.15-308.117" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:308.15-308.117" id="A_CK_RESET_DATA_CHANNEL_SILENCE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:302.15-302.111" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:302.15-302.111" id="A_CK_RESET_HOST_SILENCE">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:326.116-326.222" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:326.116-326.222" id="A_CK_RESET_INTERRUPT_DEVICE_PARTIAL">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:314.87-314.179" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:314.87-314.179" id="A_CK_RESET_INTERRUPT_RD_STALL">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:320.87-320.179" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:320.87-320.179" id="A_CK_RESET_INTERRUPT_WR_STALL">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:332.53-332.101" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:332.53-332.101" id="A_CK_RESET_RD_DONE_CLEAR">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:344.143-344.239" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:344.143-344.239" id="A_CK_RESET_RD_RESTART_ADDRESS">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:338.53-338.101" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:338.53-338.101" id="A_CK_RESET_WR_DONE_CLEAR">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:350.408-350.506" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:350.408-350.506" id="A_CK_RESET_WR_RESTART_ADDRESS">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:134.13-134.82" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:134.13-134.82" id="A_CK_WRITE_DEV_ACK_REQ">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:140.339-140.393" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:140.339-140.393" id="A_CK_WRITE_MEM_VALID_AFTER_WORD">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:146.13-146.87" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:146.13-146.87" id="A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ">
+</testcase>
+<testcase classname="default" name="Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:152.97-152.207" time="0" type="ASSERT" location="inputs/formal_out/tests/dmac_checker.sv:152.97-152.207" id="A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN">
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:365.13-365.115" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:365.13-365.115" id="C_CK_CONCURRENT_DEVICE_TRANSFER">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:362.13-362.120" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:362.13-362.120" id="C_CK_CONCURRENT_MEM_TRANSFER">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:479.13-479.322" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:479.13-479.322" id="C_CK_COVER_DUPLEX_OVERLAP">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:440.433-440.482" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:440.433-440.482" id="C_CK_COVER_RD_LEN0_COMPLETE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:446.715-446.755" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:446.715-446.755" id="C_CK_COVER_RD_LEN1">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:452.204-452.504" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:452.204-452.504" id="C_CK_COVER_RD_LONGER_PROGRESS">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:434.135-434.224" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:434.135-434.224" id="C_CK_COVER_RD_NONALIGNED">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:464.112-464.159" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:464.112-464.159" id="C_CK_COVER_RD_PENDING_NEXT">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:458.13-458.756" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:458.13-458.756" id="C_CK_COVER_RD_THREE_COMMANDS">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:476.13-476.256" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:476.13-476.256" id="C_CK_COVER_RESET_PARTIAL_FRAGMENT">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:470.13-470.185" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:470.13-470.185" id="C_CK_COVER_RESET_RD_STALL">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:473.13-473.185" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:473.13-473.185" id="C_CK_COVER_RESET_WR_STALL">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:482.13-482.88" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:482.13-482.88" id="C_CK_COVER_SIMULTANEOUS_DONE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:443.433-443.482" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:443.433-443.482" id="C_CK_COVER_WR_LEN0_COMPLETE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:449.715-449.755" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:449.715-449.755" id="C_CK_COVER_WR_LEN1">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:455.13-455.1002" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:455.13-455.1002" id="C_CK_COVER_WR_LONGER_PROGRESS">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:437.400-437.491" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:437.400-437.491" id="C_CK_COVER_WR_NONALIGNED">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:467.112-467.159" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:467.112-467.159" id="C_CK_COVER_WR_PENDING_NEXT">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:461.13-461.756" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:461.13-461.756" id="C_CK_COVER_WR_THREE_COMMANDS">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:161.3-161.133" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:161.3-161.133" id="G_A_CK_ADDRESS_RD_FIRST">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:185.3-185.135" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:185.3-185.135" id="G_A_CK_ADDRESS_RD_HOLD">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:173.3-173.152" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:173.3-173.152" id="G_A_CK_ADDRESS_RD_STEP">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:197.3-197.193" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:197.3-197.193" id="G_A_CK_ADDRESS_RD_WRAP">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:167.3-167.396" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:167.3-167.396" id="G_A_CK_ADDRESS_WR_FIRST">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:191.3-191.135" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:191.3-191.135" id="G_A_CK_ADDRESS_WR_HOLD">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:179.3-179.152" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:179.3-179.152" id="G_A_CK_ADDRESS_WR_STEP">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:203.3-203.193" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:203.3-203.193" id="G_A_CK_ADDRESS_WR_WRAP">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:359.3-359.172" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:359.3-359.172" id="G_A_CK_CONCURRENT_ACCEPT_AFTER_RESET">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:371.3-371.186" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:371.3-371.186" id="G_A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:383.3-383.129" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:383.3-383.129" id="G_A_CK_CONCURRENT_SIMULTANEOUS_DONE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:377.3-377.186" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:377.3-377.186" id="G_A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:245.3-245.445" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:245.3-245.445" id="G_A_CK_DATA_RD_FOUR_LANES">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:239.3-239.254" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:239.3-239.254" id="G_A_CK_DATA_RD_LOW_FIRST">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:257.3-257.734" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:257.3-257.734" id="G_A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:251.3-251.429" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:251.3-251.429" id="G_A_CK_DATA_WR_FOUR_LANES">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:263.3-263.734" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:263.3-263.734" id="G_A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:425.3-425.151" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:425.3-425.151" id="G_A_CK_DONE_RD_NEXT_ACK">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:413.3-413.58" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:413.3-413.58" id="G_A_CK_DONE_RD_NO_ACK">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:389.3-389.120" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:389.3-389.120" id="G_A_CK_DONE_RD_ONE_CYCLE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:401.3-401.99" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:401.3-401.99" id="G_A_CK_DONE_RD_PREV_DEV_HANDSHAKE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:431.3-431.151" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:431.3-431.151" id="G_A_CK_DONE_WR_NEXT_ACK">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:419.3-419.58" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:419.3-419.58" id="G_A_CK_DONE_WR_NO_ACK">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:395.3-395.120" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:395.3-395.120" id="G_A_CK_DONE_WR_ONE_CYCLE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:407.3-407.99" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:407.3-407.99" id="G_A_CK_DONE_WR_PREV_MEM_HANDSHAKE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:299.3-299.89" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:299.3-299.89" id="G_A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:293.3-293.147" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:293.3-293.147" id="G_A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:281.3-281.74" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:281.3-281.74" id="G_A_CK_FLOW_DEV_RD_ACK_GATED">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:287.3-287.74" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:287.3-287.74" id="G_A_CK_FLOW_DEV_WR_ACK_GATED">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:269.3-269.146" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:269.3-269.146" id="G_A_CK_FLOW_RD_VALID_ADDRESS_HOLD">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:275.3-275.151" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:275.3-275.151" id="G_A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:53.3-53.58" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:53.3-53.58" id="G_A_CK_HOST_RD_ACK_REQ">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:89.3-89.63" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:89.3-89.63" id="G_A_CK_HOST_RD_DONE_NO_ACK">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:65.3-65.217" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:65.3-65.217" id="G_A_CK_HOST_RD_LATCH_ADDRESS">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:77.3-77.190" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:77.3-77.190" id="G_A_CK_HOST_RD_NO_IMMEDIATE_REACK">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:101.3-101.161" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:101.3-101.161" id="G_A_CK_HOST_RD_PENDING_AFTER_DONE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:59.3-59.58" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:59.3-59.58" id="G_A_CK_HOST_WR_ACK_REQ">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:95.3-95.63" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:95.3-95.63" id="G_A_CK_HOST_WR_DONE_NO_ACK">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:71.3-71.719" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:71.3-71.719" id="G_A_CK_HOST_WR_LATCH_ADDRESS">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:83.3-83.190" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:83.3-83.190" id="G_A_CK_HOST_WR_NO_IMMEDIATE_REACK">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:107.3-107.161" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:107.3-107.161" id="G_A_CK_HOST_WR_PENDING_AFTER_DONE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:209.3-209.68" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:209.3-209.68" id="G_A_CK_QUOTA_ENCODING_BOUNDARY">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:227.3-227.751" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:227.3-227.751" id="G_A_CK_QUOTA_RD_LEN1">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:215.3-215.469" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:215.3-215.469" id="G_A_CK_QUOTA_RD_ZERO">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:233.3-233.751" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:233.3-233.751" id="G_A_CK_QUOTA_WR_LEN1">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:221.3-221.469" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:221.3-221.469" id="G_A_CK_QUOTA_WR_ZERO">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:119.3-119.58" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:119.3-119.58" id="G_A_CK_READ_DEV_ACK_REQ">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:131.3-131.259" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:131.3-131.259" id="G_A_CK_READ_DEV_FRAGMENT_HOLD">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:113.3-113.144" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:113.3-113.144" id="G_A_CK_READ_MEM_FIRST_AFTER_ACCEPT">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:125.3-125.75" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:125.3-125.75" id="G_A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:311.3-311.66" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:311.3-311.66" id="G_A_CK_RESET_DATA_CHANNEL_SILENCE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:305.3-305.58" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:305.3-305.58" id="G_A_CK_RESET_HOST_SILENCE">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:329.3-329.169" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:329.3-329.169" id="G_A_CK_RESET_INTERRUPT_DEVICE_PARTIAL">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:317.3-317.134" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:317.3-317.134" id="G_A_CK_RESET_INTERRUPT_RD_STALL">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:323.3-323.134" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:323.3-323.134" id="G_A_CK_RESET_INTERRUPT_WR_STALL">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:335.3-335.95" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:335.3-335.95" id="G_A_CK_RESET_RD_DONE_CLEAR">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:347.3-347.190" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:347.3-347.190" id="G_A_CK_RESET_RD_RESTART_ADDRESS">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:341.3-341.95" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:341.3-341.95" id="G_A_CK_RESET_WR_DONE_CLEAR">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:353.3-353.455" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:353.3-353.455" id="G_A_CK_RESET_WR_RESTART_ADDRESS">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:137.3-137.59" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:137.3-137.59" id="G_A_CK_WRITE_DEV_ACK_REQ">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:143.3-143.388" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:143.3-143.388" id="G_A_CK_WRITE_MEM_VALID_AFTER_WORD">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:149.3-149.76" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:149.3-149.76" id="G_A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:155.3-155.154" time="0" type="COVER" location="inputs/formal_out/tests/dmac_checker.sv:155.3-155.154" id="G_A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN">
+<skipped />
+</testcase>
+<system-out>SBY  2:25:14 [proof] Copy '/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/e266f8230d2140f184854271dcf7d864/formal_out/tests/sby_runs/.sby-63cc3dd686ff4d53904a78f6cf1f2944.g6iw7qce.tmp/inputs' to '/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/e266f8230d2140f184854271dcf7d864/formal_out/tests/sby_runs/.sby-63cc3dd686ff4d53904a78f6cf1f2944.g6iw7qce.tmp/proof/src/inputs'.
+SBY  2:25:14 [proof] engine_0: smtbmc z3
+SBY  2:25:14 [proof] base: starting process &quot;cd proof/src; yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY  2:25:14 [proof] base: Warning: Replacing memory \storage with list of registers. See inputs/dmac/rtl/dmac_fifo.sv:41
+SBY  2:25:15 [proof] base: finished (returncode=0)
+SBY  2:25:15 [proof] prep: starting process &quot;cd proof/model; yosys -ql design_prep.log design_prep.ys&quot;
+SBY  2:25:16 [proof] prep: finished (returncode=0)
+SBY  2:25:16 [proof] smt2: starting process &quot;cd proof/model; yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY  2:25:16 [proof] smt2: finished (returncode=0)
+SBY  2:25:16 [proof] engine_0: starting process &quot;cd proof; yosys-smtbmc -s z3 --presat --noprogress -t 12  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Solver: z3
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 4..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 4..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 5..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 5..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 6..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 6..
+SBY  2:25:17 [proof] engine_0: ##   0:00:00  Checking assumptions in step 7..
+SBY  2:25:17 [proof] engine_0: ##   0:00:01  Checking assertions in step 7..
+SBY  2:25:20 [proof] engine_0: ##   0:00:04  Checking assumptions in step 8..
+SBY  2:25:20 [proof] engine_0: ##   0:00:04  Checking assertions in step 8..
+SBY  2:25:27 [proof] engine_0: ##   0:00:11  Checking assumptions in step 9..
+SBY  2:25:28 [proof] engine_0: ##   0:00:11  Checking assertions in step 9..
+SBY  2:25:37 [proof] engine_0: ##   0:00:20  Checking assumptions in step 10..
+SBY  2:25:38 [proof] engine_0: ##   0:00:21  Checking assertions in step 10..
+SBY  2:25:48 [proof] engine_0: ##   0:00:31  Checking assumptions in step 11..
+SBY  2:25:49 [proof] engine_0: ##   0:00:33  Checking assertions in step 11..
+SBY  2:26:29 [proof] engine_0: ##   0:01:12  Status: passed
+SBY  2:26:29 [proof] engine_0: finished (returncode=0)
+SBY  2:26:29 [proof] engine_0: Status returned by engine: pass
+SBY  2:26:29 [proof] summary: Elapsed clock time [H:MM:SS (secs)]: 0:01:09 (69)
+SBY  2:26:29 [proof] summary: Elapsed process time [H:MM:SS (secs)]: 0:01:14 (74)
+SBY  2:26:29 [proof] summary: engine_0 (smtbmc z3) returned pass
+SBY  2:26:29 [proof] summary: engine_0 did not produce any traces
+SBY  2:26:29 [proof] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

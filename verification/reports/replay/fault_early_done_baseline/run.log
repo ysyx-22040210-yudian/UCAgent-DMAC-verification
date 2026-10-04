@@ -1,0 +1,2 @@
+FATAL: /home/ucagent-lab/development/20261004-formalmc-migration/delivery/DMAC-fullflow-20261005/replay/fault_early_done_baseline/replay_tb.sv:346: VECTOR_MISMATCH step=7 signal=host_rd_done
+       Time: 46  Scope: replay_tb

@@ -1,0 +1,50 @@
+{
+  "stage": 14,
+  "state": "completed",
+  "all_completed": true,
+  "completed_stages": 14,
+  "enabled_stages": 14,
+  "FG": 12,
+  "FC": 48,
+  "CK": 88,
+  "coverage": {
+    "covered": 75,
+    "total": 82,
+    "coi": "unsupported",
+    "vacuity": "not_established",
+    "liveness": "not_established"
+  },
+  "verification_status": "inconclusive",
+  "analysis_count": 70,
+  "analysis_resolutions": {
+    "INCONCLUSIVE": 70
+  },
+  "unreviewed": [],
+  "review_bound_to_current_input": true,
+  "assumption_review_count": 6,
+  "review_limitations": "COI: unsupported；vacuity: not_established；liveness: not_established。主任务默认ADDR_W/LEN_W/FIFO_DEPTH=32/32/2，BMC深度12；63条安全断言未获无界证明，主任务prove与联合prove均240秒超时。固定连续窗口只检查所列len0/len1局部行为，不替代任意长度、任意积压的完整模型。guard witness只表明触发可达；7个未命中目标仍未决，不声称不可达。永久背压合法，无公平性约束或最终完成结论。native独立证明仅涵盖32/32/2、32/8/1、16/8/3、32/1/4四个实际参数实例，不是全部参数量化。reset_policy=unconstrained，仅M_CK_API_RESET_INITIAL约束首采样rst_n=0，后续复位自由；深历史需有效历史与逐拍复位边界。复位结论限数字采样RTL模型，未验证模拟毛刺、恢复/移除时序。没有真实FormalMC/VCS运行。",
+  "summary": {
+    "core_function": "独立双通道DMAC：mem为64位、device为16位；N=len+1，任意haddr逐mem握手加8，低16位先传，支持背压与复位中断。",
+    "overall_result": "inconclusive",
+    "acceptance_conclusion": "本轮已执行需求规划、FG/FC/CK分解、属性实现、实际SBY运行、环境和覆盖分析、启用的反例分支、缺陷报告与静态审查，使用原生门禁完成流程。主任务12FG/48FC/88CK，63条安全断言在depth12无反例但未获无界证明，覆盖75/82；主任务与联合prove均240秒超时。四组native具体参数安全证明、两个DMAC及三个FIFO覆盖运行、七项故障对照、19次Icarus回放作为独立辅助证据保留。当前原始DUT没有已确认缺陷，不能据此宣称所有要求已证明或无缺陷。COI不支持，完整空洞性和无界活性未建立，FormalMC/VCS尚未实测。内置Agent与工程师协作完成；长YAML输出和Agent上下文限制使工程师补齐环境及最终审查，不冒称全自主Agent验收。"
+  },
+  "bugs": [],
+  "immutable_original_and_snapshot": {
+    "dmac.sv": true,
+    "dmac_fifo.sv": true
+  },
+  "documents": {
+    "06_dmac_native_evidence.md": 14823,
+    "09_dmac_property_review.md": 3515,
+    "10_dmac_joint_guided_evidence.md": 1871,
+    "11_dmac_engineering_review.md": 8047,
+    "08_dmac_requirement_traceability.md": 12386,
+    "01_dmac_verification_needs_and_plan.md": 12364,
+    "02_dmac_basic_info.md": 6539,
+    "03_dmac_functions_and_checks.md": 33558,
+    "07_dmac_env_analysis.md": 73335,
+    "04_dmac_bug_report.md": 159,
+    "04_dmac_static_bug_analysis.md": 5792,
+    "05_dmac_formal_summary.md": 30773
+  }
+}

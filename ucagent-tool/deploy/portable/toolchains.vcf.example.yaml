@@ -1,0 +1,18 @@
+# Copy to ~/.ucagent/toolchains.yaml and replace paths with this execution host's installation.
+# License VALUES belong only in the startup environment, never in this YAML.
+profiles:
+  host_vcf:
+    display_name: Installed Synopsys VC Formal
+    tools:
+      vcf: /opt/synopsys/vcf/bin/vcf
+    environment:
+      PATH: /opt/synopsys/vcf/bin:/usr/bin:/bin
+      VC_STATIC_HOME: /opt/synopsys/vcf
+      # Do not let the offline service's Python runtime configure VCF helper programs.
+      PYTHONHOME: ""
+      PYTHONPATH: ""
+    license_environment_names:
+      - SNPSLMD_LICENSE_FILE
+      - LM_LICENSE_FILE
+    minimum_free_bytes: 10737418240
+    max_concurrency: 1

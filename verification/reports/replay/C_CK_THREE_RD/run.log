@@ -1,0 +1,2 @@
+PASS replay 23 input vectors
+/home/ucagent-lab/development/20261004-formalmc-migration/delivery/DMAC-fullflow-20261005/replay/C_CK_THREE_RD/replay_tb.sv:1017: $finish called at 140 (1ns)

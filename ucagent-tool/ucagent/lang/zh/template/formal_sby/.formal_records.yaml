@@ -1,0 +1,17 @@
+dut: "{{DUT}}"
+planning: {}
+basic_info: {}
+spec:
+  function_groups: []
+analysis:
+  tt_entries: []
+  fa_entries: []
+bugs: []
+extra_config:
+  sby:
+    sources: []
+    mode: prove
+    depth: 40
+    timeout_seconds: 120
+    reset_policy: none
+summary: {}

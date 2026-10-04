@@ -1,0 +1,3 @@
+#!/bin/sh
+# Open the isolated migration workbench without changing the existing launcher.
+exec /usr/local/bin/python3.8 /home/ucagent-lab/development/20261004-formalmc-migration/delivery/UCAgent-Desktop-FormalMC-Migration.pyz --server http://127.0.0.1:8813 "$@"

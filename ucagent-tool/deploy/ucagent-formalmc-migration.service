@@ -1,0 +1,24 @@
+[Unit]
+Description=UCAgent isolated SBY to FormalMC migration workbench
+After=network.target
+
+[Service]
+Type=simple
+User=ucagent
+Group=ucagent
+WorkingDirectory=/home/ucagent-lab/development/20261004-formalmc-migration
+Environment=HOME=/home/ucagent-lab/home
+Environment=PYTHONPATH=/home/ucagent-lab/development/20261004-formalmc-migration
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONNOUSERSITE=1
+ExecStart=/home/ucagent-lab/releases/20260908-formalmc-restore1/venv/bin/python -m ucagent.server.platform_main --workspace /home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state --import-root /home/ucagent-lab/development/20261004-formalmc-migration/acceptance --toolchains /home/ucagent-lab/development/20261004-formalmc-migration/acceptance/toolchains.yaml --host 127.0.0.1 --port 8813
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=45
+KillMode=control-group
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

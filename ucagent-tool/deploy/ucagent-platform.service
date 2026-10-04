@@ -1,0 +1,38 @@
+[Unit]
+Description=UCAgent single-user verification platform
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ucagent
+Group=ucagent
+WorkingDirectory=/home/ucagent-lab/current
+Environment=HOME=/home/ucagent-lab/home
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONNOUSERSITE=1
+Environment=PIP_NO_INDEX=1
+Environment=TMPDIR=/home/ucagent-lab/tmp
+Environment=TMP=/home/ucagent-lab/tmp
+Environment=TEMP=/home/ucagent-lab/tmp
+EnvironmentFile=-/etc/ucagent/eda.env
+ExecStart=/home/ucagent-lab/current/venv/bin/python -m ucagent.server.platform_main --workspace /home/ucagent-lab/state --import-root /home/ucagent-lab/workspaces --toolchains /home/ucagent-lab/config/toolchains.yaml --host 127.0.0.1 --port 8800 --mcp-enabled
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=45
+KillMode=control-group
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadOnlyDirectories=/home/ucagent-lab/current /home/ucagent-lab/config
+ReadWriteDirectories=/home/ucagent-lab/state /home/ucagent-lab/workspaces /home/ucagent-lab/artifacts /home/ucagent-lab/tmp /home/ucagent-lab/home
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ucagent-platform
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target

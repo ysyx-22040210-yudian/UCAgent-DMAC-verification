@@ -1,0 +1,15 @@
+[options]
+mode prove
+depth 12
+timeout 240
+multiclock off
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal -sv -Iinputs/formal -DFORMAL -DSYNTHESIS "inputs/rtl/dmac_fifo.sv" "inputs/rtl/dmac.sv" "inputs/formal/dmac_checker.sv" "inputs/formal/dmac_wrapper.sv"
+prep -top dmac_wrapper
+
+[files]
+inputs

@@ -1,0 +1,1149 @@
+{
+  "case": "fifo_cover_f3",
+  "parameters": [
+    32,
+    32,
+    3
+  ],
+  "mode": "cover",
+  "depth": 12,
+  "run": {
+    "id": "40e9409f1a20473a96f426b594bc4b0f",
+    "project_id": "b73085f195114a0b8c1cfefcfc7188ad",
+    "project_name": "DMAC full workflow FIFO cover 20261005",
+    "workflow_id": "formal-guided",
+    "family": "formal",
+    "methodology": "systemverilog",
+    "authoring_mode": "guided",
+    "toolchain": "sby",
+    "execution_status": "completed",
+    "verification_status": "passed",
+    "created_at": "2026-10-04T17:00:36.509602+00:00",
+    "started_at": "2026-10-04T17:00:36.521836+00:00",
+    "finished_at": "2026-10-04T17:00:37.012926+00:00",
+    "stages": [
+      {
+        "checker": [
+          "planning_structure_check"
+        ],
+        "condition": null,
+        "description": "需求分析与验证规划",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:requirement_analysis_and_planning",
+        "inputs": [
+          "{DUT}/README.md",
+          "{RTL_PATH}/*.v",
+          "{RTL_PATH}/*.sv"
+        ],
+        "kind": "stage",
+        "name": "requirement_analysis_and_planning",
+        "outputs": [
+          "{OUT}/.formal_records.yaml"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "formal_engine",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 0,
+        "stage_key": "formal-guided:requirement_analysis_and_planning"
+      },
+      {
+        "checker": [
+          "basic_info_structure_check"
+        ],
+        "condition": null,
+        "description": "{DUT}功能理解",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:dut_function_understanding",
+        "inputs": [
+          "{DUT}/README.md",
+          "{RTL_PATH}/*.v",
+          "{RTL_PATH}/*.sv"
+        ],
+        "kind": "stage",
+        "name": "dut_function_understanding",
+        "outputs": [
+          "{OUT}/.formal_records.yaml"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "formal_engine",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 1,
+        "stage_key": "formal-guided:dut_function_understanding"
+      },
+      {
+        "checker": [],
+        "condition": null,
+        "description": "功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:functional_specification_analysis",
+        "inputs": [
+          "{DUT}/*.md",
+          "{OUT}/02_{DUT}_basic_info.md",
+          "{OUT}/01_{DUT}_verification_needs_and_plan.md"
+        ],
+        "kind": "group",
+        "name": "functional_specification_analysis",
+        "outputs": [
+          "{OUT}/.formal_records.yaml"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "formal_engine",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 2,
+        "stage_key": "formal-guided:functional_specification_analysis"
+      },
+      {
+        "checker": [
+          "group_structure_check"
+        ],
+        "condition": null,
+        "description": "DUT功能分组与层次划分{COUNT_FG}",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:functional_specification_analysis/dut_function_grouping",
+        "inputs": [],
+        "kind": "stage",
+        "name": "dut_function_grouping",
+        "outputs": [],
+        "parent_id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:functional_specification_analysis",
+        "required_capabilities": [
+          "formal_engine",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 3,
+        "stage_key": "formal-guided:functional_specification_analysis/dut_function_grouping"
+      },
+      {
+        "checker": [
+          "function_point_check"
+        ],
+        "condition": null,
+        "description": "具体功能点识别与定义{COUNT_FC}",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:functional_specification_analysis/function_point_definition",
+        "inputs": [],
+        "kind": "stage",
+        "name": "function_point_definition",
+        "outputs": [],
+        "parent_id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:functional_specification_analysis",
+        "required_capabilities": [
+          "formal_engine",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 4,
+        "stage_key": "formal-guided:functional_specification_analysis/function_point_definition"
+      },
+      {
+        "checker": [
+          "check_point_check"
+        ],
+        "condition": null,
+        "description": "检测点设计与定义{COUNT_CK}",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:functional_specification_analysis/check_point_design",
+        "inputs": [],
+        "kind": "stage",
+        "name": "check_point_design",
+        "outputs": [],
+        "parent_id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:functional_specification_analysis",
+        "required_capabilities": [
+          "formal_engine",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 5,
+        "stage_key": "formal-guided:functional_specification_analysis/check_point_design"
+      },
+      {
+        "checker": [
+          "property_structure_check"
+        ],
+        "condition": null,
+        "description": "SVA 属性实现与自动同步",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:property_generation",
+        "inputs": [
+          "{OUT}/.formal_records.yaml",
+          "Guide_Doc/sva_property.md"
+        ],
+        "kind": "stage",
+        "name": "property_generation",
+        "outputs": [
+          "{OUT}/.formal_records.yaml"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "formal_engine",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 6,
+        "stage_key": "formal-guided:property_generation"
+      },
+      {
+        "checker": [
+          "script_generation_check"
+        ],
+        "condition": null,
+        "description": "验证脚本校验",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:script_generation",
+        "inputs": [
+          "{OUT}/.formal_records.yaml",
+          "{OUT}/tests/{DUT}_checker.sv"
+        ],
+        "kind": "stage",
+        "name": "script_generation",
+        "outputs": [
+          "{OUT}/.formal_records.yaml"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "formal_engine",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 7,
+        "stage_key": "formal-guided:script_generation"
+      },
+      {
+        "checker": [
+          "environment_analysis_check"
+        ],
+        "condition": null,
+        "description": "验证环境调试与迭代修复{MAX_ITERATION: 5}",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:environment_debugging_iteration",
+        "inputs": [
+          "{OUT}/.formal_records.yaml",
+          "{OUT}/tests/{LOG_FILE}",
+          "{OUT}/tests/{DUT}_checker.sv",
+          "{OUT}/tests/{DUT}_wrapper.sv",
+          "Guide_Doc/env_analysis.md"
+        ],
+        "kind": "stage",
+        "name": "environment_debugging_iteration",
+        "outputs": [
+          "{OUT}/tests/{DUT}_checker.sv",
+          "{OUT}/tests/{DUT}_wrapper.sv"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "formal_engine",
+          "sva",
+          "waveform"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 8,
+        "stage_key": "formal-guided:environment_debugging_iteration"
+      },
+      {
+        "checker": [
+          "property_structure_check",
+          "coverage_analysis_check"
+        ],
+        "condition": null,
+        "description": "覆盖率分析与断言优化",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:coverage_analysis_and_optimization",
+        "inputs": [
+          "{OUT}/tests/{FANIN_REP}",
+          "{OUT}/tests/{DUT}_checker.sv",
+          "{OUT}/.formal_records.yaml"
+        ],
+        "kind": "stage",
+        "name": "coverage_analysis_and_optimization",
+        "outputs": [
+          "{OUT}/tests/{DUT}_checker.sv"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "coverage",
+          "formal_engine",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 9,
+        "stage_key": "formal-guided:coverage_analysis_and_optimization"
+      },
+      {
+        "checker": [
+          "counterexample_testgen_check"
+        ],
+        "condition": "ignore when $(CEX_CHECK: true)",
+        "description": "形式化反例 Python 测试用例生成",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:counterexample_python_testgen",
+        "inputs": [
+          "{OUT}/.formal_records.yaml",
+          "Guide_Doc/counterexample.md",
+          "{OUT}/tests/{DUT}_checker.sv",
+          "{OUT}/tests/{DUT}_wrapper.sv",
+          "{OUT}/tests/{LOG_FILE}"
+        ],
+        "kind": "stage",
+        "name": "counterexample_python_testgen",
+        "outputs": [
+          "{OUT}/tests/test_{DUT}_counterexample.py"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "cex_replay",
+          "formal_engine",
+          "simulator",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 10,
+        "stage_key": "formal-guided:counterexample_python_testgen"
+      },
+      {
+        "checker": [
+          "bug_report_consistency_check"
+        ],
+        "condition": null,
+        "description": "RTL缺陷分析与报告",
+        "disabled_reason": null,
+        "enabled": true,
+        "execution_status": "completed",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:formal_execution",
+        "inputs": [
+          "Guide_Doc/bug_report.md",
+          "{OUT}/.formal_records.yaml",
+          "{OUT}/tests/{LOG_FILE}",
+          "{OUT}/tests/{DUT}_checker.sv"
+        ],
+        "kind": "stage",
+        "name": "formal_execution",
+        "outputs": [
+          "{OUT}/.formal_records.yaml"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "formal_engine",
+          "sva",
+          "waveform"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "passed",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 11,
+        "stage_key": "formal-guided:formal_execution"
+      },
+      {
+        "checker": [
+          "static_formal_bug_linkage_check"
+        ],
+        "condition": "ignore when $(IGNORE_STATIC_CHECK: true)",
+        "description": "静态分析Bug与形式化验证结果关联",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:static_bug_validation",
+        "inputs": [
+          "{OUT}/04_{DUT}_static_bug_analysis.md",
+          "{OUT}/04_{DUT}_bug_report.md",
+          "{OUT}/tests/{LOG_FILE}"
+        ],
+        "kind": "stage",
+        "name": "static_bug_validation",
+        "outputs": [
+          "{OUT}/04_{DUT}_static_bug_analysis.md"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "formal_engine",
+          "sva",
+          "waveform"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 12,
+        "stage_key": "formal-guided:static_bug_validation"
+      },
+      {
+        "checker": [
+          "formal_summary_check"
+        ],
+        "condition": null,
+        "description": "验证总结与审查",
+        "disabled_reason": "This SBY run executes supplied RTL/harness assets. Agent authoring and review are not executed by the local proof service.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:verification_review_and_summary",
+        "inputs": [
+          "{OUT}/01_{DUT}_verification_needs_and_plan.md",
+          "{OUT}/tests/{LOG_FILE}",
+          "{OUT}/tests/{FANIN_REP}",
+          "{OUT}/.formal_records.yaml",
+          "{OUT}/tests/test_{DUT}_counterexample.py",
+          "Guide_Doc/formal_summary.md"
+        ],
+        "kind": "stage",
+        "name": "verification_review_and_summary",
+        "outputs": [
+          "{OUT}/.formal_records.yaml"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "formal_engine",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 13,
+        "stage_key": "formal-guided:verification_review_and_summary"
+      },
+      {
+        "checker": [],
+        "condition": null,
+        "description": "Use the original FormalMC Tcl workflow by default; alternate engines are never selected automatically.",
+        "disabled_reason": null,
+        "enabled": true,
+        "execution_status": "completed",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:toolchain_dispatch",
+        "inputs": [],
+        "kind": "group",
+        "name": "toolchain_dispatch",
+        "outputs": [],
+        "parent_id": null,
+        "required_capabilities": [
+          "formal_engine"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "passed",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 14,
+        "stage_key": "formal-guided:toolchain_dispatch"
+      },
+      {
+        "checker": [],
+        "condition": "formal.engine == vc_formal",
+        "description": "Run the fixed VC Formal FPV batch lifecycle and normalize report_fv output.",
+        "disabled_reason": "formal.engine selects sby.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:toolchain_dispatch/vc_formal",
+        "inputs": [
+          "design.filelists",
+          "formal.property_sets"
+        ],
+        "kind": "stage",
+        "name": "vc_formal",
+        "outputs": [
+          "formal report",
+          "proof database",
+          "counterexample"
+        ],
+        "parent_id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:toolchain_dispatch",
+        "required_capabilities": [
+          "vc_formal",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 15,
+        "stage_key": "formal-guided:toolchain_dispatch/vc_formal"
+      },
+      {
+        "checker": [],
+        "condition": "formal.engine == formalmc",
+        "description": "Run the declared FormalMC Tcl recipe and normalize all property outcomes.",
+        "disabled_reason": "formal.engine selects sby.",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:toolchain_dispatch/formal_mc",
+        "inputs": [
+          "design.filelists",
+          "formal.property_sets"
+        ],
+        "kind": "stage",
+        "name": "formal_mc",
+        "outputs": [
+          "formal report",
+          "proof database",
+          "counterexample"
+        ],
+        "parent_id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:toolchain_dispatch",
+        "required_capabilities": [
+          "formal_mc",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 16,
+        "stage_key": "formal-guided:toolchain_dispatch/formal_mc"
+      },
+      {
+        "checker": [],
+        "condition": "formal.engine == sby",
+        "description": "Run bundled SBY/SMTBMC/Z3 in prove, bounded-check or cover mode; retain typed property results and VCD traces.",
+        "disabled_reason": null,
+        "enabled": true,
+        "execution_status": "completed",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:toolchain_dispatch/sby",
+        "inputs": [
+          "design.filelists",
+          "formal.property_sets"
+        ],
+        "kind": "stage",
+        "name": "sby",
+        "outputs": [
+          "formal report",
+          "proof database",
+          "counterexample"
+        ],
+        "parent_id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:toolchain_dispatch",
+        "required_capabilities": [
+          "sby",
+          "sva"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "passed",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 17,
+        "stage_key": "formal-guided:toolchain_dispatch/sby"
+      },
+      {
+        "checker": [],
+        "condition": "formal.cex_replay.enabled and a property is falsified",
+        "description": "Translate an actual falsified-property trace and rerun it through UVM or UnityTest.",
+        "disabled_reason": "formal.cex_replay.enabled is false",
+        "enabled": false,
+        "execution_status": "cancelled",
+        "id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:counterexample_dynamic_replay",
+        "inputs": [
+          "signed counterexample",
+          "declared replay target"
+        ],
+        "kind": "stage",
+        "name": "counterexample_dynamic_replay",
+        "outputs": [
+          "dynamic replay manifest",
+          "test result",
+          "waveform"
+        ],
+        "parent_id": null,
+        "required_capabilities": [
+          "cex_replay",
+          "simulator"
+        ],
+        "requires_human_approval": false,
+        "verification_status": "unknown",
+        "workflow": "formal-guided",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "approval_status": "not_required",
+        "ordinal": 18,
+        "stage_key": "formal-guided:counterexample_dynamic_replay"
+      }
+    ],
+    "manifest_hash": "51044970db02eb1a2acada1f709de60be5669f5cbb223d52bd998dcde469e4d3",
+    "error": null,
+    "summary": {
+      "jobs_total": 1,
+      "jobs_finished": 1,
+      "tests_total": 0,
+      "tests_failed": 0,
+      "tests_passed": 0,
+      "properties_total": 12,
+      "properties_falsified": 0,
+      "coverage_metrics": 0,
+      "artifacts_total": 11,
+      "diagnostic_code": null,
+      "diagnostic": null,
+      "next_action": null,
+      "active_tool": null
+    },
+    "request": {
+      "authoring_mode": "guided",
+      "design": {
+        "defines": [
+          "FORMAL",
+          "SYNTHESIS"
+        ],
+        "filelists": [],
+        "include_dirs": [
+          "formal"
+        ],
+        "parameters": {
+          "ADDR_W": 32,
+          "FIFO_DEPTH": 3,
+          "LEN_W": 32
+        },
+        "sources": [
+          "rtl/dmac_fifo.sv",
+          "formal/fifo_harness.sv"
+        ],
+        "top": "fifo_harness"
+      },
+      "family": "formal",
+      "formal": {
+        "cex_replay": {
+          "enabled": false,
+          "methodology": "uvm"
+        },
+        "clock": {
+          "period": null,
+          "signal": null
+        },
+        "engine": "sby",
+        "property_sets": [],
+        "reset": {
+          "active": "low",
+          "signal": null
+        },
+        "sby": {
+          "depth": 12,
+          "mode": "cover",
+          "multiclock": false,
+          "timeout_seconds": 60
+        }
+      },
+      "methodology": "systemverilog",
+      "project_id": "b73085f195114a0b8c1cfefcfc7188ad",
+      "simulation": null,
+      "toolchain": "sby",
+      "workflow_id": null
+    },
+    "progress": 100,
+    "current_stage": null,
+    "cex_replay": {
+      "enabled": false,
+      "methodology": "uvm"
+    }
+  },
+  "jobs": {
+    "items": [
+      {
+        "id": "3c19e484d59d4b89a5905dfdf641a55b",
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f",
+        "stage_id": "40e9409f1a20473a96f426b594bc4b0f:formal-guided:toolchain_dispatch/sby",
+        "name": "sby",
+        "tool": "sby",
+        "execution_status": "completed",
+        "verification_status": "passed",
+        "attempt": 1,
+        "command": [
+          "sby",
+          "-d",
+          "proof",
+          "{WORKSPACE}/.ucagent/platform-inputs/40e9409f1a20473a96f426b594bc4b0f/run.sby"
+        ],
+        "started_at": "2026-10-04T17:00:36.547559+00:00",
+        "finished_at": "2026-10-04T17:00:36.992315+00:00",
+        "exit_code": 0,
+        "diagnostic_code": null,
+        "diagnostic": null
+      }
+    ],
+    "total": 1
+  },
+  "manifests": [
+    {
+      "path": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fifo-20261005/.ucagent/platform-runs/40e9409f1a20473a96f426b594bc4b0f/formal/manifest.json",
+      "manifest": {
+        "schema_version": 1,
+        "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+        "toolchain_id": "sby",
+        "tool": "sby",
+        "tool_version": null,
+        "execution_host": "unknown",
+        "execution_user": null,
+        "command": [
+          "/home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/sby",
+          "-d",
+          "proof",
+          "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-fifo-20261005/.ucagent/platform-inputs/40e9409f1a20473a96f426b594bc4b0f/run.sby"
+        ],
+        "started_at": "2026-10-04T17:00:36.539779+00:00",
+        "completed_at": "2026-10-04T17:00:36.974943+00:00",
+        "execution_status": "completed",
+        "verification_status": "passed",
+        "return_code": 0,
+        "input_hashes": {
+          ".ucagent/platform-inputs/40e9409f1a20473a96f426b594bc4b0f/run.sby": "d9d2ed94cdb9b3ec1e306d514e51669643877c573896c014f5e11b60951b1667",
+          "formal": "d7f73294f645daec4826b9d93e43d9b6bb044bdc47ce655b64ece6286c3db15c",
+          "formal/fifo_harness.sv": "f7d8c2c0f70b94552cc9da776740524c217f1409486ddaa4bb6702220cd0eba4",
+          "formal/fifo_monitor.svh": "cb29540b331cced8fa7dcca12566b9d8ae901ce20fef40e85b7fd9dc53ad1ebc",
+          "rtl/dmac_fifo.sv": "30c6023684d19c3a850d80b28f4628960df7ef24eebb1e6c03b8d61d0e2fd5a8"
+        },
+        "prepared_input_hashes": {
+          ".ucagent/platform-inputs/40e9409f1a20473a96f426b594bc4b0f/run.sby": "d9d2ed94cdb9b3ec1e306d514e51669643877c573896c014f5e11b60951b1667"
+        },
+        "input_hash_excludes": [
+          ".ucagent",
+          ".ucagent/platform-runs/40e9409f1a20473a96f426b594bc4b0f/formal"
+        ],
+        "input_fingerprint": "817bfb29a32643dcde128c7a369992641e5c656fae7ec808788a2b01fdd07f0f",
+        "session_inputs": [
+          {
+            "source": "formal",
+            "destination": "inputs/formal"
+          },
+          {
+            "source": "rtl/dmac_fifo.sv",
+            "destination": "inputs/rtl/dmac_fifo.sv"
+          }
+        ],
+        "cache_hit": false,
+        "source_manifest": null,
+        "test": null,
+        "suite": null,
+        "seed": null,
+        "property_set": null,
+        "metadata": {
+          "adapter": "sby",
+          "engine": "sby/smtbmc/z3",
+          "mode": "cover",
+          "depth": 12,
+          "cacheable": false
+        },
+        "tests": [],
+        "coverage": [],
+        "properties": [
+          {
+            "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:24.5-24.54",
+            "status": "disabled",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "assert",
+              "mode": "cover",
+              "property_id": "A_CK_FIFO_COUNT",
+              "location": "inputs/formal/fifo_monitor.svh:24.5-24.54",
+              "bounded_depth": null,
+              "disabled_reason": "This property kind is outside the selected SBY mode."
+            }
+          },
+          {
+            "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:29.5-29.71",
+            "status": "disabled",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "assert",
+              "mode": "cover",
+              "property_id": "A_CK_FIFO_HEAD",
+              "location": "inputs/formal/fifo_monitor.svh:29.5-29.71",
+              "bounded_depth": null,
+              "disabled_reason": "This property kind is outside the selected SBY mode."
+            }
+          },
+          {
+            "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:26.5-26.85",
+            "status": "disabled",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "assert",
+              "mode": "cover",
+              "property_id": "A_CK_FIFO_POINTER",
+              "location": "inputs/formal/fifo_monitor.svh:26.5-26.85",
+              "bounded_depth": null,
+              "disabled_reason": "This property kind is outside the selected SBY mode."
+            }
+          },
+          {
+            "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:25.5-25.87",
+            "status": "disabled",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "assert",
+              "mode": "cover",
+              "property_id": "A_CK_FIFO_RANGE",
+              "location": "inputs/formal/fifo_monitor.svh:25.5-25.87",
+              "bounded_depth": null,
+              "disabled_reason": "This property kind is outside the selected SBY mode."
+            }
+          },
+          {
+            "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:28.5-28.95",
+            "status": "disabled",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "assert",
+              "mode": "cover",
+              "property_id": "A_CK_FIFO_READY",
+              "location": "inputs/formal/fifo_monitor.svh:28.5-28.95",
+              "bounded_depth": null,
+              "disabled_reason": "This property kind is outside the selected SBY mode."
+            }
+          },
+          {
+            "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:27.5-27.63",
+            "status": "disabled",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "assert",
+              "mode": "cover",
+              "property_id": "A_CK_FIFO_VALID",
+              "location": "inputs/formal/fifo_monitor.svh:27.5-27.63",
+              "bounded_depth": null,
+              "disabled_reason": "This property kind is outside the selected SBY mode."
+            }
+          },
+          {
+            "name": "Property COVER in fifo_harness/dut at inputs/formal/fifo_monitor.svh:32.5-32.55",
+            "status": "covered",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "cover",
+              "mode": "cover",
+              "property_id": "C_CK_FIFO_EMPTY",
+              "location": "inputs/formal/fifo_monitor.svh:32.5-32.55",
+              "bounded_depth": null,
+              "trace_path": "proof/engine_0/trace0.vcd"
+            }
+          },
+          {
+            "name": "Property COVER in fifo_harness/dut at inputs/formal/fifo_monitor.svh:31.5-31.58",
+            "status": "covered",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "cover",
+              "mode": "cover",
+              "property_id": "C_CK_FIFO_FULL",
+              "location": "inputs/formal/fifo_monitor.svh:31.5-31.58",
+              "bounded_depth": null,
+              "trace_path": "proof/engine_0/trace1.vcd"
+            }
+          },
+          {
+            "name": "Property COVER in fifo_harness/dut at inputs/formal/fifo_monitor.svh:30.5-30.73",
+            "status": "covered",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "cover",
+              "mode": "cover",
+              "property_id": "C_CK_FIFO_FULL_REPLACE",
+              "location": "inputs/formal/fifo_monitor.svh:30.5-30.73",
+              "bounded_depth": null,
+              "trace_path": "proof/engine_0/trace2.vcd"
+            }
+          },
+          {
+            "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_222]",
+            "status": "disabled",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "assert",
+              "mode": "cover",
+              "property_id": "_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_222",
+              "location": "inputs/formal/fifo_monitor.svh:36.9-36.72",
+              "bounded_depth": null,
+              "disabled_reason": "This property kind is outside the selected SBY mode."
+            }
+          },
+          {
+            "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_235]",
+            "status": "disabled",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "assert",
+              "mode": "cover",
+              "property_id": "_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_235",
+              "location": "inputs/formal/fifo_monitor.svh:36.9-36.72",
+              "bounded_depth": null,
+              "disabled_reason": "This property kind is outside the selected SBY mode."
+            }
+          },
+          {
+            "name": "Property ASSERT in fifo_harness/dut at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_248]",
+            "status": "disabled",
+            "runtime_seconds": 0.0,
+            "proof_depth": null,
+            "engine": "sby/smtbmc/z3",
+            "coi": null,
+            "vacuous": null,
+            "counterexample_path": null,
+            "evidence_path": "proof/run.xml",
+            "details": {
+              "kind": "assert",
+              "mode": "cover",
+              "property_id": "_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_248",
+              "location": "inputs/formal/fifo_monitor.svh:36.9-36.72",
+              "bounded_depth": null,
+              "disabled_reason": "This property kind is outside the selected SBY mode."
+            }
+          }
+        ],
+        "diagnostics": [],
+        "artifacts": [
+          {
+            "id": "08ef58cccd684f7c88bf3de1c39fa850",
+            "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+            "path": ".",
+            "kind": "proof_directory",
+            "is_directory": true,
+            "size_bytes": 426196,
+            "sha256": "4ce09883e36cdb6d0c0e19152d4feed11f851c2cacc9a70662fc1ef4929715b2",
+            "media_type": "application/x-directory",
+            "hash_excludes": [
+              "manifest.json"
+            ]
+          },
+          {
+            "id": "e9146c9ab9f6432b96a9fee6eceab1ef",
+            "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+            "path": "events.ndjson",
+            "kind": "file",
+            "is_directory": false,
+            "size_bytes": 13653,
+            "sha256": "ccdf40efc0825ea56f4664c061b6439703aac2578f7692ec2e629c5118dadc3a",
+            "media_type": "application/octet-stream",
+            "hash_excludes": []
+          },
+          {
+            "id": "8a9780970abe417488b65bce51c34ea3",
+            "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+            "path": "proof/engine_0/trace0.vcd",
+            "kind": "waveform",
+            "is_directory": false,
+            "size_bytes": 5366,
+            "sha256": "2407c275c3f36962f29abf91e465bdcb204d3f4717a2facd7f8668feb972c677",
+            "media_type": "application/x-cdlink",
+            "hash_excludes": []
+          },
+          {
+            "id": "4ebb29b5e69d4a848e28842e71d6f641",
+            "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+            "path": "proof/engine_0/trace1.vcd",
+            "kind": "waveform",
+            "is_directory": false,
+            "size_bytes": 8798,
+            "sha256": "fd40b61da53d1607601da4f2f6c2eafc9d33dacdc523aa71f668de3abfe8870a",
+            "media_type": "application/x-cdlink",
+            "hash_excludes": []
+          },
+          {
+            "id": "12cd63b3bfda41f9a42cdef188ba7af7",
+            "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+            "path": "proof/engine_0/trace2.vcd",
+            "kind": "waveform",
+            "is_directory": false,
+            "size_bytes": 8798,
+            "sha256": "cb7305bdea798eaffafc9dd3cc2a213a0846314f8ca5284dd2689d8dc6a4feb1",
+            "media_type": "application/x-cdlink",
+            "hash_excludes": []
+          },
+          {
+            "id": "c1202780be894021ad89253827192672",
+            "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+            "path": "proof/logfile.txt",
+            "kind": "file",
+            "is_directory": false,
+            "size_bytes": 4790,
+            "sha256": "11902c7b3f504757d75320244d042110ee1deb7ee4194e2917b781e1c0524b14",
+            "media_type": "text/plain",
+            "hash_excludes": []
+          },
+          {
+            "id": "1ae5966a4eec4599ade3b1d44feec9b4",
+            "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+            "path": "proof/run.xml",
+            "kind": "report",
+            "is_directory": false,
+            "size_bytes": 8408,
+            "sha256": "86704b19181f624f1fd97066d8e18503d0b4188beed111171c74bd79e60dd13a",
+            "media_type": "text/xml",
+            "hash_excludes": []
+          },
+          {
+            "id": "52d6b21e12944752ac19e0481ffddb55",
+            "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+            "path": "proof/status",
+            "kind": "file",
+            "is_directory": false,
+            "size_bytes": 9,
+            "sha256": "4d489b9bfaac73d73a64a4023bf4d947ca1d4216d9f72864c97bfb6a2bc07d56",
+            "media_type": "application/octet-stream",
+            "hash_excludes": []
+          },
+          {
+            "id": "e4337ff4068b4daca5da8c643b1cbffb",
+            "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+            "path": "stderr.log",
+            "kind": "log",
+            "is_directory": false,
+            "size_bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "media_type": "text/plain",
+            "hash_excludes": []
+          },
+          {
+            "id": "8777b769dc824c5dacc3367189a8b444",
+            "run_id": "40e9409f1a20473a96f426b594bc4b0f.formal",
+            "path": "stdout.log",
+            "kind": "log",
+            "is_directory": false,
+            "size_bytes": 4790,
+            "sha256": "11902c7b3f504757d75320244d042110ee1deb7ee4194e2917b781e1c0524b14",
+            "media_type": "text/plain",
+            "hash_excludes": []
+          }
+        ],
+        "signature": {
+          "algorithm": "hmac-sha256",
+          "digest": "37770ccdee125c3bfb54bdb410a73ee3cd2fc09e69f61ed689b5236c3c2ab22b"
+        }
+      }
+    }
+  ]
+}

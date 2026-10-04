@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "run_id": "sby-f016812672bd4dd68d9433d29d23c3d5",
+  "toolchain_id": "sby",
+  "tool": "sby",
+  "tool_version": null,
+  "execution_host": "unknown",
+  "execution_user": null,
+  "command": [
+    "/home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/sby",
+    "-d",
+    "proof",
+    "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/e266f8230d2140f184854271dcf7d864/formal_out/tests/prove.sby"
+  ],
+  "started_at": "2026-10-04T18:14:29.636466+00:00",
+  "completed_at": "2026-10-04T18:14:29.751336+00:00",
+  "execution_status": "error",
+  "verification_status": "unknown",
+  "return_code": 16,
+  "input_hashes": {
+    "dmac/rtl/dmac.sv": "45b7898ce7eb5458c886189747ef703696365a02692810ef4aae879970895340",
+    "dmac/rtl/dmac_fifo.sv": "1e3c2eb8d75487f52920695db28db03b5b06d7b08b5ae8d453f8dfb8defacc61",
+    "formal_out/tests/dmac_checker.sv": "e244cb52a4ad141602cefa002318a7f6e4db74e8d8c4df704c871ac2c9b15f69",
+    "formal_out/tests/dmac_wrapper.sv": "6208de04dd076a46efde5296a0d8f272c21e4eddf765598a4a3ccbcac0b7e0a2",
+    "formal_out/tests/prove.sby": "88c31fc5dfacd6eff6518baca022e386db9a7aed21fcb0f52cc260c713b08b31",
+    "formal_out/tests/sby_inputs.json": "fbfe0b45810594d05ca90bf5726121f6b884b3f21ecd2bd53efc718d9e6bbb1b"
+  },
+  "prepared_input_hashes": {
+    "formal_out/tests/prove.sby": "88c31fc5dfacd6eff6518baca022e386db9a7aed21fcb0f52cc260c713b08b31",
+    "formal_out/tests/dmac_checker.sv": "e244cb52a4ad141602cefa002318a7f6e4db74e8d8c4df704c871ac2c9b15f69",
+    "formal_out/tests/dmac_wrapper.sv": "6208de04dd076a46efde5296a0d8f272c21e4eddf765598a4a3ccbcac0b7e0a2",
+    "formal_out/tests/sby_inputs.json": "fbfe0b45810594d05ca90bf5726121f6b884b3f21ecd2bd53efc718d9e6bbb1b"
+  },
+  "input_hash_excludes": [
+    ".ucagent",
+    "formal_out",
+    "formal_out/tests/sby_runs/sby-f016812672bd4dd68d9433d29d23c3d5"
+  ],
+  "input_fingerprint": "4f8cd44561066618f1734d910b817cbf67a23c3491cd1021d203f71e4a268097",
+  "session_inputs": [
+    {
+      "source": "dmac/rtl/dmac.sv",
+      "destination": "inputs/dmac/rtl/dmac.sv"
+    },
+    {
+      "source": "dmac/rtl/dmac_fifo.sv",
+      "destination": "inputs/dmac/rtl/dmac_fifo.sv"
+    },
+    {
+      "source": "formal_out/tests/dmac_checker.sv",
+      "destination": "inputs/formal_out/tests/dmac_checker.sv"
+    },
+    {
+      "source": "formal_out/tests/dmac_wrapper.sv",
+      "destination": "inputs/formal_out/tests/dmac_wrapper.sv"
+    }
+  ],
+  "cache_hit": false,
+  "source_manifest": null,
+  "test": null,
+  "suite": null,
+  "seed": null,
+  "property_set": null,
+  "metadata": {
+    "adapter": "sby",
+    "engine": "sby/smtbmc/z3",
+    "mode": "prove",
+    "depth": 40,
+    "cacheable": false,
+    "guided_profile": "2ac9b2a547314b42e2ce6cf92365e4fdac128d017f58ecc0d6a916da5dc0d297"
+  },
+  "tests": [],
+  "coverage": [],
+  "properties": [],
+  "diagnostics": [
+    {
+      "error_code": "sby_error",
+      "error": "SBY could not finish verification.",
+      "next_action": "Inspect proof/logfile.txt for RTL, solver or resource errors."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "6aea3a70a6fe4f6e837b4e6f2af41122",
+      "run_id": "sby-f016812672bd4dd68d9433d29d23c3d5",
+      "path": ".",
+      "kind": "run_directory",
+      "is_directory": true,
+      "size_bytes": 148763,
+      "sha256": "4dbbdd12cc5f5442eff6fcf46b05dfbe7d6ec32b80c82a8f316930f89cfada3d",
+      "media_type": "application/x-directory",
+      "hash_excludes": [
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "2d3f273a7637475c9e74ba4d60575bed",
+      "run_id": "sby-f016812672bd4dd68d9433d29d23c3d5",
+      "path": "events.ndjson",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 4033,
+      "sha256": "2232db77336025fff2266b1bff8633a992d92e2f75c71a5ac52223023c5489e0",
+      "media_type": "application/octet-stream",
+      "hash_excludes": []
+    },
+    {
+      "id": "46b23a1907a349199108d862ea0a9492",
+      "run_id": "sby-f016812672bd4dd68d9433d29d23c3d5",
+      "path": "proof/logfile.txt",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 1202,
+      "sha256": "b4e360ed33e6b4788cd7af412e9179798d807822c8c912400197aecfc9174a74",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    },
+    {
+      "id": "f26819e212c24746adf83df4f1ff7666",
+      "run_id": "sby-f016812672bd4dd68d9433d29d23c3d5",
+      "path": "proof/status",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 11,
+      "sha256": "165452439556b33ed7b8f2c6f31615e38e9f7484ca29caeb1b6e2d44e2f84f98",
+      "media_type": "application/octet-stream",
+      "hash_excludes": []
+    },
+    {
+      "id": "2bdd11507c604efeab1a8c5cb0b5abfc",
+      "run_id": "sby-f016812672bd4dd68d9433d29d23c3d5",
+      "path": "stderr.log",
+      "kind": "log",
+      "is_directory": false,
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    },
+    {
+      "id": "4656b13401054c48beff6e1f273d6b50",
+      "run_id": "sby-f016812672bd4dd68d9433d29d23c3d5",
+      "path": "stdout.log",
+      "kind": "log",
+      "is_directory": false,
+      "size_bytes": 1202,
+      "sha256": "b4e360ed33e6b4788cd7af412e9179798d807822c8c912400197aecfc9174a74",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    }
+  ],
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "digest": "d67286a60851c28e0703d7f8331b62743ab192f37f7c07236b6e5aa00d50de90"
+  }
+}

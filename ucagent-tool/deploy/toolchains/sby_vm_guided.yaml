@@ -1,0 +1,14 @@
+# Administrator profile for the already-installed VM OSS CAD Suite; no credentials.
+profiles:
+  sby:
+    display_name: SBY Guided - installed OSS CAD Suite
+    tools:
+      sby: /home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/sby
+      yosys: /home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/yosys
+      yosys-smtbmc: /home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/yosys-smtbmc
+      z3: /home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/z3
+    environment:
+      PATH: /home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin:/usr/local/bin:/usr/bin:/bin
+    max_concurrency: 1
+    minimum_free_bytes: 10737418240
+    minimum_root_free_bytes: 1073741824

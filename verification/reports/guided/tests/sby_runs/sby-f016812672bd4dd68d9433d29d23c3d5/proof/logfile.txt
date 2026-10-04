@@ -1,0 +1,11 @@
+SBY  2:14:29 [proof] Copy '/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/e266f8230d2140f184854271dcf7d864/formal_out/tests/sby_runs/.sby-f016812672bd4dd68d9433d29d23c3d5.6er85oyx.tmp/inputs' to '/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/e266f8230d2140f184854271dcf7d864/formal_out/tests/sby_runs/.sby-f016812672bd4dd68d9433d29d23c3d5.6er85oyx.tmp/proof/src/inputs'.
+SBY  2:14:29 [proof] engine_0: smtbmc z3
+SBY  2:14:29 [proof] base: starting process "cd proof/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  2:14:29 [proof] base: inputs/dmac/rtl/dmac_fifo.sv:37: ERROR: syntax error, unexpected TOK_ELSE, expecting ';'
+SBY  2:14:29 [proof] base: finished (returncode=1)
+SBY  2:14:29 [proof] base: task failed. ERROR.
+SBY  2:14:29 [proof] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  2:14:29 [proof] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  2:14:29 [proof] summary: engine_0 (smtbmc z3) did not return a status
+SBY  2:14:29 [proof] summary: engine_0 did not produce any traces
+SBY  2:14:29 [proof] DONE (ERROR, rc=16)

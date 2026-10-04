@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "engine": "sby",
+  "manifests": {
+    "bmc": "formal_out/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json",
+    "cover": "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json"
+  }
+}

@@ -1,0 +1,649 @@
+{
+  "id": "5081ad7183fe40ef84bec88043a12d95",
+  "options": {
+    "project_id": "b6fcf378761140e9b80c9c6aa990873d",
+    "dut": "dmac",
+    "engine": "sby",
+    "toolchain": "sby",
+    "cex_replay": true,
+    "static_review": true,
+    "human_review": false
+  },
+  "workspace": "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/5081ad7183fe40ef84bec88043a12d95",
+  "revision": 1,
+  "state": "ready",
+  "execution_status": "completed",
+  "verification_status": "unknown",
+  "view": {
+    "stages": [
+      {
+        "id": "requirement_analysis_and_planning",
+        "name": "requirement_analysis_and_planning",
+        "index": 0,
+        "description": "需求分析与验证规划",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "running",
+        "current": true,
+        "details": {
+          "task": {
+            "title": "1-requirement_analysis_and_planning-需求分析与验证规划",
+            "description": [
+              "维护 planning：项目概述、范围、策略、交付物和风险；规划格式见 Guide_Doc/sby_workflow.md。Check 自动渲染 01 文档。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ]
+          },
+          "section_index": "1",
+          "checker": [
+            "Validate planning fields in .formal_records.yaml and render the planning markdown."
+          ],
+          "reached": true,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": []
+      },
+      {
+        "id": "dut_function_understanding",
+        "name": "dut_function_understanding",
+        "index": 1,
+        "description": "dmac功能理解",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "queued",
+        "current": false,
+        "details": {
+          "task": {
+            "title": "2-dut_function_understanding-dmac功能理解",
+            "description": [
+              "维护 basic_info：完整端口、实际展开位宽、功能、正确性要求；明确 clock_signal/reset_signal，时序设计声明 clock_count=1、clock_edge。不猜测复位极性。Check 自动渲染 02 文档。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ]
+          },
+          "section_index": "2",
+          "checker": [
+            "Validate basic_info fields in .formal_records.yaml and render the basic info markdown."
+          ],
+          "reached": false,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": []
+      },
+      {
+        "id": "functional_specification_analysis",
+        "name": "functional_specification_analysis",
+        "index": 5,
+        "description": "功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "queued",
+        "current": false,
+        "details": {
+          "task": {
+            "title": "3-functional_specification_analysis-功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}",
+            "description": [
+              "沿用 FG→FC→CK 三个子阶段和原标签，维护 spec；Guide_Doc/sby_workflow.md 给出完整记录示例。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ],
+            "notes": "You have complete this stage's submissions (3.1-dut_function_grouping-DUT功能分组与层次划分, 3.2-function_point_definition-具体功能点识别与定义, 3.3-check_point_design-检测点设计与定义), now you need to check this stage is complete or not."
+          },
+          "section_index": "3",
+          "checker": [],
+          "reached": false,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": [
+          {
+            "id": "dut_function_grouping",
+            "name": "dut_function_grouping",
+            "index": 2,
+            "description": "DUT功能分组与层次划分",
+            "enabled": true,
+            "disabled_reason": "",
+            "status": "queued",
+            "current": false,
+            "details": {
+              "task": {
+                "title": "3.1-dut_function_grouping-DUT功能分组与层次划分",
+                "description": [
+                  "按 Guide_Doc/sby_workflow.md 在 spec.function_groups 中维护 FG/FC/CK，包含 FG-API 和 FG-COVERAGE；style 使用 Assume/Comb/Seq/Cover，sva_body 使用本引擎支持的表达式。仅修改当前子阶段要求的层级。"
+                ],
+                "reference_files": {},
+                "output_files": [],
+                "upper_task": {
+                  "title": "3-functional_specification_analysis-功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}",
+                  "description": [
+                    "沿用 FG→FC→CK 三个子阶段和原标签，维护 spec；Guide_Doc/sby_workflow.md 给出完整记录示例。"
+                  ],
+                  "reference_files": {
+                    "dmac/rtl/dmac_fifo.sv": "Not Read",
+                    "dmac/rtl/dmac.sv": "Not Read",
+                    "formal_out/.formal_records.yaml": "Not Read",
+                    "Guide_Doc/sby_workflow.md": "Not Read"
+                  },
+                  "output_files": [
+                    "formal_out/.formal_records.yaml"
+                  ]
+                }
+              },
+              "section_index": "3.1",
+              "checker": [
+                "Validates the formal specification structure and content."
+              ],
+              "reached": false,
+              "is_completed": false,
+              "check_pass": false,
+              "fail_count": 0,
+              "is_skipped": false,
+              "needs_human_check": false,
+              "last_human_check_result": null,
+              "last_human_check_msg": ""
+            },
+            "journal": null,
+            "children": []
+          },
+          {
+            "id": "function_point_definition",
+            "name": "function_point_definition",
+            "index": 3,
+            "description": "具体功能点识别与定义",
+            "enabled": true,
+            "disabled_reason": "",
+            "status": "queued",
+            "current": false,
+            "details": {
+              "task": {
+                "title": "3.2-function_point_definition-具体功能点识别与定义",
+                "description": [
+                  "按 Guide_Doc/sby_workflow.md 在 spec.function_groups 中维护 FG/FC/CK，包含 FG-API 和 FG-COVERAGE；style 使用 Assume/Comb/Seq/Cover，sva_body 使用本引擎支持的表达式。仅修改当前子阶段要求的层级。"
+                ],
+                "reference_files": {},
+                "output_files": [],
+                "upper_task": {
+                  "title": "3-functional_specification_analysis-功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}",
+                  "description": [
+                    "沿用 FG→FC→CK 三个子阶段和原标签，维护 spec；Guide_Doc/sby_workflow.md 给出完整记录示例。"
+                  ],
+                  "reference_files": {
+                    "dmac/rtl/dmac_fifo.sv": "Not Read",
+                    "dmac/rtl/dmac.sv": "Not Read",
+                    "formal_out/.formal_records.yaml": "Not Read",
+                    "Guide_Doc/sby_workflow.md": "Not Read"
+                  },
+                  "output_files": [
+                    "formal_out/.formal_records.yaml"
+                  ]
+                }
+              },
+              "section_index": "3.2",
+              "checker": [
+                "Validates the formal specification structure and content."
+              ],
+              "reached": false,
+              "is_completed": false,
+              "check_pass": false,
+              "fail_count": 0,
+              "is_skipped": false,
+              "needs_human_check": false,
+              "last_human_check_result": null,
+              "last_human_check_msg": ""
+            },
+            "journal": null,
+            "children": []
+          },
+          {
+            "id": "check_point_design",
+            "name": "check_point_design",
+            "index": 4,
+            "description": "检测点设计与定义",
+            "enabled": true,
+            "disabled_reason": "",
+            "status": "queued",
+            "current": false,
+            "details": {
+              "task": {
+                "title": "3.3-check_point_design-检测点设计与定义",
+                "description": [
+                  "按 Guide_Doc/sby_workflow.md 在 spec.function_groups 中维护 FG/FC/CK，包含 FG-API 和 FG-COVERAGE；style 使用 Assume/Comb/Seq/Cover，sva_body 使用本引擎支持的表达式。仅修改当前子阶段要求的层级。"
+                ],
+                "reference_files": {},
+                "output_files": [],
+                "upper_task": {
+                  "title": "3-functional_specification_analysis-功能规格分析与形式化策略定义{COUNT_FG}/{COUNT_FC}/{COUNT_CK}",
+                  "description": [
+                    "沿用 FG→FC→CK 三个子阶段和原标签，维护 spec；Guide_Doc/sby_workflow.md 给出完整记录示例。"
+                  ],
+                  "reference_files": {
+                    "dmac/rtl/dmac_fifo.sv": "Not Read",
+                    "dmac/rtl/dmac.sv": "Not Read",
+                    "formal_out/.formal_records.yaml": "Not Read",
+                    "Guide_Doc/sby_workflow.md": "Not Read"
+                  },
+                  "output_files": [
+                    "formal_out/.formal_records.yaml"
+                  ]
+                }
+              },
+              "section_index": "3.3",
+              "checker": [
+                "Validates the formal specification structure and content."
+              ],
+              "reached": false,
+              "is_completed": false,
+              "check_pass": false,
+              "fail_count": 0,
+              "is_skipped": false,
+              "needs_human_check": false,
+              "last_human_check_result": null,
+              "last_human_check_msg": ""
+            },
+            "journal": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "property_generation",
+        "name": "property_generation",
+        "index": 6,
+        "description": "属性实现与自动同步（SBY 原生表达式）",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "queued",
+        "current": false,
+        "details": {
+          "task": {
+            "title": "4-property_generation-属性实现与自动同步（SBY 原生表达式）",
+            "description": [
+              "填写每个 CK 的 sva_body、sby_guard、sby_trigger；填写 extra_config.sby 输入集及明确复位策略。Check 自动生成 checker/wrapper，不编辑派生 SV。",
+              "组合检查用 Comb，采样历史用 Seq；约束用 Assume，业务可达性用 Cover。每个断言还生成具名 guard witness。此阶段通过仅说明已生成，下一阶段执行真实编译。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ]
+          },
+          "section_index": "4",
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage."
+          ],
+          "reached": false,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": []
+      },
+      {
+        "id": "script_generation",
+        "name": "script_generation",
+        "index": 7,
+        "description": "验证脚本生成与执行（SBY）",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "queued",
+        "current": false,
+        "details": {
+          "task": {
+            "title": "5-script_generation-验证脚本生成与执行（SBY）",
+            "description": [
+              "确认 extra_config.sby.sources/filelists/include_dirs/defines、mode、depth、timeout_seconds 及 reset_policy。Check 自动生成 .sby，并分别运行 prove（或 bmc）与 cover；不用写 Tcl 或调用 Shell。",
+              "核对实际编译的 DUT 端口与 basic_info 完全一致。执行错误要修复；真实反例保留，进入下一阶段分析。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ]
+          },
+          "section_index": "5",
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage."
+          ],
+          "reached": false,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": []
+      },
+      {
+        "id": "environment_debugging_iteration",
+        "name": "environment_debugging_iteration",
+        "index": 8,
+        "description": "验证环境调试与迭代修复{MAX_ITERATION: 5}",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "queued",
+        "current": false,
+        "details": {
+          "task": {
+            "title": "6-environment_debugging_iteration-验证环境调试与迭代修复{MAX_ITERATION: 5}",
+            "description": [
+              "读取 tests/sby_coverage.json 及对应 manifest/VCD，审查每个 Assume 和初始复位约束，在 extra_config.sby.review 写下规格依据及限制。",
+              "补全 analysis.fa_entries：持续 falsified 的断言只有确认 RTL_BUG 才能保留推进；环境错误必须真实修复后重跑。未决证明、未命中 Cover/guard witness 用 INCONCLUSIVE，不当作 RTL 缺陷或不可达证明。",
+              "Check 检查输入指纹；输入未变时验证签名并复用，输入改变后重新运行，不接受旧日志。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/tests/dmac_checker.sv",
+              "formal_out/tests/dmac_wrapper.sv"
+            ]
+          },
+          "section_index": "6",
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage."
+          ],
+          "reached": false,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": []
+      },
+      {
+        "id": "coverage_analysis_and_optimization",
+        "name": "coverage_analysis_and_optimization",
+        "index": 9,
+        "description": "覆盖分析与优化（业务 Cover / guard witness；COI 不支持）",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "queued",
+        "current": false,
+        "details": {
+          "task": {
+            "title": "7-coverage_analysis_and_optimization-覆盖分析与优化（业务 Cover / guard witness；COI 不支持）",
+            "description": [
+              "按 FG/FC/CK 查看业务 Cover 和断言 guard witness，分别分析缺口，必要时改属性/深度后重跑。COI、完整空洞性、无界活性显示未建立，不使用 90% COI 门限冒充。",
+              "所有缺口需真实分析。允许带 INCONCLUSIVE 结论完成分析工作，不表示覆盖闭环或 DUT 通过。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/tests/dmac_checker.sv"
+            ]
+          },
+          "section_index": "7",
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage."
+          ],
+          "reached": false,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": []
+      },
+      {
+        "id": "counterexample_python_testgen",
+        "name": "counterexample_python_testgen",
+        "index": 10,
+        "description": "形式化反例 Python 测试用例生成",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "queued",
+        "current": false,
+        "details": {
+          "task": {
+            "title": "8-counterexample_python_testgen-形式化反例 Python 测试用例生成",
+            "description": [
+              "只为已审查 RTL_BUG 的 falsified 属性生成 tests/test_dmac_counterexample.py；读取对应签名 manifest 的 counterexample_path，明确接口/时钟映射并真实驱动 dut。",
+              "沿用原始 test_cex_ck_* 命名和 dut fixture，执行 Step/RefreshComb、真实断言及 Finish。Check 必须真实执行并验证复现证据；仅有 VCD 或测试函数不算复现。无缺陷时写明无需复现。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/tests/test_dmac_counterexample.py"
+            ]
+          },
+          "section_index": "8",
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage.",
+            "Validate, execute, and attest counterexample test reproductions."
+          ],
+          "reached": false,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": []
+      },
+      {
+        "id": "formal_execution",
+        "name": "formal_execution",
+        "index": 11,
+        "description": "RTL缺陷分析与报告",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "queued",
+        "current": false,
+        "details": {
+          "task": {
+            "title": "9-formal_execution-RTL缺陷分析与报告",
+            "description": [
+              "沿用 bugs 条目与 04 Bug 报告：仅记录当前已审查 RTL_BUG，补齐源码位置、触发、预期/实际、根因和修复建议。不把 cover 缺口或 inconclusive 当作 DUT 缺陷。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ]
+          },
+          "section_index": "9",
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage.",
+            "Validates the consistency of the formal verification bug report."
+          ],
+          "reached": false,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": []
+      },
+      {
+        "id": "static_bug_validation",
+        "name": "static_bug_validation",
+        "index": 12,
+        "description": "静态分析Bug与形式化验证结果关联",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "queued",
+        "current": false,
+        "details": {
+          "task": {
+            "title": "10-static_bug_validation-静态分析Bug与形式化验证结果关联",
+            "description": [
+              "核对静态分析线索与已审查 RTL_BUG。没有反例不证明静态线索是误报，未决项保留未决说明；标签约定见 Guide_Doc/sby_workflow.md。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/04_dmac_static_bug_analysis.md"
+            ]
+          },
+          "section_index": "10",
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage.",
+            "Validates the linkage between static bugs and formal verification results."
+          ],
+          "reached": false,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": []
+      },
+      {
+        "id": "verification_review_and_summary",
+        "name": "verification_review_and_summary",
+        "index": 13,
+        "description": "验证总结与审查",
+        "enabled": true,
+        "disabled_reason": "",
+        "status": "queued",
+        "current": false,
+        "details": {
+          "task": {
+            "title": "11-verification_review_and_summary-验证总结与审查",
+            "description": [
+              "填写 summary.core_function、overall_result 和 acceptance_conclusion；overall_result 必须与当前签名结果 passed/failed/inconclusive 一致。Check 渲染 05 总结，列出覆盖缺口、工具限制和证据。",
+              "不得设置 stats_override，不得把预算耗尽或阶段完成称为验证通过。反例复现为关闭分支时明确未执行，不能声称已动态复现。"
+            ],
+            "reference_files": {
+              "dmac/rtl/dmac_fifo.sv": "Not Read",
+              "dmac/rtl/dmac.sv": "Not Read",
+              "formal_out/.formal_records.yaml": "Not Read",
+              "Guide_Doc/sby_workflow.md": "Not Read"
+            },
+            "output_files": [
+              "formal_out/.formal_records.yaml"
+            ]
+          },
+          "section_index": "11",
+          "checker": [
+            "Generate current inputs and validate actual proof/cover evidence for this stage."
+          ],
+          "reached": false,
+          "is_completed": false,
+          "check_pass": false,
+          "fail_count": 0,
+          "is_skipped": false,
+          "needs_human_check": false,
+          "last_human_check_result": null,
+          "last_human_check_msg": ""
+        },
+        "journal": null,
+        "children": []
+      }
+    ],
+    "current_index": 0,
+    "all_completed": false,
+    "last_check": {},
+    "next_action": "Read stage inputs, edit required artifacts, save a journal, then Check / Complete."
+  },
+  "last_result": null,
+  "capabilities": {
+    "engine": "sby",
+    "stage_control": "original_stage_manager",
+    "authoring": "shared_agent_with_manual_review",
+    "property_syntax": "native_yosys_expressions",
+    "coi": "unsupported",
+    "vacuity": "not_established_trigger_cover_only",
+    "liveness": "not_established",
+    "bounded_proof": "bmc_no_counterexample_is_inconclusive",
+    "dynamic_replay": "requires_actual_simulation_receipt",
+    "automatic_fallback": false,
+    "tool_acceptance": "not_run_in_this_session"
+  },
+  "updated_at": 1791140628.2117407
+}

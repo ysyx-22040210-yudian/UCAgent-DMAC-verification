@@ -1,0 +1,43 @@
+SBY  2:25:14 [proof] Copy '/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/e266f8230d2140f184854271dcf7d864/formal_out/tests/sby_runs/.sby-63cc3dd686ff4d53904a78f6cf1f2944.g6iw7qce.tmp/inputs' to '/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/e266f8230d2140f184854271dcf7d864/formal_out/tests/sby_runs/.sby-63cc3dd686ff4d53904a78f6cf1f2944.g6iw7qce.tmp/proof/src/inputs'.
+SBY  2:25:14 [proof] engine_0: smtbmc z3
+SBY  2:25:14 [proof] base: starting process "cd proof/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  2:25:14 [proof] base: Warning: Replacing memory \storage with list of registers. See inputs/dmac/rtl/dmac_fifo.sv:41
+SBY  2:25:15 [proof] base: finished (returncode=0)
+SBY  2:25:15 [proof] prep: starting process "cd proof/model; yosys -ql design_prep.log design_prep.ys"
+SBY  2:25:16 [proof] prep: finished (returncode=0)
+SBY  2:25:16 [proof] smt2: starting process "cd proof/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY  2:25:16 [proof] smt2: finished (returncode=0)
+SBY  2:25:16 [proof] engine_0: starting process "cd proof; yosys-smtbmc -s z3 --presat --noprogress -t 12  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Solver: z3
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 4..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 4..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 5..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 5..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assumptions in step 6..
+SBY  2:25:16 [proof] engine_0: ##   0:00:00  Checking assertions in step 6..
+SBY  2:25:17 [proof] engine_0: ##   0:00:00  Checking assumptions in step 7..
+SBY  2:25:17 [proof] engine_0: ##   0:00:01  Checking assertions in step 7..
+SBY  2:25:20 [proof] engine_0: ##   0:00:04  Checking assumptions in step 8..
+SBY  2:25:20 [proof] engine_0: ##   0:00:04  Checking assertions in step 8..
+SBY  2:25:27 [proof] engine_0: ##   0:00:11  Checking assumptions in step 9..
+SBY  2:25:28 [proof] engine_0: ##   0:00:11  Checking assertions in step 9..
+SBY  2:25:37 [proof] engine_0: ##   0:00:20  Checking assumptions in step 10..
+SBY  2:25:38 [proof] engine_0: ##   0:00:21  Checking assertions in step 10..
+SBY  2:25:48 [proof] engine_0: ##   0:00:31  Checking assumptions in step 11..
+SBY  2:25:49 [proof] engine_0: ##   0:00:33  Checking assertions in step 11..
+SBY  2:26:29 [proof] engine_0: ##   0:01:12  Status: passed
+SBY  2:26:29 [proof] engine_0: finished (returncode=0)
+SBY  2:26:29 [proof] engine_0: Status returned by engine: pass
+SBY  2:26:29 [proof] summary: Elapsed clock time [H:MM:SS (secs)]: 0:01:09 (69)
+SBY  2:26:29 [proof] summary: Elapsed process time [H:MM:SS (secs)]: 0:01:14 (74)
+SBY  2:26:29 [proof] summary: engine_0 (smtbmc z3) returned pass
+SBY  2:26:29 [proof] summary: engine_0 did not produce any traces
+SBY  2:26:29 [proof] DONE (PASS, rc=0)

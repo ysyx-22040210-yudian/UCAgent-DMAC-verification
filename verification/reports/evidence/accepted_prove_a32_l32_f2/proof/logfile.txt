@@ -1,0 +1,49 @@
+SBY  0:57:25 [proof] Copy '/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-native-20261005/.ucagent/platform-runs/da585410434c4cf889b18eba50cec087/.formal.ubjwfvy5.tmp/inputs' to '/home/ucagent-lab/development/20261004-formalmc-migration/acceptance/DMAC-fullflow-native-20261005/.ucagent/platform-runs/da585410434c4cf889b18eba50cec087/.formal.ubjwfvy5.tmp/proof/src/inputs'.
+SBY  0:57:25 [proof] engine_0: smtbmc z3
+SBY  0:57:25 [proof] base: starting process "cd proof/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  0:57:25 [proof] base: Warning: Replacing memory \f_fifo_model with list of registers. See inputs/formal/fifo_monitor.svh:13
+SBY  0:57:25 [proof] base: Warning: Replacing memory \storage with list of registers. See inputs/rtl/dmac_fifo.sv:45
+SBY  0:57:25 [proof] base: finished (returncode=0)
+SBY  0:57:25 [proof] prep: starting process "cd proof/model; yosys -ql design_prep.log design_prep.ys"
+SBY  0:57:25 [proof] prep: finished (returncode=0)
+SBY  0:57:25 [proof] smt2: starting process "cd proof/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY  0:57:25 [proof] smt2: finished (returncode=0)
+SBY  0:57:25 [proof] engine_0.basecase: starting process "cd proof; yosys-smtbmc -s z3 --presat --noprogress -t 8  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY  0:57:25 [proof] engine_0.induction: starting process "cd proof; yosys-smtbmc -s z3 --presat -i --noprogress -t 8  --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-yw engine_0/trace_induct.yw --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2"
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Solver: z3
+SBY  0:57:25 [proof] engine_0.induction: ##   0:00:00  Solver: z3
+SBY  0:57:25 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 8..
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 0..
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 0..
+SBY  0:57:25 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 7..
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 1..
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 1..
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 2..
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 2..
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 3..
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 3..
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 4..
+SBY  0:57:25 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 6..
+SBY  0:57:25 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 4..
+SBY  0:57:25 [proof] engine_0.induction: ##   0:00:00  Trying induction in step 5..
+SBY  0:57:26 [proof] engine_0.basecase: ##   0:00:00  Checking assumptions in step 5..
+SBY  0:57:26 [proof] engine_0.basecase: ##   0:00:00  Checking assertions in step 5..
+SBY  0:57:27 [proof] engine_0.basecase: ##   0:00:01  Checking assumptions in step 6..
+SBY  0:57:27 [proof] engine_0.basecase: ##   0:00:01  Checking assertions in step 6..
+SBY  0:57:29 [proof] engine_0.basecase: ##   0:00:03  Checking assumptions in step 7..
+SBY  0:57:29 [proof] engine_0.basecase: ##   0:00:03  Checking assertions in step 7..
+SBY  0:57:33 [proof] engine_0.basecase: ##   0:00:08  Status: passed
+SBY  0:57:33 [proof] engine_0.basecase: finished (returncode=0)
+SBY  0:57:33 [proof] engine_0.basecase: Status returned by engine for basecase: pass
+SBY  0:58:30 [proof] engine_0.induction: ##   0:01:04  waiting for solver (1 minute)
+SBY  0:59:03 [proof] engine_0.induction: ##   0:01:37  Temporal induction successful.
+SBY  0:59:03 [proof] engine_0.induction: ##   0:01:37  Status: passed
+SBY  0:59:03 [proof] engine_0.induction: finished (returncode=0)
+SBY  0:59:03 [proof] engine_0.induction: Status returned by engine for induction: pass
+SBY  0:59:03 [proof] summary: Elapsed clock time [H:MM:SS (secs)]: 0:01:33 (93)
+SBY  0:59:03 [proof] summary: Elapsed process time [H:MM:SS (secs)]: 0:01:46 (106)
+SBY  0:59:03 [proof] summary: engine_0 (smtbmc z3) returned pass for basecase
+SBY  0:59:03 [proof] summary: engine_0 (smtbmc z3) returned pass for induction
+SBY  0:59:03 [proof] summary: engine_0 did not produce any traces
+SBY  0:59:03 [proof] summary: successful proof by k-induction.
+SBY  0:59:03 [proof] DONE (PASS, rc=0)

@@ -1,0 +1,142 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:28 (28)
+Elapsed process time [H:MM:SS (secs)]: 0:00:34 (34)
+engine_0 (smtbmc z3) returned FAIL
+cover trace: engine_0/trace0.vcd
+cover trace: engine_0/trace0.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK at inputs/formal_out/tests/dmac_checker.sv:299.3-299.89
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_FLOW_DEV_RD_ACK_GATED at inputs/formal_out/tests/dmac_checker.sv:281.3-281.74
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_FLOW_DEV_WR_ACK_GATED at inputs/formal_out/tests/dmac_checker.sv:287.3-287.74
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ at inputs/formal_out/tests/dmac_checker.sv:125.3-125.75
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_RESET_DATA_CHANNEL_SILENCE at inputs/formal_out/tests/dmac_checker.sv:311.3-311.66
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_RESET_HOST_SILENCE at inputs/formal_out/tests/dmac_checker.sv:305.3-305.58
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ at inputs/formal_out/tests/dmac_checker.sv:149.3-149.76
+cover trace: engine_0/trace1.vcd
+cover trace: engine_0/trace1.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_HOST_WR_ACK_REQ at inputs/formal_out/tests/dmac_checker.sv:59.3-59.58 step 1
+cover trace: engine_0/trace10.vcd
+cover trace: engine_0/trace10.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_ADDRESS_RD_HOLD at inputs/formal_out/tests/dmac_checker.sv:185.3-185.135 step 4
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_FLOW_RD_VALID_ADDRESS_HOLD at inputs/formal_out/tests/dmac_checker.sv:269.3-269.146 step 4
+cover trace: engine_0/trace11.vcd
+cover trace: engine_0/trace11.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_RESET_INTERRUPT_RD_STALL at inputs/formal_out/tests/dmac_checker.sv:317.3-317.134 step 4
+cover trace: engine_0/trace12.vcd
+cover trace: engine_0/trace12.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_RESET_INTERRUPT_DEVICE_PARTIAL at inputs/formal_out/tests/dmac_checker.sv:329.3-329.169 step 4
+cover trace: engine_0/trace13.vcd
+cover trace: engine_0/trace13.yw
+  reached cover statement dmac_wrapper.u_checker.C_CK_CONCURRENT_DEVICE_TRANSFER at inputs/formal_out/tests/dmac_checker.sv:365.13-365.115 step 4
+cover trace: engine_0/trace14.vcd
+cover trace: engine_0/trace14.yw
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_RESET_PARTIAL_FRAGMENT at inputs/formal_out/tests/dmac_checker.sv:476.13-476.256 step 5
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_RESET_RD_STALL at inputs/formal_out/tests/dmac_checker.sv:470.13-470.185 step 5
+cover trace: engine_0/trace15.vcd
+cover trace: engine_0/trace15.yw
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_DUPLEX_OVERLAP at inputs/formal_out/tests/dmac_checker.sv:479.13-479.322 step 7
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_RD_LONGER_PROGRESS at inputs/formal_out/tests/dmac_checker.sv:452.204-452.504 step 7
+cover trace: engine_0/trace16.vcd
+cover trace: engine_0/trace16.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DATA_RD_FOUR_LANES at inputs/formal_out/tests/dmac_checker.sv:245.3-245.445 step 7
+cover trace: engine_0/trace17.vcd
+cover trace: engine_0/trace17.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DONE_RD_NO_ACK at inputs/formal_out/tests/dmac_checker.sv:413.3-413.58 step 7
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_HOST_RD_DONE_NO_ACK at inputs/formal_out/tests/dmac_checker.sv:89.3-89.63 step 7
+cover trace: engine_0/trace18.vcd
+cover trace: engine_0/trace18.yw
+  reached cover statement dmac_wrapper.u_checker.C_CK_CONCURRENT_MEM_TRANSFER at inputs/formal_out/tests/dmac_checker.sv:362.13-362.120 step 7
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_WR_NONALIGNED at inputs/formal_out/tests/dmac_checker.sv:437.400-437.491 step 7
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_ADDRESS_WR_FIRST at inputs/formal_out/tests/dmac_checker.sv:167.3-167.396 step 7
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE at inputs/formal_out/tests/dmac_checker.sv:371.3-371.186 step 7
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DATA_WR_FOUR_LANES at inputs/formal_out/tests/dmac_checker.sv:251.3-251.429 step 7
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DONE_WR_NO_ACK at inputs/formal_out/tests/dmac_checker.sv:419.3-419.58 step 7
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_HOST_WR_DONE_NO_ACK at inputs/formal_out/tests/dmac_checker.sv:95.3-95.63 step 7
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_HOST_WR_LATCH_ADDRESS at inputs/formal_out/tests/dmac_checker.sv:71.3-71.719 step 7
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_RESET_WR_RESTART_ADDRESS at inputs/formal_out/tests/dmac_checker.sv:353.3-353.455 step 7
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_WRITE_MEM_VALID_AFTER_WORD at inputs/formal_out/tests/dmac_checker.sv:143.3-143.388 step 7
+cover trace: engine_0/trace19.vcd
+cover trace: engine_0/trace19.yw
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_RD_LEN0_COMPLETE at inputs/formal_out/tests/dmac_checker.sv:440.433-440.482 step 8
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_SIMULTANEOUS_DONE at inputs/formal_out/tests/dmac_checker.sv:482.13-482.88 step 8
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_WR_LEN0_COMPLETE at inputs/formal_out/tests/dmac_checker.sv:443.433-443.482 step 8
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_CONCURRENT_SIMULTANEOUS_DONE at inputs/formal_out/tests/dmac_checker.sv:383.3-383.129 step 8
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DONE_RD_PREV_DEV_HANDSHAKE at inputs/formal_out/tests/dmac_checker.sv:401.3-401.99 step 8
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DONE_WR_PREV_MEM_HANDSHAKE at inputs/formal_out/tests/dmac_checker.sv:407.3-407.99 step 8
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_QUOTA_RD_ZERO at inputs/formal_out/tests/dmac_checker.sv:215.3-215.469 step 8
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_QUOTA_WR_ZERO at inputs/formal_out/tests/dmac_checker.sv:221.3-221.469 step 8
+cover trace: engine_0/trace2.vcd
+cover trace: engine_0/trace2.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_HOST_RD_ACK_REQ at inputs/formal_out/tests/dmac_checker.sv:53.3-53.58 step 1
+cover trace: engine_0/trace20.vcd
+cover trace: engine_0/trace20.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_RESET_INTERRUPT_WR_STALL at inputs/formal_out/tests/dmac_checker.sv:323.3-323.134 step 8
+cover trace: engine_0/trace21.vcd
+cover trace: engine_0/trace21.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_ADDRESS_WR_HOLD at inputs/formal_out/tests/dmac_checker.sv:191.3-191.135 step 8
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE at inputs/formal_out/tests/dmac_checker.sv:377.3-377.186 step 8
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD at inputs/formal_out/tests/dmac_checker.sv:293.3-293.147 step 8
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD at inputs/formal_out/tests/dmac_checker.sv:275.3-275.151 step 8
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN at inputs/formal_out/tests/dmac_checker.sv:155.3-155.154 step 8
+cover trace: engine_0/trace22.vcd
+cover trace: engine_0/trace22.yw
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_RD_PENDING_NEXT at inputs/formal_out/tests/dmac_checker.sv:464.112-464.159 step 9
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DONE_RD_NEXT_ACK at inputs/formal_out/tests/dmac_checker.sv:425.3-425.151 step 9
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DONE_RD_ONE_CYCLE at inputs/formal_out/tests/dmac_checker.sv:389.3-389.120 step 9
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_HOST_RD_PENDING_AFTER_DONE at inputs/formal_out/tests/dmac_checker.sv:101.3-101.161 step 9
+cover trace: engine_0/trace23.vcd
+cover trace: engine_0/trace23.yw
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_WR_PENDING_NEXT at inputs/formal_out/tests/dmac_checker.sv:467.112-467.159 step 9
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DONE_WR_NEXT_ACK at inputs/formal_out/tests/dmac_checker.sv:431.3-431.151 step 9
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DONE_WR_ONE_CYCLE at inputs/formal_out/tests/dmac_checker.sv:395.3-395.120 step 9
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_HOST_WR_PENDING_AFTER_DONE at inputs/formal_out/tests/dmac_checker.sv:107.3-107.161 step 9
+cover trace: engine_0/trace24.vcd
+cover trace: engine_0/trace24.yw
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_RESET_WR_STALL at inputs/formal_out/tests/dmac_checker.sv:473.13-473.185 step 9
+cover trace: engine_0/trace25.vcd
+cover trace: engine_0/trace25.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER at inputs/formal_out/tests/dmac_checker.sv:257.3-257.734 step 11
+cover trace: engine_0/trace26.vcd
+cover trace: engine_0/trace26.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER at inputs/formal_out/tests/dmac_checker.sv:263.3-263.734 step 11
+cover trace: engine_0/trace27.vcd
+cover trace: engine_0/trace27.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_ADDRESS_WR_STEP at inputs/formal_out/tests/dmac_checker.sv:179.3-179.152 step 11
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_ADDRESS_WR_WRAP at inputs/formal_out/tests/dmac_checker.sv:203.3-203.193 step 11
+cover trace: engine_0/trace3.vcd
+cover trace: engine_0/trace3.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_CONCURRENT_ACCEPT_AFTER_RESET at inputs/formal_out/tests/dmac_checker.sv:359.3-359.172 step 2
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_QUOTA_ENCODING_BOUNDARY at inputs/formal_out/tests/dmac_checker.sv:209.3-209.68 step 2
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_RESET_RD_DONE_CLEAR at inputs/formal_out/tests/dmac_checker.sv:335.3-335.95 step 2
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_RESET_WR_DONE_CLEAR at inputs/formal_out/tests/dmac_checker.sv:341.3-341.95 step 2
+cover trace: engine_0/trace4.vcd
+cover trace: engine_0/trace4.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_WRITE_DEV_ACK_REQ at inputs/formal_out/tests/dmac_checker.sv:137.3-137.59 step 2
+cover trace: engine_0/trace5.vcd
+cover trace: engine_0/trace5.yw
+  reached cover statement dmac_wrapper.u_checker.C_CK_COVER_RD_NONALIGNED at inputs/formal_out/tests/dmac_checker.sv:434.135-434.224 step 3
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_ADDRESS_RD_FIRST at inputs/formal_out/tests/dmac_checker.sv:161.3-161.133 step 3
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_HOST_RD_LATCH_ADDRESS at inputs/formal_out/tests/dmac_checker.sv:65.3-65.217 step 3
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_HOST_RD_NO_IMMEDIATE_REACK at inputs/formal_out/tests/dmac_checker.sv:77.3-77.190 step 3
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_HOST_WR_NO_IMMEDIATE_REACK at inputs/formal_out/tests/dmac_checker.sv:83.3-83.190 step 3
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_READ_MEM_FIRST_AFTER_ACCEPT at inputs/formal_out/tests/dmac_checker.sv:113.3-113.144 step 3
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_RESET_RD_RESTART_ADDRESS at inputs/formal_out/tests/dmac_checker.sv:347.3-347.190 step 3
+cover trace: engine_0/trace6.vcd
+cover trace: engine_0/trace6.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_READ_DEV_ACK_REQ at inputs/formal_out/tests/dmac_checker.sv:119.3-119.58 step 3
+cover trace: engine_0/trace7.vcd
+cover trace: engine_0/trace7.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_ADDRESS_RD_STEP at inputs/formal_out/tests/dmac_checker.sv:173.3-173.152 step 4
+cover trace: engine_0/trace8.vcd
+cover trace: engine_0/trace8.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_ADDRESS_RD_WRAP at inputs/formal_out/tests/dmac_checker.sv:197.3-197.193 step 4
+cover trace: engine_0/trace9.vcd
+cover trace: engine_0/trace9.yw
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_DATA_RD_LOW_FIRST at inputs/formal_out/tests/dmac_checker.sv:239.3-239.254 step 4
+  reached cover statement dmac_wrapper.u_checker.G_A_CK_READ_DEV_FRAGMENT_HOLD at inputs/formal_out/tests/dmac_checker.sv:131.3-131.259 step 4
+unreached cover statements:
+  dmac_wrapper.u_checker.C_CK_COVER_RD_LEN1 at inputs/formal_out/tests/dmac_checker.sv:446.715-446.755
+  dmac_wrapper.u_checker.C_CK_COVER_RD_THREE_COMMANDS at inputs/formal_out/tests/dmac_checker.sv:458.13-458.756
+  dmac_wrapper.u_checker.C_CK_COVER_WR_LEN1 at inputs/formal_out/tests/dmac_checker.sv:449.715-449.755
+  dmac_wrapper.u_checker.C_CK_COVER_WR_LONGER_PROGRESS at inputs/formal_out/tests/dmac_checker.sv:455.13-455.1002
+  dmac_wrapper.u_checker.C_CK_COVER_WR_THREE_COMMANDS at inputs/formal_out/tests/dmac_checker.sv:461.13-461.756
+  dmac_wrapper.u_checker.G_A_CK_QUOTA_RD_LEN1 at inputs/formal_out/tests/dmac_checker.sv:227.3-227.751
+  dmac_wrapper.u_checker.G_A_CK_QUOTA_WR_LEN1 at inputs/formal_out/tests/dmac_checker.sv:233.3-233.751

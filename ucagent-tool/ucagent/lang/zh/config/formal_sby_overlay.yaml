@@ -1,0 +1,122 @@
+
+# Engine specialization only: formal.yaml owns the stage order and conditions.
+mission:
+  name: "{DUT} SBY 形式化验证任务"
+  prompt:
+    system: |
+      你负责 {DUT} 的形式化验证，当前用户明确选择 SBY（Yosys 原生前端 + SMTBMC/Z3）。
+      读取 Guide_Doc/sby_workflow.md。沿用规划→理解→FG/FC/CK→属性→脚本→环境→覆盖→反例→Bug→静态关联→总结。
+      操作仍是 CurrentTips、ReadTextFile、EditTextFile、ReplaceStringInFile、Check、Complete、SetCurrentStageJournal。
+      唯一人工维护记录是 {OUT}/.formal_records.yaml；派生 checker、wrapper、.sby、JSON 报告和 Markdown 不直接编辑。
+      sva_body 在本引擎是即时断言的表达式，不是 property/endproperty 或 |->/##。不同引擎的源记录分别存放，不自动转换。
+      sby_guard 明确检查使能，sby_trigger 明确可达性探针。uc_past_valid 仅表示已有一次采样；更深历史需显式有效条件。
+      不默认关闭复位期间的断言，不按信号名猜复位极性，不自动增加协议假设。
+      Check 执行成功、阶段工作完成、DUT 验证通过是三种不同结论。Fail 保留并分析，不能削弱判据换 Pass。
+      bmc 无反例仍为 inconclusive；cover 未命中不是不可达证明；guard witness 不是完整空洞性检查。
+      本路径不支持 FormalMC 的 COI 报告、完整并发 SVA、无界活性、自动白盒导出或多时钟生成，不得伪造这些结果。
+      约束依据、未决结果和工具限制必须显式审查，最终结论来自签名运行证据，不能靠文档声称完成。
+      技能仅为可选指导；没有 .ucagent/skills 时，直接维护 YAML 并使用同一 Check/Complete 即可。
+      {skill_system}
+    skill_system: "技能可用时可用 SkillList 阅读 formal/sby；不要求技能脚本，正常工具路径始终可用。"
+  tips:
+    allways:
+      - "使用 Check/Complete 检查当前阶段，推进前用 SetCurrentStageJournal 记录结论。"
+    random:
+      - "SBY 的覆盖探针与 COI 不同，不得合并成一个覆盖百分比。"
+      - "预算耗尽和 BMC 无反例不能写成 proven。"
+hooks:
+  continue: "继续当前阶段，阅读 Check 的诊断后修改事实源 YAML。不得编辑派生文件或将未决结论改成通过。"
+  cagent_init: "调用 RoleInfo 和 CurrentTips，读取 Guide_Doc/sby_workflow.md。"
+spec_task: "按 Guide_Doc/sby_workflow.md 在 spec.function_groups 中维护 FG/FC/CK，包含 FG-API 和 FG-COVERAGE；style 使用 Assume/Comb/Seq/Cover，sva_body 使用本引擎支持的表达式。仅修改当前子阶段要求的层级。"
+stages:
+  requirement_analysis_and_planning:
+    task:
+      - "维护 planning：项目概述、范围、策略、交付物和风险；规划格式见 Guide_Doc/sby_workflow.md。Check 自动渲染 01 文档。"
+  dut_function_understanding:
+    task:
+      - "维护 basic_info：完整端口、实际展开位宽、功能、正确性要求；明确 clock_signal/reset_signal，时序设计声明 clock_count=1、clock_edge。不猜测复位极性。Check 自动渲染 02 文档。"
+  functional_specification_analysis:
+    task:
+      - "沿用 FG→FC→CK 三个子阶段和原标签，维护 spec；Guide_Doc/sby_workflow.md 给出完整记录示例。"
+  property_generation:
+    desc: "属性实现与自动同步（SBY 原生表达式）"
+    task:
+      - "填写每个 CK 的 sva_body、sby_guard、sby_trigger；填写 extra_config.sby 输入集及明确复位策略。Check 自动生成 checker/wrapper，不编辑派生 SV。"
+      - "组合检查用 Comb，采样历史用 Seq；约束用 Assume，业务可达性用 Cover。每个断言还生成具名 guard witness。此阶段通过仅说明已生成，下一阶段执行真实编译。"
+    checker:
+      - name: property_structure_check
+        clss: ucagent.checkers.formal_sby.SbyGuidedChecker
+        args: {dut_name: "{DUT}", phase: property}
+  script_generation:
+    desc: "验证脚本生成与执行（SBY）"
+    task:
+      - "确认 extra_config.sby.sources/filelists/include_dirs/defines、mode、depth、timeout_seconds 及 reset_policy。Check 自动生成 .sby，并分别运行 prove（或 bmc）与 cover；不用写 Tcl 或调用 Shell。"
+      - "核对实际编译的 DUT 端口与 basic_info 完全一致。执行错误要修复；真实反例保留，进入下一阶段分析。"
+    checker:
+      - name: script_generation_check
+        clss: ucagent.checkers.formal_sby.SbyGuidedChecker
+        args: {dut_name: "{DUT}", phase: script}
+  environment_debugging_iteration:
+    task:
+      - "读取 tests/sby_coverage.json 及对应 manifest/VCD，审查每个 Assume 和初始复位约束，在 extra_config.sby.review 写下规格依据及限制。"
+      - "补全 analysis.fa_entries：持续 falsified 的断言只有确认 RTL_BUG 才能保留推进；环境错误必须真实修复后重跑。未决证明、未命中 Cover/guard witness 用 INCONCLUSIVE，不当作 RTL 缺陷或不可达证明。"
+      - "Check 检查输入指纹；输入未变时验证签名并复用，输入改变后重新运行，不接受旧日志。"
+    checker:
+      - name: environment_analysis_check
+        clss: ucagent.checkers.formal_sby.SbyGuidedChecker
+        args: {dut_name: "{DUT}", phase: environment}
+  coverage_analysis_and_optimization:
+    desc: "覆盖分析与优化（业务 Cover / guard witness；COI 不支持）"
+    task:
+      - "按 FG/FC/CK 查看业务 Cover 和断言 guard witness，分别分析缺口，必要时改属性/深度后重跑。COI、完整空洞性、无界活性显示未建立，不使用 90% COI 门限冒充。"
+      - "所有缺口需真实分析。允许带 INCONCLUSIVE 结论完成分析工作，不表示覆盖闭环或 DUT 通过。"
+    checker:
+      - name: coverage_analysis_check
+        clss: ucagent.checkers.formal_sby.SbyGuidedChecker
+        args: {dut_name: "{DUT}", phase: coverage}
+  counterexample_python_testgen:
+    task:
+      - "只为已审查 RTL_BUG 的 falsified 属性生成 tests/test_{DUT}_counterexample.py；读取对应签名 manifest 的 counterexample_path，明确接口/时钟映射并真实驱动 dut。"
+      - "沿用原始 test_cex_ck_* 命名和 dut fixture，执行 Step/RefreshComb、真实断言及 Finish。Check 必须真实执行并验证复现证据；仅有 VCD 或测试函数不算复现。无缺陷时写明无需复现。"
+    checker:
+      - name: current_sby_evidence
+        clss: ucagent.checkers.formal_sby.SbyGuidedChecker
+        args: {dut_name: "{DUT}", phase: evidence}
+      - name: counterexample_testgen_check
+        clss: ucagent.checkers.formal.CounterexampleTestgenChecker
+        args: {dut_name: "{DUT}"}
+  formal_execution:
+    task:
+      - "沿用 bugs 条目与 04 Bug 报告：仅记录当前已审查 RTL_BUG，补齐源码位置、触发、预期/实际、根因和修复建议。不把 cover 缺口或 inconclusive 当作 DUT 缺陷。"
+    checker:
+      - name: current_sby_evidence
+        clss: ucagent.checkers.formal_sby.SbyGuidedChecker
+        args: {dut_name: "{DUT}", phase: evidence}
+      - name: bug_report_consistency_check
+        clss: ucagent.checkers.formal.BugReportConsistencyChecker
+        args: {dut_name: "{DUT}"}
+  static_bug_validation:
+    task:
+      - "核对静态分析线索与已审查 RTL_BUG。没有反例不证明静态线索是误报，未决项保留未决说明；标签约定见 Guide_Doc/sby_workflow.md。"
+    checker:
+      - name: current_sby_evidence
+        clss: ucagent.checkers.formal_sby.SbyGuidedChecker
+        args: {dut_name: "{DUT}", phase: evidence}
+      - name: static_formal_bug_linkage_check
+        clss: ucagent.checkers.formal.StaticFormalBugLinkageChecker
+        args: {dut_name: "{DUT}"}
+  verification_review_and_summary:
+    task:
+      - "填写 summary.core_function、overall_result 和 acceptance_conclusion；overall_result 必须与当前签名结果 passed/failed/inconclusive 一致。Check 渲染 05 总结，列出覆盖缺口、工具限制和证据。"
+      - "不得设置 stats_override，不得把预算耗尽或阶段完成称为验证通过。反例复现为关闭分支时明确未执行，不能声称已动态复现。"
+    checker:
+      - name: formal_summary_check
+        clss: ucagent.checkers.formal_sby.SbyGuidedChecker
+        args: {dut_name: "{DUT}", phase: summary}
+llm_suggestion:
+  check_fail_refinement:
+    system_prompt: "根据当前 Check 诊断提出具体修复步骤，遵守 Guide_Doc/sby_workflow.md。不要求 FormalMC Tcl、COI 或本引擎不支持的并发 SVA，不削弱规格和判据。"
+    suggestion_prompt: "解释本阶段失败输入和下一步，不丢失有界/未决/工具错误区别。"
+  check_pass_refinement:
+    system_prompt: "审查当前阶段工作及证据范围，不能将 Check 通过等同 DUT 通过；通过 ApproveStagePass 给出评审结论。"
+    suggestion_prompt: "评审 FG/FC/CK 对应关系、约束依据、真实工具证据与能力限制。"

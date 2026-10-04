@@ -1,0 +1,27 @@
+
+# {{ dut }} SBY 形式化验证总结
+
+## 1. 结论
+
+- 执行引擎：SBY / SMTBMC / Z3
+- 验证结论：{{ report.verification_status }}
+- 模式：{{ report.mode }}；深度参数：{{ report.depth }}
+- 功能范围：{{ summary.core_function }}
+- 验收说明：{{ summary.acceptance_conclusion }}
+- 阶段完成不代表设计通过；bmc 无反例不属于无界证明。
+
+## 2. 属性与证据
+
+| FG | FC | CK | 类型 | 属性 | 结论 | Manifest |
+|---|---|---|---|---|---|---|
+{% for p in report.properties %}| {{ p.fg }} | {{ p.fc }} | {{ p.ck }} | {{ p.kind }} | {{ p.label }} | {{ p.status }} | {{ p.evidence | default('环境假设，非证明') }} |
+{% endfor %}
+
+## 3. 覆盖与限制
+
+- Cover 与 guard witness：{{ report.coverage.covered }} / {{ report.coverage.total }}。
+- COI：不支持；不计算 FormalMC 的 nets/dffs 覆盖百分比。
+- 空洞性：未建立。guard witness 仅说明所写使能和探针可达，不是完整空洞性证明。
+- 无界活性：未建立；本路径只运行安全属性和有界可达性。
+- 未命中不等于不可达，不更改覆盖分母。
+- 动态反例复现：仅以独立的 counterexample_replay_evidence.json 校验结果为准，本总结不自动认定已复现。

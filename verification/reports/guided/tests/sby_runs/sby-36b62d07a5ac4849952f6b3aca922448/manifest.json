@@ -1,0 +1,3218 @@
+{
+  "schema_version": 1,
+  "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+  "toolchain_id": "sby",
+  "tool": "sby",
+  "tool_version": null,
+  "execution_host": "unknown",
+  "execution_user": null,
+  "command": [
+    "/home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/sby",
+    "-d",
+    "proof",
+    "/home/ucagent-lab/development/20261004-formalmc-migration/acceptance-state/.ucagent/platform/formal_sessions/5081ad7183fe40ef84bec88043a12d95/formal_out/tests/cover.sby"
+  ],
+  "started_at": "2026-10-04T19:06:15.068354+00:00",
+  "completed_at": "2026-10-04T19:06:52.039014+00:00",
+  "execution_status": "completed",
+  "verification_status": "inconclusive",
+  "return_code": 2,
+  "input_hashes": {
+    "dmac/rtl/dmac.sv": "45b7898ce7eb5458c886189747ef703696365a02692810ef4aae879970895340",
+    "dmac/rtl/dmac_fifo.sv": "1e3c2eb8d75487f52920695db28db03b5b06d7b08b5ae8d453f8dfb8defacc61",
+    "formal_out/tests/cover.sby": "e8be3092d86302981717ca9fbb496c69e2986675533fe85a49e506cd6b532c06",
+    "formal_out/tests/dmac_checker.sv": "e244cb52a4ad141602cefa002318a7f6e4db74e8d8c4df704c871ac2c9b15f69",
+    "formal_out/tests/dmac_wrapper.sv": "6208de04dd076a46efde5296a0d8f272c21e4eddf765598a4a3ccbcac0b7e0a2",
+    "formal_out/tests/sby_inputs.json": "fce2c3069ac3096abbfa9e4340c84b40bf787a604d067f46695d02a6bbb8b51c"
+  },
+  "prepared_input_hashes": {
+    "formal_out/tests/cover.sby": "e8be3092d86302981717ca9fbb496c69e2986675533fe85a49e506cd6b532c06",
+    "formal_out/tests/dmac_checker.sv": "e244cb52a4ad141602cefa002318a7f6e4db74e8d8c4df704c871ac2c9b15f69",
+    "formal_out/tests/dmac_wrapper.sv": "6208de04dd076a46efde5296a0d8f272c21e4eddf765598a4a3ccbcac0b7e0a2",
+    "formal_out/tests/sby_inputs.json": "fce2c3069ac3096abbfa9e4340c84b40bf787a604d067f46695d02a6bbb8b51c"
+  },
+  "input_hash_excludes": [
+    ".ucagent",
+    "formal_out",
+    "formal_out/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448"
+  ],
+  "input_fingerprint": "84a4e8c5451020a32be839af80aab9b832fcaa51ffb16d26867b6dd28a461493",
+  "session_inputs": [
+    {
+      "source": "dmac/rtl/dmac.sv",
+      "destination": "inputs/dmac/rtl/dmac.sv"
+    },
+    {
+      "source": "dmac/rtl/dmac_fifo.sv",
+      "destination": "inputs/dmac/rtl/dmac_fifo.sv"
+    },
+    {
+      "source": "formal_out/tests/dmac_checker.sv",
+      "destination": "inputs/formal_out/tests/dmac_checker.sv"
+    },
+    {
+      "source": "formal_out/tests/dmac_wrapper.sv",
+      "destination": "inputs/formal_out/tests/dmac_wrapper.sv"
+    }
+  ],
+  "cache_hit": false,
+  "source_manifest": null,
+  "test": null,
+  "suite": null,
+  "seed": null,
+  "property_set": null,
+  "metadata": {
+    "adapter": "sby",
+    "engine": "sby/smtbmc/z3",
+    "mode": "cover",
+    "depth": 12,
+    "cacheable": false,
+    "guided_profile": "2ac9b2a547314b42e2ce6cf92365e4fdac128d017f58ecc0d6a916da5dc0d297"
+  },
+  "tests": [],
+  "coverage": [],
+  "properties": [
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:158.94-158.161",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_ADDRESS_RD_FIRST",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:158.94-158.161",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:182.97-182.168",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_ADDRESS_RD_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:182.97-182.168",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:170.114-170.188",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_ADDRESS_RD_STEP",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:170.114-170.188",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:194.155-194.229",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_ADDRESS_RD_WRAP",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:194.155-194.229",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:164.357-164.426",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_ADDRESS_WR_FIRST",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:164.357-164.426",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:188.97-188.194",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_ADDRESS_WR_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:188.97-188.194",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:176.114-176.188",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_ADDRESS_WR_STEP",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:176.114-176.188",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:200.155-200.229",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_ADDRESS_WR_WRAP",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:200.155-200.229",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:356.120-356.191",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_CONCURRENT_ACCEPT_AFTER_RESET",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:356.120-356.191",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:368.131-368.215",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:368.131-368.215",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:380.54-380.186",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_CONCURRENT_SIMULTANEOUS_DONE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:380.54-380.186",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:374.131-374.239",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:374.131-374.239",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:242.404-242.706",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DATA_RD_FOUR_LANES",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:242.404-242.706",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:236.214-236.293",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DATA_RD_LOW_FIRST",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:236.214-236.293",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:254.683-254.1278",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:254.683-254.1278",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:248.388-248.520",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DATA_WR_FOUR_LANES",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:248.388-248.520",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:260.683-260.942",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:260.683-260.942",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:422.112-422.172",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DONE_RD_NEXT_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:422.112-422.172",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:410.13-410.72",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DONE_RD_NO_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:410.13-410.72",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:386.80-386.126",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DONE_RD_ONE_CYCLE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:386.80-386.126",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:398.42-398.124",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DONE_RD_PREV_DEV_HANDSHAKE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:398.42-398.124",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:428.112-428.172",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DONE_WR_NEXT_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:428.112-428.172",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:416.13-416.72",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DONE_WR_NO_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:416.13-416.72",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:392.80-392.126",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DONE_WR_ONE_CYCLE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:392.80-392.126",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:404.42-404.128",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_DONE_WR_PREV_MEM_HANDSHAKE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:404.42-404.128",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:296.13-296.118",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:296.13-296.118",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:290.97-290.200",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:290.97-290.200",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:278.13-278.86",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FLOW_DEV_RD_ACK_GATED",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:278.13-278.86",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:284.13-284.86",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FLOW_DEV_WR_ACK_GATED",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:284.13-284.86",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:266.97-266.179",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FLOW_RD_VALID_ADDRESS_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:266.97-266.179",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:272.97-272.210",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:272.97-272.210",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:50.13-50.82",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_HOST_RD_ACK_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:50.13-50.82",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:86.13-86.77",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_HOST_RD_DONE_NO_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:86.13-86.77",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:62.93-62.165",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_HOST_RD_LATCH_ADDRESS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:62.93-62.165",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:74.77-74.131",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_HOST_RD_NO_IMMEDIATE_REACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:74.77-74.131",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:98.112-98.182",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_HOST_RD_PENDING_AFTER_DONE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:98.112-98.182",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:56.13-56.82",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_HOST_WR_ACK_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:56.13-56.82",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:92.13-92.77",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_HOST_WR_DONE_NO_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:92.13-92.77",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:68.344-68.419",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_HOST_WR_LATCH_ADDRESS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:68.344-68.419",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:80.77-80.131",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_HOST_WR_NO_IMMEDIATE_REACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:80.77-80.131",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:104.112-104.182",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_HOST_WR_PENDING_AFTER_DONE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:104.112-104.182",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:206.22-206.2417",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_QUOTA_ENCODING_BOUNDARY",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:206.22-206.2417",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:224.715-224.786",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_QUOTA_RD_LEN1",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:224.715-224.786",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:212.433-212.474",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_QUOTA_RD_ZERO",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:212.433-212.474",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:230.715-230.786",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_QUOTA_WR_LEN1",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:230.715-230.786",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:218.433-218.474",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_QUOTA_WR_ZERO",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:218.433-218.474",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:116.13-116.81",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_READ_DEV_ACK_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:116.13-116.81",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:128.214-128.298",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_READ_DEV_FRAGMENT_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:128.214-128.298",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:110.94-110.188",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_READ_MEM_FIRST_AFTER_ACCEPT",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:110.94-110.188",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:122.13-122.86",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:122.13-122.86",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:308.15-308.117",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RESET_DATA_CHANNEL_SILENCE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:308.15-308.117",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:302.15-302.111",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RESET_HOST_SILENCE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:302.15-302.111",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:326.116-326.222",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RESET_INTERRUPT_DEVICE_PARTIAL",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:326.116-326.222",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:314.87-314.179",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RESET_INTERRUPT_RD_STALL",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:314.87-314.179",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:320.87-320.179",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RESET_INTERRUPT_WR_STALL",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:320.87-320.179",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:332.53-332.101",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RESET_RD_DONE_CLEAR",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:332.53-332.101",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:344.143-344.239",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RESET_RD_RESTART_ADDRESS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:344.143-344.239",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:338.53-338.101",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RESET_WR_DONE_CLEAR",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:338.53-338.101",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:350.408-350.506",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_RESET_WR_RESTART_ADDRESS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:350.408-350.506",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:134.13-134.82",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WRITE_DEV_ACK_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:134.13-134.82",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:140.339-140.393",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WRITE_MEM_VALID_AFTER_WORD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:140.339-140.393",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:146.13-146.87",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:146.13-146.87",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property ASSERT in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:152.97-152.207",
+      "status": "disabled",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "assert",
+        "mode": "cover",
+        "property_id": "A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:152.97-152.207",
+        "bounded_depth": null,
+        "disabled_reason": "This property kind is outside the selected SBY mode."
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:365.13-365.115",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_CONCURRENT_DEVICE_TRANSFER",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:365.13-365.115",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace13.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:362.13-362.120",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_CONCURRENT_MEM_TRANSFER",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:362.13-362.120",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace18.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:479.13-479.322",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_DUPLEX_OVERLAP",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:479.13-479.322",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace15.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:440.433-440.482",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_RD_LEN0_COMPLETE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:440.433-440.482",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace19.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:446.715-446.755",
+      "status": "uncovered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_RD_LEN1",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:446.715-446.755",
+        "bounded_depth": null
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:452.204-452.504",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_RD_LONGER_PROGRESS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:452.204-452.504",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace15.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:434.135-434.224",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_RD_NONALIGNED",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:434.135-434.224",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace5.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:464.112-464.159",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_RD_PENDING_NEXT",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:464.112-464.159",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace22.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:458.13-458.756",
+      "status": "uncovered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_RD_THREE_COMMANDS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:458.13-458.756",
+        "bounded_depth": null
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:476.13-476.256",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_RESET_PARTIAL_FRAGMENT",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:476.13-476.256",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace14.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:470.13-470.185",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_RESET_RD_STALL",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:470.13-470.185",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace14.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:473.13-473.185",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_RESET_WR_STALL",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:473.13-473.185",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace24.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:482.13-482.88",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_SIMULTANEOUS_DONE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:482.13-482.88",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace19.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:443.433-443.482",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_WR_LEN0_COMPLETE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:443.433-443.482",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace19.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:449.715-449.755",
+      "status": "uncovered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_WR_LEN1",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:449.715-449.755",
+        "bounded_depth": null
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:455.13-455.1002",
+      "status": "uncovered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_WR_LONGER_PROGRESS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:455.13-455.1002",
+        "bounded_depth": null
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:437.400-437.491",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_WR_NONALIGNED",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:437.400-437.491",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace18.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:467.112-467.159",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_WR_PENDING_NEXT",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:467.112-467.159",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace23.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:461.13-461.756",
+      "status": "uncovered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "C_CK_COVER_WR_THREE_COMMANDS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:461.13-461.756",
+        "bounded_depth": null
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:161.3-161.133",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_ADDRESS_RD_FIRST",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:161.3-161.133",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace5.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:185.3-185.135",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_ADDRESS_RD_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:185.3-185.135",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace10.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:173.3-173.152",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_ADDRESS_RD_STEP",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:173.3-173.152",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace7.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:197.3-197.193",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_ADDRESS_RD_WRAP",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:197.3-197.193",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace8.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:167.3-167.396",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_ADDRESS_WR_FIRST",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:167.3-167.396",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace18.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:191.3-191.135",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_ADDRESS_WR_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:191.3-191.135",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace21.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:179.3-179.152",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_ADDRESS_WR_STEP",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:179.3-179.152",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace27.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:203.3-203.193",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_ADDRESS_WR_WRAP",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:203.3-203.193",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace27.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:359.3-359.172",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_CONCURRENT_ACCEPT_AFTER_RESET",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:359.3-359.172",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace3.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:371.3-371.186",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:371.3-371.186",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace18.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:383.3-383.129",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_CONCURRENT_SIMULTANEOUS_DONE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:383.3-383.129",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace19.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:377.3-377.186",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:377.3-377.186",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace21.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:245.3-245.445",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DATA_RD_FOUR_LANES",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:245.3-245.445",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace16.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:239.3-239.254",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DATA_RD_LOW_FIRST",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:239.3-239.254",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace9.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:257.3-257.734",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:257.3-257.734",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace25.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:251.3-251.429",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DATA_WR_FOUR_LANES",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:251.3-251.429",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace18.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:263.3-263.734",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:263.3-263.734",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace26.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:425.3-425.151",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DONE_RD_NEXT_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:425.3-425.151",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace22.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:413.3-413.58",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DONE_RD_NO_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:413.3-413.58",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace17.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:389.3-389.120",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DONE_RD_ONE_CYCLE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:389.3-389.120",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace22.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:401.3-401.99",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DONE_RD_PREV_DEV_HANDSHAKE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:401.3-401.99",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace19.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:431.3-431.151",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DONE_WR_NEXT_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:431.3-431.151",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace23.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:419.3-419.58",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DONE_WR_NO_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:419.3-419.58",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace18.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:395.3-395.120",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DONE_WR_ONE_CYCLE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:395.3-395.120",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace23.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:407.3-407.99",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_DONE_WR_PREV_MEM_HANDSHAKE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:407.3-407.99",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace19.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:299.3-299.89",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:299.3-299.89",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace0.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:293.3-293.147",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:293.3-293.147",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace21.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:281.3-281.74",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_FLOW_DEV_RD_ACK_GATED",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:281.3-281.74",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace0.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:287.3-287.74",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_FLOW_DEV_WR_ACK_GATED",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:287.3-287.74",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace0.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:269.3-269.146",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_FLOW_RD_VALID_ADDRESS_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:269.3-269.146",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace10.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:275.3-275.151",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:275.3-275.151",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace21.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:53.3-53.58",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_HOST_RD_ACK_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:53.3-53.58",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace2.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:89.3-89.63",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_HOST_RD_DONE_NO_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:89.3-89.63",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace17.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:65.3-65.217",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_HOST_RD_LATCH_ADDRESS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:65.3-65.217",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace5.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:77.3-77.190",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_HOST_RD_NO_IMMEDIATE_REACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:77.3-77.190",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace5.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:101.3-101.161",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_HOST_RD_PENDING_AFTER_DONE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:101.3-101.161",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace22.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:59.3-59.58",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_HOST_WR_ACK_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:59.3-59.58",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace1.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:95.3-95.63",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_HOST_WR_DONE_NO_ACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:95.3-95.63",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace18.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:71.3-71.719",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_HOST_WR_LATCH_ADDRESS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:71.3-71.719",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace18.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:83.3-83.190",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_HOST_WR_NO_IMMEDIATE_REACK",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:83.3-83.190",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace5.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:107.3-107.161",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_HOST_WR_PENDING_AFTER_DONE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:107.3-107.161",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace23.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:209.3-209.68",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_QUOTA_ENCODING_BOUNDARY",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:209.3-209.68",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace3.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:227.3-227.751",
+      "status": "uncovered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_QUOTA_RD_LEN1",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:227.3-227.751",
+        "bounded_depth": null
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:215.3-215.469",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_QUOTA_RD_ZERO",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:215.3-215.469",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace19.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:233.3-233.751",
+      "status": "uncovered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_QUOTA_WR_LEN1",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:233.3-233.751",
+        "bounded_depth": null
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:221.3-221.469",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_QUOTA_WR_ZERO",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:221.3-221.469",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace19.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:119.3-119.58",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_READ_DEV_ACK_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:119.3-119.58",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace6.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:131.3-131.259",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_READ_DEV_FRAGMENT_HOLD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:131.3-131.259",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace9.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:113.3-113.144",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_READ_MEM_FIRST_AFTER_ACCEPT",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:113.3-113.144",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace5.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:125.3-125.75",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:125.3-125.75",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace0.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:311.3-311.66",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_RESET_DATA_CHANNEL_SILENCE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:311.3-311.66",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace0.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:305.3-305.58",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_RESET_HOST_SILENCE",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:305.3-305.58",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace0.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:329.3-329.169",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_RESET_INTERRUPT_DEVICE_PARTIAL",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:329.3-329.169",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace12.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:317.3-317.134",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_RESET_INTERRUPT_RD_STALL",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:317.3-317.134",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace11.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:323.3-323.134",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_RESET_INTERRUPT_WR_STALL",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:323.3-323.134",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace20.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:335.3-335.95",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_RESET_RD_DONE_CLEAR",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:335.3-335.95",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace3.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:347.3-347.190",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_RESET_RD_RESTART_ADDRESS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:347.3-347.190",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace5.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:341.3-341.95",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_RESET_WR_DONE_CLEAR",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:341.3-341.95",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace3.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:353.3-353.455",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_RESET_WR_RESTART_ADDRESS",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:353.3-353.455",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace18.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:137.3-137.59",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_WRITE_DEV_ACK_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:137.3-137.59",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace4.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:143.3-143.388",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_WRITE_MEM_VALID_AFTER_WORD",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:143.3-143.388",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace18.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:149.3-149.76",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:149.3-149.76",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace0.vcd"
+      }
+    },
+    {
+      "name": "Property COVER in dmac_wrapper/u_checker at inputs/formal_out/tests/dmac_checker.sv:155.3-155.154",
+      "status": "covered",
+      "runtime_seconds": 36.0,
+      "proof_depth": null,
+      "engine": "sby/smtbmc/z3",
+      "coi": null,
+      "vacuous": null,
+      "counterexample_path": null,
+      "evidence_path": "proof/cover.xml",
+      "details": {
+        "kind": "cover",
+        "mode": "cover",
+        "property_id": "G_A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN",
+        "location": "inputs/formal_out/tests/dmac_checker.sv:155.3-155.154",
+        "bounded_depth": null,
+        "trace_path": "proof/engine_0/trace21.vcd"
+      }
+    }
+  ],
+  "diagnostics": [],
+  "artifacts": [
+    {
+      "id": "01d6ae772b40475d8ba749b1165239f4",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": ".",
+      "kind": "run_directory",
+      "is_directory": true,
+      "size_bytes": 37646392,
+      "sha256": "b114e402f8086f45f5b1e55ac5ad4991793961951f76d00a212aa9f3f0684c40",
+      "media_type": "application/x-directory",
+      "hash_excludes": [
+        "manifest.json"
+      ]
+    },
+    {
+      "id": "48b84b4ca624473ebbc4db772e53491b",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "events.ndjson",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 76121,
+      "sha256": "1ecee9c2a474ea56c02fe9db9b703e46ad995ef9b8254c18c12dca1b81b985d7",
+      "media_type": "application/octet-stream",
+      "hash_excludes": []
+    },
+    {
+      "id": "fcae849177cc4e348ff4fc1817ddf944",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/cover.xml",
+      "kind": "report",
+      "is_directory": false,
+      "size_bytes": 74494,
+      "sha256": "4c860494825870693b78e8d841be2f04afe37d362b516c0f3f1ff58ed971e82c",
+      "media_type": "text/xml",
+      "hash_excludes": []
+    },
+    {
+      "id": "084af201e0224a73a7e6d54340222d50",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace0.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 132917,
+      "sha256": "424389331bf37f7aae79d1b3da439b2df36825bdf75f085bdbd5c3180350ef6f",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "4da037558b8245d38797f3b6e60c9850",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace1.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 156945,
+      "sha256": "352e76064271428a1f1b510244c174f05a27f8516ee3b5d2300223de6613333e",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "da043ea7a1bd41bdbcd50e888f6a3ebe",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace10.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 229029,
+      "sha256": "9fe8a065b9e7150685f9b4c667d24328d420d8c4b8a3da767994fd8d2bd93a9e",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "a926ef8c0fc14c3aabad4f04952653ff",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace11.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 229029,
+      "sha256": "6834a6b9d8aa404b4f0869e096f96f53d5d04f00b4bd6fa744a17c19d3f43c0d",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "c160abd2823b4bd4ab078b2fbaa0a71e",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace12.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 229029,
+      "sha256": "436428461e8beb9be969df86a3d837e177d36df002d479145293c4b79120b721",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "2246477bc5cf419083bdf4093b4b3cbc",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace13.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 229029,
+      "sha256": "610bf8c5b51cab48bfe0b3fdf4759171ad48e3079b57b4e2b054e4847f2c51d2",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "a878f0686eda4491a138116adc68b8ac",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace14.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 253057,
+      "sha256": "ae59c5bbb44f8bead90bb5a9a9ace87474e62c721f81f8e2224131cd5846224e",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "fb902cd7498c4ebfb2817fd5542ac143",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace15.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 301113,
+      "sha256": "074d89f94b00fe78c10d3ecdc3fd482fcf8c51dc8bb439ec42ae8d1187c2ce24",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "a551f196da084c73929f2a0b195f4a3c",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace16.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 301113,
+      "sha256": "69a5cf40fb29182a38fbf2ead1e0150896a1ad8dfe193cecfa0299a6e65380e6",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "e5476b281885462fa9ff698ea9b65948",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace17.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 301113,
+      "sha256": "d0071977591f66d459bdc73bd17c42be272e8801f146e5a96cdfbd72c44f3655",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "5cd34478e1b7441abe0e045f5c3d5e37",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace18.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 301113,
+      "sha256": "ef5425295e2aef5180132c80931e388d93f860deb7765205d6f3f0d469470c23",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "feac4210a91e4fa28c1f8d74fdd15154",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace19.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 325141,
+      "sha256": "69fde0b2eadf7114572cf5ca752be1cf281a0888b8605195ac7b9d6cacb844ce",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "ff0cc95be2834e089a778ba1a9e89ddc",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace2.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 156945,
+      "sha256": "4fc7a69b8d8fb7f7800ce81231f1526b31460596c06ba1f55d5a53a0ea784524",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "bb170b401c254e039dec300535f687bd",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace20.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 325141,
+      "sha256": "04891ef66d4fd8355c24d6828653b21eb4ba1e661fc8e4fe35613cf70b1fbb32",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "012f926c9f16410881619fa9a3490136",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace21.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 325141,
+      "sha256": "a2b97cc729bbae3fa9cd3c8ea33d8881b88bec0106a1f5a1665145ee79afdb49",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "967dee48332e41a7aa70d7232db62f1d",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace22.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 349170,
+      "sha256": "5264ae4c123c5eebae7206e70f7c7f45f01e0d06e9bd00e45073e4bfe66def74",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "bb4a31967dd14c02a99f7c50eed2c5a5",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace23.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 349170,
+      "sha256": "1d3354071a74e1aa8e460a0a13a7082c5528823ee7a962eaaf200ff8cd78f835",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "a26389647dfa44389646dd68862205db",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace24.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 349170,
+      "sha256": "cccbeff75d8813bfc1d9052209b7271dd98510ed4dc5eb886ce20a61d288f2c6",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "e025ec9bbdc14674b88e5d4534d0b2ae",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace25.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 397230,
+      "sha256": "f3342d8936b321ec8a6ecb5da186ffea57afde36c48b54aefc7a17bf413b7655",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "589b4ef029a0488d9a14dee3c0b9588f",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace26.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 397230,
+      "sha256": "6881ba0afd84c02d5d4a08cda49edee00788179d3c4d9bd2100539e1b2b788e2",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "3c9054219ec44c6b824e6bfd29b04063",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace27.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 397230,
+      "sha256": "44eb6a6cc6484654e0d48935c1c2dff95eb055882297c0d00eba5591caa82b1d",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "02448d90f6f24f61a37cff07db502527",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace3.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 180973,
+      "sha256": "c2b04d8b0a17011f547b5eb234e44ea8ead98542755e48eeec1ebbd894e2ac1a",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "24ecf14567914239afb94bd718b21bf0",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace4.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 180973,
+      "sha256": "168fb68c6dda68b34a6d6c92ba1687f113451e315b14d68fc982788ee19e1f13",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "ca7865fce94e4e75a0293470b1c36dfa",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace5.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 205001,
+      "sha256": "3d2ab0b93c9373dc820fc61fc5525cf0939bebd657b8ea0c44b16be2d0a0eaff",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "fbdc226110584a2f982033ebad3bb9f8",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace6.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 205001,
+      "sha256": "3799592b50f238b5c6474fdd094d15c6a33db5732bda3ba76ec0a0f9702cf912",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "81c827ea8baf4e719861e599a714f42a",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace7.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 229029,
+      "sha256": "5c52860157ad730a657a5dce8179b942a68d7275ab432ca289297366280b8683",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "40649e07c7794173a4e120f232980408",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace8.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 229029,
+      "sha256": "fa2593417affd5e103f9af8a38786b80cb631ff6da1afee0715dd5ceace6a341",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "365354086f664f53a22483d68374cc35",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/engine_0/trace9.vcd",
+      "kind": "waveform",
+      "is_directory": false,
+      "size_bytes": 229029,
+      "sha256": "d765d0f49b5f57e27961458f9a8e1a73d4c080bfcb9bdba9ec1b41ba249875f2",
+      "media_type": "application/x-cdlink",
+      "hash_excludes": []
+    },
+    {
+      "id": "b7c8bbd72a584b83aea00a3f0a9a528b",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/logfile.txt",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 30534,
+      "sha256": "d64cf2c0684e8b41747d677f31ea55218d83d25772ea54ea19bf14630aa79089",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    },
+    {
+      "id": "f329865236504695b7e1ccc3c8842b4b",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "proof/status",
+      "kind": "file",
+      "is_directory": false,
+      "size_bytes": 10,
+      "sha256": "521472b28e1b0c762a085b2025f239cd2947bec0a8ed1c026ab93ede08c96df6",
+      "media_type": "application/octet-stream",
+      "hash_excludes": []
+    },
+    {
+      "id": "e16443f38c0c445b8816088c5f9ea5c4",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "stderr.log",
+      "kind": "log",
+      "is_directory": false,
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    },
+    {
+      "id": "6f17fa2c73b4401a94d8a07df8e1b25e",
+      "run_id": "sby-36b62d07a5ac4849952f6b3aca922448",
+      "path": "stdout.log",
+      "kind": "log",
+      "is_directory": false,
+      "size_bytes": 30534,
+      "sha256": "d64cf2c0684e8b41747d677f31ea55218d83d25772ea54ea19bf14630aa79089",
+      "media_type": "text/plain",
+      "hash_excludes": []
+    }
+  ],
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "digest": "fd8ba3e3e0e48c8f36be62a21b79df69e3bf1e887892d38ba9b1e2b910e7c69b"
+  }
+}

@@ -1,0 +1,8 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+engine_0 (smtbmc z3) returned FAIL
+counterexample trace: engine_0/trace.vcd
+counterexample trace: engine_0/trace.yw
+  failed assertion dmac_harness.dut.A_CK_RD_DELIVER_LEFT at inputs/formal/dmac_monitor.svh:63.5-63.83 step 3
+  failed assertion dmac_harness.dut.A_CK_RD_FETCH_LEFT at inputs/formal/dmac_monitor.svh:62.5-62.72 step 3
+  failed assertion dmac_harness.dut.A_CK_RD_PROGRESS at inputs/formal/dmac_monitor.svh:78.5-78.104 step 3

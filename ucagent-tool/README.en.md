@@ -1,0 +1,393 @@
+
+# UCAgent (UnityChip Verification Agent)
+
+AI-powered automated UT verification agent based on large language models
+
+[中文介绍](/README.zh.md) | [UCAgent Online Documentation](https://ucagent.open-verify.cc/)
+
+## Introduction
+
+UCAgent is an automated hardware verification AI agent based on large language models, focusing on Unit Test verification for chip design. It automatically analyzes hardware designs, generates test cases, executes verification tasks, and produces test reports through AI technology, thereby improving verification efficiency.
+
+**Key Features:**
+
+- Automated chip verification workflow
+- Support for functional coverage and code coverage analysis
+- Consistency assurance among documentation, code, and reports
+- Deep collaboration with mainstream Code Agents (OpenHands, Copilot, Claude Code, Gemini-CLI, Qwen-Code, etc.) via MCP protocol
+- Three intelligent interaction modes (standard, enhanced, advanced)
+
+**For more details, please refer to [UCAgent Online Documentation](https://ucagent.open-verify.cc/)**
+
+> [!TIP]
+> The slide, code and environment for UCAgent workshop presented at **RISC-V Summit Europe 2026** are available at the official repository: [https://github.com/XS-MLVP/tutorial-records](https://github.com/XS-MLVP/tutorial-records)
+
+---
+
+## System Requirements
+
+- Python 3.11+, if the latest version of Python encounters dependency issues, please downgrade
+- Supported OS: Linux, macOS
+- Memory: 4GB+ recommended
+- Network: Access to AI model API (OpenAI compatible)
+- picker: https://github.com/XS-MLVP/picker
+
+---
+
+## Quick Start
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/XS-MLVP/UCAgent.git
+cd UCAgent
+```
+
+### 2. Install Dependencies
+
+```bash
+pip3 install -r requirements.txt
+```
+
+### 3. Install and Configure qwen
+
+Please refer to [https://qwenlm.github.io/qwen-code-docs/en/](https://qwenlm.github.io/qwen-code-docs/en/) to install qwen-code-cli, then configure the MCP Server as shown below.
+
+Example `~/.qwen/settings.json`:
+
+```json
+{
+    "mcpServers": {
+           "unitytest": {
+            "httpUrl": "http://localhost:5000/mcp",
+            "timeout": 300000
+        }
+    }
+}
+```
+
+Since running test cases may take a long time, it is recommended to set a larger `timeout` value, for example 300 seconds.
+
+For other Code Agents, please refer to their documentation, e.g., [claude code](https://claude.com/product/claude-code), [opencode](https://opencode.ai/), [copilot-cli](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/use-copilot-cli), [kilo-cli](https://kilo.ai/cli), [iflow](https://platform.iflow.cn/cli/quickstart), etc.
+
+### 4. Start Verification
+
+Taking `Adder` in examples as an illustration.
+
+#### 4.1 Method 1: Automatically run qwen with specified backend (Recommended)
+
+```bash
+# Default backend is langchain,
+#   requires configuration: OPENAI_API_BASE and other environment variables
+# backend can be: langchian, claude, opencode, copilot, kilo, qwen, iflow, etc.
+make mcp_Adder ARGS="--loop --backend=qwen"
+```
+
+For supported backends, please refer to the `backend` section in [ucagent/setting.yaml](/ucagent/setting.yaml).
+
+#### 4.2 Method 2: Manually run qwen (For unadapted CodeAgents)
+
+**（1）Start MCP-Server**
+
+```bash
+make mcp_Adder  # workspace is set to output/workspace_Adder directory
+# Calls the following commands:
+#   picker export Adder/Adder.v --rw 1 --sname Adder --tdir output/workspace_Adder/ -c -w output/workspace_Adder/Adder/Adder.fst
+#   ucagent output/workspace_Adder/ Adder -s -hm --tui --mcp-server-no-file-tools --no-embed-tools
+# Browser Web UI mode:
+#   ucagent output/workspace_Adder/ Adder -s -hm --web-console --mcp-server-no-file-tools --no-embed-tools
+# Custom Web UI host/port/password (HTTP Basic Auth):
+#   ucagent output/workspace_Adder/ Adder -s -hm --web-console 0.0.0.0:18000:secret --mcp-server-no-file-tools --no-embed-tools
+```
+
+The default MCP Server address is: http://127.0.0.1:5000/mcp
+
+**（2）Start qwen to execute task**
+
+```bash
+cd output/workspace_Adder
+qwen
+```
+
+After starting qwen as above, input the task prompt:
+
+> Please use the tool `RoleInfo` to get your role information and basic guidance, then complete the task. Use the tool `ReadTextFile` to read files. You need to perform file operations in the current working directory and should not go beyond this directory.
+
+**Note:**
+- Start the Code Agent in the working directory (e.g., output/workspace_Adder in the example above), otherwise file path mismatch issues may occur.
+- If the DUT is complex and has peripheral component dependencies, you need to open the default skipped stages via ucagent interaction commands.
+
+**Tips:**
+
+- Write verification prompts according to task requirements
+- When Code Agent stops midway, you can input: `Continue, please use tool 'Complete' to determine if all tasks are finished`
+
+> 💡 **More Usage Methods:** Besides MCP collaboration mode, UCAgent also supports direct LLM integration, human-machine collaboration, and other modes. See [Usage Documentation](https://ucagent.open-verify.cc/content/02_usage/01_direct/)
+
+
+### 5. How to Improve Verification Quality (Optional)
+
+By default, UCAgent only enables the internal `Python Checker` for stage checking, which is heuristic. If you need verification quality improvement, you can enable `LLM stage checking`. If you need to reach "delivery level" quality, you further need to enable `Human stage checking`.
+
+1. [Enable LLM stage checking](/examples/LLMCheck/README.md)
+
+2. [Enable human stage checking](https://ucagent.open-verify.cc/content/02_usage/02_assit/)
+
+Default stage checking order: Python Checker -> LLM -> Human
+
+---
+
+## Interact via Web Interface
+
+UCAgent provides Master mode, based on which you can perform centralized Agent management, create tasks, view status, use online terminals, and other operations through the web interface.
+
+### Local Startup
+
+#### 1. Configure Environment Variables
+
+```bash
+# Edit a custom file to export environment variables required by ucagent, for example:
+# export OPENAI_API_BASE=<your_openai_api_base>
+# export OPENAI_API_KEY=<your_openai_api_key>
+# export OPENAI_MODEL=<your_openai_model>
+vim ~/.ucagent_env
+# Then load the environment variables
+source ~/.ucagent_env
+```
+
+#### 2. Start UCAgent Master
+
+```bash
+make as_master_persist
+# Or, if ucagent is installed, you can directly run ucagent to start master mode
+ucagent --as-master-persist --as-master
+```
+
+Then visit `http://localhost:8800` in your browser.
+
+### Docker Startup
+
+```bash
+docker run -it --rm \
+  -e OPENAI_API_BASE=<your_openai_api_base> \
+  -e OPENAI_API_KEY=<your_openai_api_key> \
+  -e OPENAI_MODEL=<your_openai_model> \
+  -p 8800:8800 \
+  ghcr.io/xs-mlvp/ucagent:latest ucagent --as-master-persist --as-master
+```
+
+If ghcr.io is not accessible, you can directly replace it with mirror addresses such as `ghcr.nju.edu.cn`.
+
+After successful startup, visit `http://localhost:8800` in your browser.
+
+### Basic Operations
+
+1. In the web interface, click the `+` button (or launch button) to create a new task.
+2. In the Agent list, click the API button to connect to the control page of a specific Agent.
+3. In the Agent control page, click the web terminal button to open the online terminal.
+4. Start ucagent locally and connect to an existing Master service via the --master parameter.
+
+### More Features
+
+1. Launch page: create workspace, upload/import files, parse modules, compile, and preview launch command.
+2. Task page: filter, paginate, inspect task details/logs, and stop/delete managed tasks.
+3. Enhanced Agent page: stage multi-select and bulk toggles (HM/Skip/LFail/LPass), plus stage artifact content/diff review.
+4. Unified proxy access: Master proxies cmd/terminal/web-console paths for both task and agent entries.
+5. Improved Web Terminal: multiple terminal sessions across different URLs.
+
+> 📖 **Detailed Operations:** See [TUI Usage Documentation](https://ucagent.open-verify.cc/content/07_web_master/)
+
+---
+
+## Basic Operations
+
+### TUI Shortcuts
+
+- `ctrl+up/down/left/right`: Adjust layout (Console height / Mission panel width)
+- `ctrl+h/j/k/l`: Vim-style layout adjustment (equivalent to ctrl+left/down/up/right)
+- `ctrl+c`: Cancel running command; exit TUI if no command is running
+- `ctrl+t`: Open theme picker
+- `f1`: Show/hide keyboard shortcuts help panel
+- `shift+right`: Clear console output
+- `shift+left`: Clear input text
+- `tab`: Command completion; press Tab repeatedly to cycle through candidates
+- `pageup/pagedown`: Page through Console output
+- `esc`: Exit scrolling/paging/help panel, or clear input
+
+### Stage Color Indicators
+
+- `White`: Pending execution
+- `Red`: Currently executing
+- `Green`: Execution passed
+- `*`:
+  - Blue indicates LLM Fail checking is enabled for this stage, providing modification suggestions when stage check fails more than 3 times
+  - Green indicates LLM Pass checking is enabled for this stage, verifying if stage task requirements are met upon completion
+  - Red indicates this stage requires mandatory human inspection, AI can continue after entering command `hmcheck_pass [msg]`
+- `Yellow`: Stage skipped
+
+### Common Interactive Commands
+
+- `q`: Exit TUI (or exit UCAgent)
+- `tui`: Enter TUI
+- `tab`: Command completion
+- `tool_list`: List all available tools
+- `help`: View all command help
+- `loop [prompt]`: Continue current task
+
+> 📖 **Detailed Operations:** See [TUI Usage Documentation](https://ucagent.open-verify.cc/content/02_usage/04_tui/)
+
+---
+
+## Frequently Asked Questions (FAQ)
+
+**Q: How to configure different AI models?**
+
+A: Modify the `openai.model_name` field in `config.yaml`, which supports any OpenAI-compatible API. See [Configuration Documentation](https://ucagent.open-verify.cc/content/02_usage/01_direct/).
+
+**Q: What to do when errors occur during verification?**
+
+A: Use `Ctrl+C` to enter interactive mode, check current status with `status`, and use `help` to get debugging commands.
+
+**Q: MCP server cannot connect?**
+
+A: Check if the port is occupied, verify firewall settings, and you can specify a different port with `--mcp-server-port`.
+
+**Q: Why is there information from the last execution?**
+
+A: UCAgent by default looks for the `.ucagent/ucagent_info.json` file in the working directory to load previous execution information and continue. If you don't need history, delete this file or use the `--no-history` parameter to ignore loading history.
+
+**Q: How to run long-duration verification?**
+
+A: Please refer to CodeAgent's custom backend mode [examples/CustomBackend/README.md](/examples/CustomBackend/README.md).
+
+**Q: Can verification stages be customized?**
+
+A: Yes, see [Customization Documentation](https://ucagent.open-verify.cc/content/03_develop/01_customize/).
+
+**Q: How to add custom tools?**
+
+A: Create a new tool class in the `ucagent/tools/` directory, inherit from the `UCTool` base class, and load it with the `--ex-tools` parameter. See [Tool List Documentation](https://ucagent.open-verify.cc/content/03_develop/02_tool_list/).
+
+> 🔍 **More Questions:** Check the complete [FAQ Documentation](https://ucagent.open-verify.cc/content/02_usage/05_faq/)
+
+---
+
+## Documentation Build and Preview (MkDocs)
+
+The Makefile provides documentation-related helper targets (MkDocs + Material):
+
+| Target              | Purpose                                                      | Use Case                        |
+| ------------------- | ------------------------------------------------------------ | ------------------------------- |
+| `make docs-help`    | Show documentation-related target help                       | View available commands         |
+| `make docs-install` | Install build dependencies from `docs/requirements-docs.txt` | First use or dependency updates |
+| `make docs-serve`   | Local preview (default 127.0.0.1:8030)                       | Develop and preview docs        |
+| `make docs-build`   | Build static site to `docs/site`                             | Generate production version     |
+| `make docs-clean`   | Delete `docs/site` directory                                 | Clean build artifacts           |
+
+### Usage Flow
+
+**First-time use (install dependencies):**
+
+```bash
+make docs-install    # Install mkdocs and material theme dependencies
+```
+
+**Daily development (preview documentation):**
+
+```bash
+make docs-serve      # Start local server, visit http://127.0.0.1:8030
+# Browser will auto-refresh after modifying docs
+```
+
+**Local generation and viewing (build production version):**
+
+```bash
+make docs-build      # Generate static website to docs/site directory
+# Open docs/site/index.html in local browser
+make docs-clean      # Clean build artifacts (optional)
+```
+
+### Complete Workflow Example
+
+```bash
+# 1. Initial setup: Install dependencies
+make docs-install
+
+# 2. Development phase: Preview docs (can be repeated)
+make docs-serve      # Visit http://127.0.0.1:8030 in browser
+# ...edit documentation...
+# Press Ctrl+C to stop service
+
+# 3. Local generation: Build production version
+make docs-build      # Generate docs/site directory
+# Open docs/site/index.html in local browser
+
+# 4. Cleanup (optional)
+make docs-clean      # Delete docs/site directory
+```
+
+### Notes
+
+- Port and address are currently hardcoded in `docs/Makefile`, can be modified as needed.
+- `make docs-serve` is suitable for development use, supports hot reload
+- `make docs-build` generates complete static website files, output to docs/site directory, can preview final effect locally (open docs/site/index.html)
+
+---
+
+## PDF Manual Build (Pandoc + XeLaTeX)
+
+For generating high-quality developer PDF manuals:
+
+| Target           | Purpose                                                  |
+| ---------------- | -------------------------------------------------------- |
+| `make pdf`       | Generate `ucagent-doc.pdf` from ordered Markdown sources |
+| `make pdf-one`   | Equivalent to `pdf` (convenient for CI calls)            |
+| `make pdf-clean` | Clean generated PDF and LaTeX temporary files            |
+
+### Examples
+
+```bash
+make pdf
+make MONO="JetBrains Mono" pdf      # Override monospace font
+make TWOSIDE=1 pdf                   # Two-sided layout (adds -twoside to filename)
+make pdf-clean
+```
+
+### Dependencies
+
+- pandoc
+- XeLaTeX (TexLive)
+- Chinese font "Noto Serif CJK SC"
+- Monospace font (default DejaVu Sans Mono)
+- Optional filter `pandoc-crossref`
+
+### Custom Variables
+
+- `MONO` Change monospace font
+- `TWOSIDE` Enable two-sided mode when non-empty
+
+### Common Issues
+
+- **Missing fonts:** Install CJK font packages (e.g., `fonts-noto-cjk`).
+- **LaTeX errors:** Ensure complete XeLaTeX suite is installed (use `texlive-full` if necessary).
+- **Missing cross-references:** Confirm `pandoc-crossref` is in PATH.
+
+Output: `ucagent-doc.pdf` can be distributed with version releases.
+
+---
+
+## Get More Help
+
+- 📚 [UCAgent Online Documentation](https://ucagent.open-verify.cc)
+- 🚀 [Quick Start Guide](https://ucagent.open-verify.cc/content/02_usage/01_direct/)
+- 🔧 [Custom Configuration](https://ucagent.open-verify.cc/content/03_develop/01_customize/)
+- 🛠️ [Tool List](https://ucagent.open-verify.cc/content/03_develop/02_tool_list/)
+- 💬 [GitHub Issues](https://github.com/XS-MLVP/UCAgent/issues)
+
+### Contributing
+
+Issues and Pull Requests are welcome!
+
+<div align="center">
+<img src="/.github/group.png"/>
+</div>

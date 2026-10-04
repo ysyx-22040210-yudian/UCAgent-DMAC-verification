@@ -1,0 +1,2 @@
+FATAL: replay_tb.sv:178: VECTOR_MISMATCH step=3 signal=mem_rd_addr
+       Time: 22  Scope: replay_tb

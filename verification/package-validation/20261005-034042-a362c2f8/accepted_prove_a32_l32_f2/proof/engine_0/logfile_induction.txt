@@ -1,0 +1,8 @@
+##   0:00:00  Solver: z3
+##   0:00:00  Trying induction in step 8..
+##   0:00:00  Trying induction in step 7..
+##   0:00:00  Trying induction in step 6..
+##   0:00:00  Trying induction in step 5..
+##   0:01:03  waiting for solver (1 minute)
+##   0:01:45  Temporal induction successful.
+##   0:01:45  Status: passed

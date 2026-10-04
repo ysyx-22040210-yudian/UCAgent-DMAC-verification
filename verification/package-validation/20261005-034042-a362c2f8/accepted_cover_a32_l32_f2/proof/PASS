@@ -1,0 +1,52 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:41 (41)
+Elapsed process time [H:MM:SS (secs)]: 0:00:42 (42)
+engine_0 (smtbmc z3) returned pass
+cover trace: engine_0/trace0.vcd
+cover trace: engine_0/trace0.yw
+  reached cover statement dmac_harness.dut.C_CK_READ_WRAP at inputs/formal/dmac_monitor.svh:100.5-100.87 step 3
+  reached cover statement dmac_harness.dut.u_rd_fifo.C_CK_FIFO_EMPTY at inputs/formal/fifo_monitor.svh:32.5-32.55 step 3
+cover trace: engine_0/trace1.vcd
+cover trace: engine_0/trace1.yw
+  reached cover statement dmac_harness.dut.C_CK_HIGH_LEN_RD at inputs/formal/dmac_monitor.svh:106.9-106.67 step 3
+cover trace: engine_0/trace10.vcd
+cover trace: engine_0/trace10.yw
+  reached cover statement dmac_harness.C_CK_RESET_ABORT_WR at inputs/formal/dmac_harness.sv:26.9-26.84 step 8
+cover trace: engine_0/trace11.vcd
+cover trace: engine_0/trace11.yw
+  reached cover statement dmac_harness.dut.C_CK_DUPLEX_DONE at inputs/formal/dmac_monitor.svh:99.5-99.59 step 8
+cover trace: engine_0/trace12.vcd
+cover trace: engine_0/trace12.yw
+  reached cover statement dmac_harness.dut.u_wr_fifo.C_CK_FIFO_FULL at inputs/formal/fifo_monitor.svh:31.5-31.58 step 11
+cover trace: engine_0/trace13.vcd
+cover trace: engine_0/trace13.yw
+  reached cover statement dmac_harness.dut.u_wr_fifo.C_CK_FIFO_FULL_REPLACE at inputs/formal/fifo_monitor.svh:30.5-30.73 step 14
+cover trace: engine_0/trace14.vcd
+cover trace: engine_0/trace14.yw
+  reached cover statement dmac_harness.dut.C_CK_THREE_RD at inputs/formal/dmac_monitor.svh:97.5-97.60 step 22
+cover trace: engine_0/trace15.vcd
+cover trace: engine_0/trace15.yw
+  reached cover statement dmac_harness.dut.C_CK_THREE_WR at inputs/formal/dmac_monitor.svh:98.5-98.60 step 22
+cover trace: engine_0/trace2.vcd
+cover trace: engine_0/trace2.yw
+  reached cover statement dmac_harness.dut.C_CK_PENDING_RD at inputs/formal/dmac_monitor.svh:109.5-109.84 step 4
+cover trace: engine_0/trace3.vcd
+cover trace: engine_0/trace3.yw
+  reached cover statement dmac_harness.C_CK_RESET_ABORT_RD at inputs/formal/dmac_harness.sv:25.9-25.84 step 4
+cover trace: engine_0/trace4.vcd
+cover trace: engine_0/trace4.yw
+  reached cover statement dmac_harness.dut.u_rd_fifo.C_CK_FIFO_FULL at inputs/formal/fifo_monitor.svh:31.5-31.58 step 5
+cover trace: engine_0/trace5.vcd
+cover trace: engine_0/trace5.yw
+  reached cover statement dmac_harness.dut.u_wr_fifo.C_CK_FIFO_EMPTY at inputs/formal/fifo_monitor.svh:32.5-32.55 step 6
+cover trace: engine_0/trace6.vcd
+cover trace: engine_0/trace6.yw
+  reached cover statement dmac_harness.dut.C_CK_PENDING_WR at inputs/formal/dmac_monitor.svh:110.5-110.86 step 7
+cover trace: engine_0/trace7.vcd
+cover trace: engine_0/trace7.yw
+  reached cover statement dmac_harness.dut.u_rd_fifo.C_CK_FIFO_FULL_REPLACE at inputs/formal/fifo_monitor.svh:30.5-30.73 step 7
+cover trace: engine_0/trace8.vcd
+cover trace: engine_0/trace8.yw
+  reached cover statement dmac_harness.dut.C_CK_HIGH_LEN_WR at inputs/formal/dmac_monitor.svh:107.9-107.67 step 7
+cover trace: engine_0/trace9.vcd
+cover trace: engine_0/trace9.yw
+  reached cover statement dmac_harness.dut.C_CK_WRITE_WRAP at inputs/formal/dmac_monitor.svh:101.5-101.88 step 7

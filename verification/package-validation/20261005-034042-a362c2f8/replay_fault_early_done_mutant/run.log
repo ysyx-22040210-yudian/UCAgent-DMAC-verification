@@ -1,0 +1,2 @@
+PASS replay 9 input vectors
+replay_tb.sv:414: $finish called at 56 (1ns)

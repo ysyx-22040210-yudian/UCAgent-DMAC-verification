@@ -1,0 +1,19 @@
+{"case": "accepted_cover_a32_l1_f1", "mode": "cover", "exit_code": 0, "tool_status": "PASS", "conclusion": "覆盖全部命中", "expected_observation": true}
+{"case": "accepted_cover_a32_l32_f2", "mode": "cover", "exit_code": 0, "tool_status": "PASS", "conclusion": "覆盖全部命中", "expected_observation": true}
+{"case": "accepted_prove_a16_l8_f3", "mode": "prove", "exit_code": 0, "tool_status": "PASS", "conclusion": "本参数实例安全证明通过", "expected_observation": true}
+{"case": "accepted_prove_a32_l1_f4", "mode": "prove", "exit_code": 0, "tool_status": "PASS", "conclusion": "本参数实例安全证明通过", "expected_observation": true}
+{"case": "accepted_prove_a32_l32_f2", "mode": "prove", "exit_code": 0, "tool_status": "PASS", "conclusion": "本参数实例安全证明通过", "expected_observation": true}
+{"case": "accepted_prove_a32_l8_f1", "mode": "prove", "exit_code": 0, "tool_status": "PASS", "conclusion": "本参数实例安全证明通过", "expected_observation": true}
+{"case": "fault_address_step", "mode": "bmc", "exit_code": 2, "tool_status": "FAIL", "conclusion": "故障对照有效：检测到预期断言反例", "expected_observation": true}
+{"case": "fault_early_done", "mode": "bmc", "exit_code": 2, "tool_status": "FAIL", "conclusion": "故障对照有效：检测到预期断言反例", "expected_observation": true}
+{"case": "fault_fifo_pop", "mode": "bmc", "exit_code": 2, "tool_status": "FAIL", "conclusion": "故障对照有效：检测到预期断言反例", "expected_observation": true}
+{"case": "fault_length_encoding", "mode": "bmc", "exit_code": 2, "tool_status": "FAIL", "conclusion": "故障对照有效：检测到预期断言反例", "expected_observation": true}
+{"case": "fault_read_lane", "mode": "bmc", "exit_code": 2, "tool_status": "FAIL", "conclusion": "故障对照有效：检测到预期断言反例", "expected_observation": true}
+{"case": "fault_reset_lane", "mode": "bmc", "exit_code": 2, "tool_status": "FAIL", "conclusion": "故障对照有效：检测到预期断言反例", "expected_observation": true}
+{"case": "fault_write_lane", "mode": "bmc", "exit_code": 2, "tool_status": "FAIL", "conclusion": "故障对照有效：检测到预期断言反例", "expected_observation": true}
+{"case": "fifo_cover_f1", "mode": "cover", "exit_code": 0, "tool_status": "PASS", "conclusion": "覆盖全部命中", "expected_observation": true}
+{"case": "fifo_cover_f3", "mode": "cover", "exit_code": 0, "tool_status": "PASS", "conclusion": "覆盖全部命中", "expected_observation": true}
+{"case": "fifo_cover_f4", "mode": "cover", "exit_code": 0, "tool_status": "PASS", "conclusion": "覆盖全部命中", "expected_observation": true}
+{"case": "guided_bmc", "mode": "bmc", "exit_code": 0, "tool_status": "PASS", "conclusion": "有界深度内无反例，仍未决", "expected_observation": true}
+{"case": "guided_cover", "mode": "cover", "exit_code": 2, "tool_status": "FAIL", "conclusion": "覆盖仍有未命中项，结论未决", "expected_observation": true}
+结果目录：/tmp/ucagent-dmac-package-review-20261005-7e1ac3/results/20261005-034042-a362c2f8

@@ -1,0 +1,6 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:04 (4)
+Elapsed process time [H:MM:SS (secs)]: 0:00:04 (4)
+engine_0 (smtbmc z3) returned FAIL
+counterexample trace: engine_0/trace.vcd
+counterexample trace: engine_0/trace.yw
+  failed assertion dmac_harness.dut.u_wr_fifo.A_CK_FIFO_POINTER at inputs/formal/fifo_monitor.svh:26.5-26.85 step 8

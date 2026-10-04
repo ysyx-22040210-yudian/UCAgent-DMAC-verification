@@ -1,0 +1,1 @@
+["/home/ucagent-lab/portable-distributions/UCAgent-Studio-0.3.1-linux-x86_64/oss-cad-suite/bin/iverilog", "-g2012", "-DSYNTHESIS", "-s", "replay_tb", "-o", "sim", "dmac.sv", "dmac_fifo.sv", "replay_tb.sv"]

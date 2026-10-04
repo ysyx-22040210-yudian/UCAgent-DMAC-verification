@@ -1,0 +1,9 @@
+.............................................................            [100%]
+=============================== warnings summary ===============================
+../../../home/ucagent-lab/releases/20260908-formalmc-restore1/venv/lib/python3.11/site-packages/trustcall/_base.py:46
+  /home/ucagent-lab/releases/20260908-formalmc-restore1/venv/lib/python3.11/site-packages/trustcall/_base.py:46: LangGraphDeprecatedSinceV10: Importing Send from langgraph.constants is deprecated. Please use 'from langgraph.types import Send' instead. Deprecated in LangGraph V1.0 to be removed in V2.0.
+    from langgraph.constants import Send
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /tmp/ucagent-dmac-package-review-20261005-7e1ac3/results/tool-regression.xml -
+61 passed, 1 warning in 20.89s

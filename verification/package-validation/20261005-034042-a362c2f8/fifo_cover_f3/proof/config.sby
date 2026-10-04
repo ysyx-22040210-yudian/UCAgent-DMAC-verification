@@ -1,0 +1,18 @@
+[options]
+mode cover
+depth 12
+timeout 60
+multiclock off
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -formal -sv -Iinputs/formal -DFORMAL -DSYNTHESIS "inputs/rtl/dmac_fifo.sv" "inputs/formal/fifo_harness.sv"
+chparam -set ADDR_W 32 fifo_harness
+chparam -set LEN_W 32 fifo_harness
+chparam -set FIFO_DEPTH 3 fifo_harness
+prep -top fifo_harness
+
+[files]
+inputs

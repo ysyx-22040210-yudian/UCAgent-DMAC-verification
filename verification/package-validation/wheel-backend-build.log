@@ -1,0 +1,1071 @@
+/tmp/ucagent-dmac-build-env-20261005/lib/python3.11/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
+!!
+
+        ********************************************************************************
+        Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+
+        By 2027-Feb-18, you need to update your project and remove deprecated calls
+        or your builds will no longer be supported.
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+  corresp(dist, value, root_dir)
+/tmp/ucagent-dmac-build-env-20261005/lib/python3.11/site-packages/setuptools/config/_apply_pyprojecttoml.py:61: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+!!
+
+        ********************************************************************************
+        Please consider removing the following classifiers in favor of a SPDX license expression:
+
+        License :: OSI Approved :: MIT License
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+  dist._finalize_license_expression()
+/tmp/ucagent-dmac-build-env-20261005/lib/python3.11/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+!!
+
+        ********************************************************************************
+        Please consider removing the following classifiers in favor of a SPDX license expression:
+
+        License :: OSI Approved :: MIT License
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+  self._finalize_license_expression()
+running bdist_wheel
+running build
+running build_py
+creating build/lib/ucagent
+copying ucagent/__init__.py -> build/lib/ucagent
+copying ucagent/_version.py -> build/lib/ucagent
+copying ucagent/cli.py -> build/lib/ucagent
+copying ucagent/verify_agent.py -> build/lib/ucagent
+copying ucagent/verify_pdb.py -> build/lib/ucagent
+copying ucagent/version.py -> build/lib/ucagent
+creating build/lib/ucagent/abackend
+copying ucagent/abackend/__init__.py -> build/lib/ucagent/abackend
+copying ucagent/abackend/base.py -> build/lib/ucagent/abackend
+copying ucagent/abackend/cmdline.py -> build/lib/ucagent/abackend
+creating build/lib/ucagent/checkers
+copying ucagent/checkers/__init__.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/base.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/bash_script.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/file_linemap.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/file_markdown.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/formal.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/formal_sby.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/increment.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/recorder.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/static_bug.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/toffee_report.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/unity_test.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/unity_test_mock.py -> build/lib/ucagent/checkers
+copying ucagent/checkers/unity_test_random.py -> build/lib/ucagent/checkers
+creating build/lib/ucagent/eda
+copying ucagent/eda/__init__.py -> build/lib/ucagent/eda
+copying ucagent/eda/claude.py -> build/lib/ucagent/eda
+copying ucagent/eda/driver.py -> build/lib/ucagent/eda
+copying ucagent/eda/formal_workflow.py -> build/lib/ucagent/eda
+copying ucagent/eda/formalmc_conversion.py -> build/lib/ucagent/eda
+copying ucagent/eda/formalmc_results.py -> build/lib/ucagent/eda
+copying ucagent/eda/input_closure.py -> build/lib/ucagent/eda
+copying ucagent/eda/license_probe.py -> build/lib/ucagent/eda
+copying ucagent/eda/manifest.py -> build/lib/ucagent/eda
+copying ucagent/eda/models.py -> build/lib/ucagent/eda
+copying ucagent/eda/npi.py -> build/lib/ucagent/eda
+copying ucagent/eda/parsers.py -> build/lib/ucagent/eda
+copying ucagent/eda/runner.py -> build/lib/ucagent/eda
+copying ucagent/eda/sby_guided.py -> build/lib/ucagent/eda
+copying ucagent/eda/sby_results.py -> build/lib/ucagent/eda
+copying ucagent/eda/security.py -> build/lib/ucagent/eda
+creating build/lib/ucagent/interaction
+copying ucagent/interaction/__init__.py -> build/lib/ucagent/interaction
+copying ucagent/interaction/advanced.py -> build/lib/ucagent/interaction
+copying ucagent/interaction/enhanced.py -> build/lib/ucagent/interaction
+copying ucagent/interaction/orchestrator.py -> build/lib/ucagent/interaction
+creating build/lib/ucagent/platform
+copying ucagent/platform/__init__.py -> build/lib/ucagent/platform
+copying ucagent/platform/campaign.py -> build/lib/ucagent/platform
+copying ucagent/platform/formal_session.py -> build/lib/ucagent/platform
+copying ucagent/platform/project.py -> build/lib/ucagent/platform
+copying ucagent/platform/uvm.py -> build/lib/ucagent/platform
+copying ucagent/platform/workflow_catalog.py -> build/lib/ucagent/platform
+creating build/lib/ucagent/scripts
+copying ucagent/scripts/refresh_workspace_assets.py -> build/lib/ucagent/scripts
+creating build/lib/ucagent/server
+copying ucagent/server/__init__.py -> build/lib/ucagent/server
+copying ucagent/server/analysis_jobs.py -> build/lib/ucagent/server
+copying ucagent/server/api_campaign.py -> build/lib/ucagent/server
+copying ucagent/server/api_cmd.py -> build/lib/ucagent/server
+copying ucagent/server/api_master.py -> build/lib/ucagent/server
+copying ucagent/server/api_mcp.py -> build/lib/ucagent/server
+copying ucagent/server/api_platform.py -> build/lib/ucagent/server
+copying ucagent/server/api_terminal.py -> build/lib/ucagent/server
+copying ucagent/server/campaign_service.py -> build/lib/ucagent/server
+copying ucagent/server/formal_agent.py -> build/lib/ucagent/server
+copying ucagent/server/formal_sessions.py -> build/lib/ucagent/server
+copying ucagent/server/npi_service.py -> build/lib/ucagent/server
+copying ucagent/server/platform_main.py -> build/lib/ucagent/server
+copying ucagent/server/platform_mcp.py -> build/lib/ucagent/server
+copying ucagent/server/platform_store.py -> build/lib/ucagent/server
+copying ucagent/server/platform_workbench.py -> build/lib/ucagent/server
+copying ucagent/server/portable_main.py -> build/lib/ucagent/server
+creating build/lib/ucagent/stage
+copying ucagent/stage/__init__.py -> build/lib/ucagent/stage
+copying ucagent/stage/vmanager.py -> build/lib/ucagent/stage
+copying ucagent/stage/vstage.py -> build/lib/ucagent/stage
+creating build/lib/ucagent/tools
+copying ucagent/tools/__init__.py -> build/lib/ucagent/tools
+copying ucagent/tools/bash.py -> build/lib/ucagent/tools
+copying ucagent/tools/context.py -> build/lib/ucagent/tools
+copying ucagent/tools/extool.py -> build/lib/ucagent/tools
+copying ucagent/tools/fileops.py -> build/lib/ucagent/tools
+copying ucagent/tools/human.py -> build/lib/ucagent/tools
+copying ucagent/tools/memory.py -> build/lib/ucagent/tools
+copying ucagent/tools/planning.py -> build/lib/ucagent/tools
+copying ucagent/tools/skill.py -> build/lib/ucagent/tools
+copying ucagent/tools/testops.py -> build/lib/ucagent/tools
+copying ucagent/tools/uctool.py -> build/lib/ucagent/tools
+copying ucagent/tools/waveform.py -> build/lib/ucagent/tools
+copying ucagent/tools/workdiff.py -> build/lib/ucagent/tools
+creating build/lib/ucagent/tui
+copying ucagent/tui/__init__.py -> build/lib/ucagent/tui
+copying ucagent/tui/app.py -> build/lib/ucagent/tui
+copying ucagent/tui/completion.py -> build/lib/ucagent/tui
+copying ucagent/tui/handlers.py -> build/lib/ucagent/tui
+copying ucagent/tui/utils.py -> build/lib/ucagent/tui
+creating build/lib/ucagent/util
+copying ucagent/util/__init__.py -> build/lib/ucagent/util
+copying ucagent/util/bug_analysis_contract.py -> build/lib/ucagent/util
+copying ucagent/util/config.py -> build/lib/ucagent/util
+copying ucagent/util/cqueque.py -> build/lib/ucagent/util
+copying ucagent/util/diff_ops.py -> build/lib/ucagent/util
+copying ucagent/util/functions.py -> build/lib/ucagent/util
+copying ucagent/util/log.py -> build/lib/ucagent/util
+copying ucagent/util/markdown.py -> build/lib/ucagent/util
+copying ucagent/util/models.py -> build/lib/ucagent/util
+copying ucagent/util/test_tools.py -> build/lib/ucagent/util
+copying ucagent/util/waveform_viewer.py -> build/lib/ucagent/util
+copying ucagent/util/workspace_archive.py -> build/lib/ucagent/util
+creating build/lib/ucagent/abackend/langchain
+copying ucagent/abackend/langchain/__init__.py -> build/lib/ucagent/abackend/langchain
+copying ucagent/abackend/langchain/agent.py -> build/lib/ucagent/abackend/langchain
+creating build/lib/ucagent/abackend/langchain/middleware
+copying ucagent/abackend/langchain/middleware/__init__.py -> build/lib/ucagent/abackend/langchain/middleware
+copying ucagent/abackend/langchain/middleware/messages.py -> build/lib/ucagent/abackend/langchain/middleware
+creating build/lib/ucagent/eda/adapters
+copying ucagent/eda/adapters/__init__.py -> build/lib/ucagent/eda/adapters
+copying ucagent/eda/adapters/base.py -> build/lib/ucagent/eda/adapters
+copying ucagent/eda/adapters/formal_mc.py -> build/lib/ucagent/eda/adapters
+copying ucagent/eda/adapters/picker.py -> build/lib/ucagent/eda/adapters
+copying ucagent/eda/adapters/pytest.py -> build/lib/ucagent/eda/adapters
+copying ucagent/eda/adapters/sby.py -> build/lib/ucagent/eda/adapters
+copying ucagent/eda/adapters/urg.py -> build/lib/ucagent/eda/adapters
+copying ucagent/eda/adapters/vc_formal.py -> build/lib/ucagent/eda/adapters
+copying ucagent/eda/adapters/vcs.py -> build/lib/ucagent/eda/adapters
+copying ucagent/eda/adapters/verdi.py -> build/lib/ucagent/eda/adapters
+creating build/lib/ucagent/lang/zh/skills/formal/lib
+copying ucagent/lang/zh/skills/formal/lib/__init__.py -> build/lib/ucagent/lang/zh/skills/formal/lib
+copying ucagent/lang/zh/skills/formal/lib/formal_paths.py -> build/lib/ucagent/lang/zh/skills/formal/lib
+copying ucagent/lang/zh/skills/formal/lib/formal_tools.py -> build/lib/ucagent/lang/zh/skills/formal/lib
+copying ucagent/lang/zh/skills/formal/lib/models.py -> build/lib/ucagent/lang/zh/skills/formal/lib
+creating build/lib/ucagent/lang/zh/skills/formal/basic-info/scripts
+copying ucagent/lang/zh/skills/formal/basic-info/scripts/update_basic_info.py -> build/lib/ucagent/lang/zh/skills/formal/basic-info/scripts
+creating build/lib/ucagent/lang/zh/skills/formal/bug-report/scripts
+copying ucagent/lang/zh/skills/formal/bug-report/scripts/update_bug.py -> build/lib/ucagent/lang/zh/skills/formal/bug-report/scripts
+creating build/lib/ucagent/lang/zh/skills/formal/env-config/scripts
+copying ucagent/lang/zh/skills/formal/env-config/scripts/update_extra_config.py -> build/lib/ucagent/lang/zh/skills/formal/env-config/scripts
+creating build/lib/ucagent/lang/zh/skills/formal/func-spec/scripts
+copying ucagent/lang/zh/skills/formal/func-spec/scripts/update_spec.py -> build/lib/ucagent/lang/zh/skills/formal/func-spec/scripts
+creating build/lib/ucagent/lang/zh/skills/formal/plan/scripts
+copying ucagent/lang/zh/skills/formal/plan/scripts/update_plan.py -> build/lib/ucagent/lang/zh/skills/formal/plan/scripts
+creating build/lib/ucagent/lang/zh/skills/formal/summary/scripts
+copying ucagent/lang/zh/skills/formal/summary/scripts/update_summary.py -> build/lib/ucagent/lang/zh/skills/formal/summary/scripts
+creating build/lib/ucagent/lang/zh/skills/formal/sva-audit/scripts
+copying ucagent/lang/zh/skills/formal/sva-audit/scripts/env_analysis.py -> build/lib/ucagent/lang/zh/skills/formal/sva-audit/scripts
+copying ucagent/lang/zh/skills/formal/sva-audit/scripts/update_analysis.py -> build/lib/ucagent/lang/zh/skills/formal/sva-audit/scripts
+creating build/lib/ucagent/lang/zh/skills/formal/sva-gen/scripts
+copying ucagent/lang/zh/skills/formal/sva-gen/scripts/generate_formal_env.py -> build/lib/ucagent/lang/zh/skills/formal/sva-gen/scripts
+copying ucagent/lang/zh/skills/formal/sva-gen/scripts/update_sva_body.py -> build/lib/ucagent/lang/zh/skills/formal/sva-gen/scripts
+creating build/lib/ucagent/lang/zh/skills/formal/sva-opt/scripts
+copying ucagent/lang/zh/skills/formal/sva-opt/scripts/run_formal_verification.py -> build/lib/ucagent/lang/zh/skills/formal/sva-opt/scripts
+creating build/lib/ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts
+copying ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts/__init__.py -> build/lib/ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts
+copying ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts/createtemplate.py -> build/lib/ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts
+creating build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts
+copying ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts/__init__.py -> build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts
+copying ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts/record_dynamic_bug.py -> build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts
+creating build/lib/ucagent/lang/zh/skills/unitytest/functions-and-checks/scripts
+copying ucagent/lang/zh/skills/unitytest/functions-and-checks/scripts/update.py -> build/lib/ucagent/lang/zh/skills/unitytest/functions-and-checks/scripts
+creating build/lib/ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts
+copying ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts/__init__.py -> build/lib/ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts
+copying ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts/record_static_bug.py -> build/lib/ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts
+creating build/lib/ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts
+copying ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts/__init__.py -> build/lib/ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts
+copying ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts/linkbug.py -> build/lib/ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts
+creating build/lib/ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch/scripts
+copying ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch/scripts/__init__.py -> build/lib/ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch/scripts
+creating build/lib/ucagent/lang/zh/template/unity_test/tests
+copying ucagent/lang/zh/template/unity_test/tests/test_example.py -> build/lib/ucagent/lang/zh/template/unity_test/tests
+copying ucagent/lang/zh/template/unity_test/tests/test_{{DUT}}_random_example.py -> build/lib/ucagent/lang/zh/template/unity_test/tests
+copying ucagent/lang/zh/template/unity_test/tests/{{DUT}}_api.py -> build/lib/ucagent/lang/zh/template/unity_test/tests
+copying ucagent/lang/zh/template/unity_test/tests/{{DUT}}_function_coverage_def.py -> build/lib/ucagent/lang/zh/template/unity_test/tests
+creating build/lib/ucagent/scripts/ucagent-client/scripts
+copying ucagent/scripts/ucagent-client/scripts/ucagent_client.py -> build/lib/ucagent/scripts/ucagent-client/scripts
+creating build/lib/ucagent/stage/llm_suggestion
+copying ucagent/stage/llm_suggestion/__init__.py -> build/lib/ucagent/stage/llm_suggestion
+copying ucagent/stage/llm_suggestion/base_suggestion.py -> build/lib/ucagent/stage/llm_suggestion
+copying ucagent/stage/llm_suggestion/langchain_suggestion.py -> build/lib/ucagent/stage/llm_suggestion
+creating build/lib/ucagent/tui/mixins
+copying ucagent/tui/mixins/__init__.py -> build/lib/ucagent/tui/mixins
+copying ucagent/tui/mixins/auto_scroll.py -> build/lib/ucagent/tui/mixins
+copying ucagent/tui/mixins/console_capture.py -> build/lib/ucagent/tui/mixins
+copying ucagent/tui/mixins/sigint.py -> build/lib/ucagent/tui/mixins
+creating build/lib/ucagent/tui/screens
+copying ucagent/tui/screens/__init__.py -> build/lib/ucagent/tui/screens
+copying ucagent/tui/screens/theme_picker.py -> build/lib/ucagent/tui/screens
+creating build/lib/ucagent/tui/styles
+copying ucagent/tui/styles/__init__.py -> build/lib/ucagent/tui/styles
+creating build/lib/ucagent/tui/widgets
+copying ucagent/tui/widgets/__init__.py -> build/lib/ucagent/tui/widgets
+copying ucagent/tui/widgets/console.py -> build/lib/ucagent/tui/widgets
+copying ucagent/tui/widgets/console_input.py -> build/lib/ucagent/tui/widgets
+copying ucagent/tui/widgets/messages_panel.py -> build/lib/ucagent/tui/widgets
+copying ucagent/tui/widgets/splitter.py -> build/lib/ucagent/tui/widgets
+copying ucagent/tui/widgets/status_bar.py -> build/lib/ucagent/tui/widgets
+copying ucagent/tui/widgets/task_panel.py -> build/lib/ucagent/tui/widgets
+running egg_info
+creating UCAgent.egg-info
+writing UCAgent.egg-info/PKG-INFO
+writing dependency_links to UCAgent.egg-info/dependency_links.txt
+writing entry points to UCAgent.egg-info/entry_points.txt
+writing requirements to UCAgent.egg-info/requires.txt
+writing top-level names to UCAgent.egg-info/top_level.txt
+writing manifest file 'UCAgent.egg-info/SOURCES.txt'
+reading manifest file 'UCAgent.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no files found matching '*.yml' under directory 'ucagent'
+warning: no files found matching '*.jinja2' under directory 'ucagent'
+warning: no files found matching '*.v' under directory 'ucagent'
+warning: no files found matching '*.sh' under directory 'ucagent'
+warning: no files found matching '*.png' under directory 'ucagent'
+warning: no files found matching '*.cpp' under directory 'ucagent/eda/native'
+adding license file 'LICENSE'
+writing manifest file 'UCAgent.egg-info/SOURCES.txt'
+copying ucagent/SKILL.md -> build/lib/ucagent
+copying ucagent/setting.yaml -> build/lib/ucagent
+creating build/lib/ucagent/lang/zh/config
+copying ucagent/lang/zh/config/default.yaml -> build/lib/ucagent/lang/zh/config
+copying ucagent/lang/zh/config/formal.yaml -> build/lib/ucagent/lang/zh/config
+copying ucagent/lang/zh/config/formal_sby_overlay.yaml -> build/lib/ucagent/lang/zh/config
+copying ucagent/lang/zh/config/inc.yaml -> build/lib/ucagent/lang/zh/config
+copying ucagent/lang/zh/config/labeled_spec.yaml -> build/lib/ucagent/lang/zh/config
+copying ucagent/lang/zh/config/master.yaml -> build/lib/ucagent/lang/zh/config
+copying ucagent/lang/zh/config/vibe.yaml -> build/lib/ucagent/lang/zh/config
+creating build/lib/ucagent/lang/zh/skills/unitytest/mock-components/agents
+copying ucagent/lang/zh/skills/unitytest/mock-components/agents/openai.yaml -> build/lib/ucagent/lang/zh/skills/unitytest/mock-components/agents
+creating build/lib/ucagent/lang/zh/doc/Formal_Doc
+copying ucagent/lang/zh/doc/Formal_Doc/bug_report.md -> build/lib/ucagent/lang/zh/doc/Formal_Doc
+copying ucagent/lang/zh/doc/Formal_Doc/checker_module.md -> build/lib/ucagent/lang/zh/doc/Formal_Doc
+copying ucagent/lang/zh/doc/Formal_Doc/coi_coverage.md -> build/lib/ucagent/lang/zh/doc/Formal_Doc
+copying ucagent/lang/zh/doc/Formal_Doc/counterexample.md -> build/lib/ucagent/lang/zh/doc/Formal_Doc
+copying ucagent/lang/zh/doc/Formal_Doc/env_analysis.md -> build/lib/ucagent/lang/zh/doc/Formal_Doc
+copying ucagent/lang/zh/doc/Formal_Doc/formal_summary.md -> build/lib/ucagent/lang/zh/doc/Formal_Doc
+copying ucagent/lang/zh/doc/Formal_Doc/functions_and_checks.md -> build/lib/ucagent/lang/zh/doc/Formal_Doc
+copying ucagent/lang/zh/doc/Formal_Doc/sva_property.md -> build/lib/ucagent/lang/zh/doc/Formal_Doc
+creating build/lib/ucagent/lang/zh/doc/Formal_SBY_Doc
+copying ucagent/lang/zh/doc/Formal_SBY_Doc/formalmc_migration.md -> build/lib/ucagent/lang/zh/doc/Formal_SBY_Doc
+copying ucagent/lang/zh/doc/Formal_SBY_Doc/sby_workflow.md -> build/lib/ucagent/lang/zh/doc/Formal_SBY_Doc
+creating build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_api_instruction.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_bug_analysis.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_fixture.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_function_coverage_def.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_functions_and_checks.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_line_coverage.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_line_func_map.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_mock.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_mock_test.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_test_case.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_test_case_random.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_test_program.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_test_summary.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/dut_test_template.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/doc/Guide_Doc/env_spec_template.md -> build/lib/ucagent/lang/zh/doc/Guide_Doc
+copying ucagent/lang/zh/skills/formal/basic-info/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/basic-info
+copying ucagent/lang/zh/skills/formal/bug-report/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/bug-report
+creating build/lib/ucagent/lang/zh/skills/formal/cex-gen
+copying ucagent/lang/zh/skills/formal/cex-gen/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/cex-gen
+copying ucagent/lang/zh/skills/formal/env-config/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/env-config
+copying ucagent/lang/zh/skills/formal/func-spec/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/func-spec
+copying ucagent/lang/zh/skills/formal/lib/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/lib
+copying ucagent/lang/zh/skills/formal/plan/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/plan
+creating build/lib/ucagent/lang/zh/skills/formal/sby
+copying ucagent/lang/zh/skills/formal/sby/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/sby
+copying ucagent/lang/zh/skills/formal/summary/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/summary
+copying ucagent/lang/zh/skills/formal/sva-audit/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/sva-audit
+copying ucagent/lang/zh/skills/formal/sva-gen/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/sva-gen
+copying ucagent/lang/zh/skills/formal/sva-opt/SKILL.md -> build/lib/ucagent/lang/zh/skills/formal/sva-opt
+copying ucagent/lang/zh/skills/unitytest/create-test-case-templates/SKILL.md -> build/lib/ucagent/lang/zh/skills/unitytest/create-test-case-templates
+copying ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/SKILL.md -> build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording
+creating build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets
+copying ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets/bug_analysis_document.md -> build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets
+copying ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets/dynamic_bug_entry.md -> build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets
+copying ucagent/lang/zh/skills/unitytest/functions-and-checks/SKILL.md -> build/lib/ucagent/lang/zh/skills/unitytest/functions-and-checks
+copying ucagent/lang/zh/skills/unitytest/mock-components/SKILL.md -> build/lib/ucagent/lang/zh/skills/unitytest/mock-components
+copying ucagent/lang/zh/skills/unitytest/static-bug-analysis/SKILL.md -> build/lib/ucagent/lang/zh/skills/unitytest/static-bug-analysis
+copying ucagent/lang/zh/skills/unitytest/static-bug-validation/SKILL.md -> build/lib/ucagent/lang/zh/skills/unitytest/static-bug-validation
+copying ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch/SKILL.md -> build/lib/ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch
+creating build/lib/ucagent/lang/zh/template/formal_test
+copying ucagent/lang/zh/template/formal_test/01_{{DUT}}_verification_needs_and_plan.md -> build/lib/ucagent/lang/zh/template/formal_test
+copying ucagent/lang/zh/template/formal_test/02_{{DUT}}_basic_info.md -> build/lib/ucagent/lang/zh/template/formal_test
+copying ucagent/lang/zh/template/formal_test/05_{{DUT}}_formal_summary.md -> build/lib/ucagent/lang/zh/template/formal_test
+creating build/lib/ucagent/lang/zh/template/formal_test copy
+copying ucagent/lang/zh/template/formal_test copy/01_{{DUT}}_verification_needs_and_plan.md -> build/lib/ucagent/lang/zh/template/formal_test copy
+copying ucagent/lang/zh/template/formal_test copy/02_{{DUT}}_basic_info.md -> build/lib/ucagent/lang/zh/template/formal_test copy
+copying ucagent/lang/zh/template/formal_test copy/03_{{DUT}}_functions_and_checks.md -> build/lib/ucagent/lang/zh/template/formal_test copy
+copying ucagent/lang/zh/template/formal_test copy/05_{{DUT}}_formal_summary.md -> build/lib/ucagent/lang/zh/template/formal_test copy
+copying ucagent/lang/zh/template/unity_test/{{DUT}}_bug_analysis.md -> build/lib/ucagent/lang/zh/template/unity_test
+copying ucagent/lang/zh/template/unity_test/{{DUT}}_functions_and_checks.md -> build/lib/ucagent/lang/zh/template/unity_test
+copying ucagent/lang/zh/template/unity_test/{{DUT}}_line_coverage_analysis.md -> build/lib/ucagent/lang/zh/template/unity_test
+copying ucagent/lang/zh/config/bug_analysis_contract.json -> build/lib/ucagent/lang/zh/config
+creating build/lib/ucagent/lang/zh/skills/formal/lib/templates
+copying ucagent/lang/zh/skills/formal/lib/templates/basic_info.md.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates
+copying ucagent/lang/zh/skills/formal/lib/templates/bug_report.md.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates
+copying ucagent/lang/zh/skills/formal/lib/templates/env_analysis.md.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates
+copying ucagent/lang/zh/skills/formal/lib/templates/formal_summary.md.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates
+copying ucagent/lang/zh/skills/formal/lib/templates/functions_and_checks.md.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates
+copying ucagent/lang/zh/skills/formal/lib/templates/sby_analysis.md.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates
+copying ucagent/lang/zh/skills/formal/lib/templates/sby_summary.md.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates
+copying ucagent/lang/zh/skills/formal/lib/templates/verification_needs_and_plan.md.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates
+creating build/lib/ucagent/lang/zh/skills/formal/lib/templates/tests
+copying ucagent/lang/zh/skills/formal/lib/templates/tests/checker.sv.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates/tests
+copying ucagent/lang/zh/skills/formal/lib/templates/tests/formal.tcl.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates/tests
+copying ucagent/lang/zh/skills/formal/lib/templates/tests/wrapper.sv.j2 -> build/lib/ucagent/lang/zh/skills/formal/lib/templates/tests
+copying ucagent/lang/zh/config/formal_gui_agent.txt -> build/lib/ucagent/lang/zh/config
+creating build/lib/ucagent/lang/zh/template/formal_test copy/tests
+copying ucagent/lang/zh/template/formal_test copy/tests/{{DUT}}_checker.sv -> build/lib/ucagent/lang/zh/template/formal_test copy/tests
+copying ucagent/lang/zh/template/formal_test copy/tests/{{DUT}}_wrapper.sv -> build/lib/ucagent/lang/zh/template/formal_test copy/tests
+copying ucagent/lang/zh/template/formal_test copy/tests/{{DUT}}_formal.tcl -> build/lib/ucagent/lang/zh/template/formal_test copy/tests
+creating build/lib/ucagent/server/templates
+copying ucagent/server/templates/agent.html -> build/lib/ucagent/server/templates
+copying ucagent/server/templates/complete.html -> build/lib/ucagent/server/templates
+copying ucagent/server/templates/launch.html -> build/lib/ucagent/server/templates
+copying ucagent/server/templates/master.html -> build/lib/ucagent/server/templates
+copying ucagent/server/templates/task.html -> build/lib/ucagent/server/templates
+copying ucagent/server/templates/terminal.html -> build/lib/ucagent/server/templates
+creating build/lib/ucagent/server/static
+copying ucagent/server/static/highlight-atom-one-dark.min.css -> build/lib/ucagent/server/static
+copying ucagent/server/static/highlight.min.js -> build/lib/ucagent/server/static
+copying ucagent/server/static/marked.min.js -> build/lib/ucagent/server/static
+creating build/lib/ucagent/server/static/platform
+copying ucagent/server/static/platform/index.html -> build/lib/ucagent/server/static/platform
+creating build/lib/ucagent/server/static/platform/assets
+copying ucagent/server/static/platform/assets/index--LAFlBh7.js -> build/lib/ucagent/server/static/platform/assets
+copying ucagent/server/static/platform/assets/index-CiHJkaN3.css -> build/lib/ucagent/server/static/platform/assets
+creating build/lib/ucagent/server/static/share
+copying ucagent/server/static/share/ucagent-favicon.svg -> build/lib/ucagent/server/static/share
+copying ucagent/server/static/share/ucagent-shell.css -> build/lib/ucagent/server/static/share
+copying ucagent/server/static/share/ucagent-shell.js -> build/lib/ucagent/server/static/share
+creating build/lib/ucagent/server/static/surfer
+copying ucagent/server/static/surfer/deep-link.js -> build/lib/ucagent/server/static/surfer
+copying ucagent/server/static/surfer/fst-fallback-worker.js -> build/lib/ucagent/server/static/surfer
+copying ucagent/server/static/surfer/fst-fallback.js -> build/lib/ucagent/server/static/surfer
+copying ucagent/server/static/surfer/index.html -> build/lib/ucagent/server/static/surfer
+copying ucagent/server/static/surfer/integration.js -> build/lib/ucagent/server/static/surfer
+copying ucagent/server/static/surfer/manifest.json -> build/lib/ucagent/server/static/surfer
+copying ucagent/server/static/surfer/surfer.js -> build/lib/ucagent/server/static/surfer
+copying ucagent/server/static/surfer/sw.js -> build/lib/ucagent/server/static/surfer
+creating build/lib/ucagent/server/static/xterm
+copying ucagent/server/static/xterm/addon-fit.min.js -> build/lib/ucagent/server/static/xterm
+copying ucagent/server/static/xterm/addon-web-links.min.js -> build/lib/ucagent/server/static/xterm
+copying ucagent/server/static/xterm/xterm.min.css -> build/lib/ucagent/server/static/xterm
+copying ucagent/server/static/xterm/xterm.min.js -> build/lib/ucagent/server/static/xterm
+creating build/lib/ucagent/assets
+copying ucagent/assets/mcp_claude.json -> build/lib/ucagent/assets
+copying ucagent/assets/mcp_copilot.json -> build/lib/ucagent/assets
+copying ucagent/assets/mcp_iflow.json -> build/lib/ucagent/assets
+copying ucagent/assets/mcp_kilo.json -> build/lib/ucagent/assets
+copying ucagent/assets/mcp_opencode.json -> build/lib/ucagent/assets
+copying ucagent/assets/mcp_qwen.json -> build/lib/ucagent/assets
+creating build/lib/ucagent/lang/zh/template/formal_sby
+copying ucagent/lang/zh/template/formal_sby/.formal_records.yaml -> build/lib/ucagent/lang/zh/template/formal_sby
+copying ucagent/lang/zh/template/formal_test/.formal_records.yaml -> build/lib/ucagent/lang/zh/template/formal_test
+copying ucagent/lang/zh/template/formal_test copy/.formal_records.json -> build/lib/ucagent/lang/zh/template/formal_test copy
+copying ucagent/lang/zh/template/unity_test/.pytest.ini -> build/lib/ucagent/lang/zh/template/unity_test
+copying ucagent/scripts/ucagent-client/SKILL.md -> build/lib/ucagent/scripts/ucagent-client
+creating build/lib/ucagent/server/fst_converter
+copying ucagent/server/fst_converter/README.md -> build/lib/ucagent/server/fst_converter
+installing to build/bdist.linux-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.linux-x86_64/wheel
+creating build/bdist.linux-x86_64/wheel/ucagent
+copying build/lib/ucagent/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent
+copying build/lib/ucagent/_version.py -> build/bdist.linux-x86_64/wheel/./ucagent
+copying build/lib/ucagent/cli.py -> build/bdist.linux-x86_64/wheel/./ucagent
+copying build/lib/ucagent/verify_agent.py -> build/bdist.linux-x86_64/wheel/./ucagent
+copying build/lib/ucagent/verify_pdb.py -> build/bdist.linux-x86_64/wheel/./ucagent
+copying build/lib/ucagent/version.py -> build/bdist.linux-x86_64/wheel/./ucagent
+creating build/bdist.linux-x86_64/wheel/ucagent/abackend
+copying build/lib/ucagent/abackend/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/abackend
+copying build/lib/ucagent/abackend/base.py -> build/bdist.linux-x86_64/wheel/./ucagent/abackend
+copying build/lib/ucagent/abackend/cmdline.py -> build/bdist.linux-x86_64/wheel/./ucagent/abackend
+creating build/bdist.linux-x86_64/wheel/ucagent/abackend/langchain
+copying build/lib/ucagent/abackend/langchain/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/abackend/langchain
+copying build/lib/ucagent/abackend/langchain/agent.py -> build/bdist.linux-x86_64/wheel/./ucagent/abackend/langchain
+creating build/bdist.linux-x86_64/wheel/ucagent/abackend/langchain/middleware
+copying build/lib/ucagent/abackend/langchain/middleware/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/abackend/langchain/middleware
+copying build/lib/ucagent/abackend/langchain/middleware/messages.py -> build/bdist.linux-x86_64/wheel/./ucagent/abackend/langchain/middleware
+creating build/bdist.linux-x86_64/wheel/ucagent/checkers
+copying build/lib/ucagent/checkers/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/base.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/bash_script.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/file_linemap.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/file_markdown.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/formal.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/formal_sby.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/increment.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/recorder.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/static_bug.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/toffee_report.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/unity_test.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/unity_test_mock.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+copying build/lib/ucagent/checkers/unity_test_random.py -> build/bdist.linux-x86_64/wheel/./ucagent/checkers
+creating build/bdist.linux-x86_64/wheel/ucagent/eda
+copying build/lib/ucagent/eda/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/claude.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/driver.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/formal_workflow.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/formalmc_conversion.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/formalmc_results.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/input_closure.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/license_probe.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/manifest.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/models.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/npi.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/parsers.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/runner.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/sby_guided.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/sby_results.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+copying build/lib/ucagent/eda/security.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda
+creating build/bdist.linux-x86_64/wheel/ucagent/eda/adapters
+copying build/lib/ucagent/eda/adapters/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda/adapters
+copying build/lib/ucagent/eda/adapters/base.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda/adapters
+copying build/lib/ucagent/eda/adapters/formal_mc.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda/adapters
+copying build/lib/ucagent/eda/adapters/picker.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda/adapters
+copying build/lib/ucagent/eda/adapters/pytest.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda/adapters
+copying build/lib/ucagent/eda/adapters/sby.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda/adapters
+copying build/lib/ucagent/eda/adapters/urg.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda/adapters
+copying build/lib/ucagent/eda/adapters/vc_formal.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda/adapters
+copying build/lib/ucagent/eda/adapters/vcs.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda/adapters
+copying build/lib/ucagent/eda/adapters/verdi.py -> build/bdist.linux-x86_64/wheel/./ucagent/eda/adapters
+creating build/bdist.linux-x86_64/wheel/ucagent/interaction
+copying build/lib/ucagent/interaction/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/interaction
+copying build/lib/ucagent/interaction/advanced.py -> build/bdist.linux-x86_64/wheel/./ucagent/interaction
+copying build/lib/ucagent/interaction/enhanced.py -> build/bdist.linux-x86_64/wheel/./ucagent/interaction
+copying build/lib/ucagent/interaction/orchestrator.py -> build/bdist.linux-x86_64/wheel/./ucagent/interaction
+creating build/bdist.linux-x86_64/wheel/ucagent/platform
+copying build/lib/ucagent/platform/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/platform
+copying build/lib/ucagent/platform/campaign.py -> build/bdist.linux-x86_64/wheel/./ucagent/platform
+copying build/lib/ucagent/platform/formal_session.py -> build/bdist.linux-x86_64/wheel/./ucagent/platform
+copying build/lib/ucagent/platform/project.py -> build/bdist.linux-x86_64/wheel/./ucagent/platform
+copying build/lib/ucagent/platform/uvm.py -> build/bdist.linux-x86_64/wheel/./ucagent/platform
+copying build/lib/ucagent/platform/workflow_catalog.py -> build/bdist.linux-x86_64/wheel/./ucagent/platform
+creating build/bdist.linux-x86_64/wheel/ucagent/scripts
+copying build/lib/ucagent/scripts/refresh_workspace_assets.py -> build/bdist.linux-x86_64/wheel/./ucagent/scripts
+creating build/bdist.linux-x86_64/wheel/ucagent/scripts/ucagent-client
+creating build/bdist.linux-x86_64/wheel/ucagent/scripts/ucagent-client/scripts
+copying build/lib/ucagent/scripts/ucagent-client/scripts/ucagent_client.py -> build/bdist.linux-x86_64/wheel/./ucagent/scripts/ucagent-client/scripts
+copying build/lib/ucagent/scripts/ucagent-client/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/scripts/ucagent-client
+creating build/bdist.linux-x86_64/wheel/ucagent/server
+copying build/lib/ucagent/server/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/analysis_jobs.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/api_campaign.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/api_cmd.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/api_master.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/api_mcp.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/api_platform.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/api_terminal.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/campaign_service.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/formal_agent.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/formal_sessions.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/npi_service.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/platform_main.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/platform_mcp.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/platform_store.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/platform_workbench.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+copying build/lib/ucagent/server/portable_main.py -> build/bdist.linux-x86_64/wheel/./ucagent/server
+creating build/bdist.linux-x86_64/wheel/ucagent/server/templates
+copying build/lib/ucagent/server/templates/agent.html -> build/bdist.linux-x86_64/wheel/./ucagent/server/templates
+copying build/lib/ucagent/server/templates/complete.html -> build/bdist.linux-x86_64/wheel/./ucagent/server/templates
+copying build/lib/ucagent/server/templates/launch.html -> build/bdist.linux-x86_64/wheel/./ucagent/server/templates
+copying build/lib/ucagent/server/templates/master.html -> build/bdist.linux-x86_64/wheel/./ucagent/server/templates
+copying build/lib/ucagent/server/templates/task.html -> build/bdist.linux-x86_64/wheel/./ucagent/server/templates
+copying build/lib/ucagent/server/templates/terminal.html -> build/bdist.linux-x86_64/wheel/./ucagent/server/templates
+creating build/bdist.linux-x86_64/wheel/ucagent/server/static
+copying build/lib/ucagent/server/static/highlight-atom-one-dark.min.css -> build/bdist.linux-x86_64/wheel/./ucagent/server/static
+copying build/lib/ucagent/server/static/highlight.min.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static
+copying build/lib/ucagent/server/static/marked.min.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static
+creating build/bdist.linux-x86_64/wheel/ucagent/server/static/platform
+copying build/lib/ucagent/server/static/platform/index.html -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/platform
+creating build/bdist.linux-x86_64/wheel/ucagent/server/static/platform/assets
+copying build/lib/ucagent/server/static/platform/assets/index--LAFlBh7.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/platform/assets
+copying build/lib/ucagent/server/static/platform/assets/index-CiHJkaN3.css -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/platform/assets
+creating build/bdist.linux-x86_64/wheel/ucagent/server/static/share
+copying build/lib/ucagent/server/static/share/ucagent-favicon.svg -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/share
+copying build/lib/ucagent/server/static/share/ucagent-shell.css -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/share
+copying build/lib/ucagent/server/static/share/ucagent-shell.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/share
+creating build/bdist.linux-x86_64/wheel/ucagent/server/static/surfer
+copying build/lib/ucagent/server/static/surfer/deep-link.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/surfer
+copying build/lib/ucagent/server/static/surfer/fst-fallback-worker.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/surfer
+copying build/lib/ucagent/server/static/surfer/fst-fallback.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/surfer
+copying build/lib/ucagent/server/static/surfer/index.html -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/surfer
+copying build/lib/ucagent/server/static/surfer/integration.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/surfer
+copying build/lib/ucagent/server/static/surfer/manifest.json -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/surfer
+copying build/lib/ucagent/server/static/surfer/surfer.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/surfer
+copying build/lib/ucagent/server/static/surfer/sw.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/surfer
+creating build/bdist.linux-x86_64/wheel/ucagent/server/static/xterm
+copying build/lib/ucagent/server/static/xterm/addon-fit.min.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/xterm
+copying build/lib/ucagent/server/static/xterm/addon-web-links.min.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/xterm
+copying build/lib/ucagent/server/static/xterm/xterm.min.css -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/xterm
+copying build/lib/ucagent/server/static/xterm/xterm.min.js -> build/bdist.linux-x86_64/wheel/./ucagent/server/static/xterm
+creating build/bdist.linux-x86_64/wheel/ucagent/server/fst_converter
+copying build/lib/ucagent/server/fst_converter/README.md -> build/bdist.linux-x86_64/wheel/./ucagent/server/fst_converter
+creating build/bdist.linux-x86_64/wheel/ucagent/stage
+copying build/lib/ucagent/stage/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/stage
+copying build/lib/ucagent/stage/vmanager.py -> build/bdist.linux-x86_64/wheel/./ucagent/stage
+copying build/lib/ucagent/stage/vstage.py -> build/bdist.linux-x86_64/wheel/./ucagent/stage
+creating build/bdist.linux-x86_64/wheel/ucagent/stage/llm_suggestion
+copying build/lib/ucagent/stage/llm_suggestion/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/stage/llm_suggestion
+copying build/lib/ucagent/stage/llm_suggestion/base_suggestion.py -> build/bdist.linux-x86_64/wheel/./ucagent/stage/llm_suggestion
+copying build/lib/ucagent/stage/llm_suggestion/langchain_suggestion.py -> build/bdist.linux-x86_64/wheel/./ucagent/stage/llm_suggestion
+creating build/bdist.linux-x86_64/wheel/ucagent/tools
+copying build/lib/ucagent/tools/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/bash.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/context.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/extool.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/fileops.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/human.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/memory.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/planning.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/skill.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/testops.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/uctool.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/waveform.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+copying build/lib/ucagent/tools/workdiff.py -> build/bdist.linux-x86_64/wheel/./ucagent/tools
+creating build/bdist.linux-x86_64/wheel/ucagent/tui
+copying build/lib/ucagent/tui/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui
+copying build/lib/ucagent/tui/app.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui
+copying build/lib/ucagent/tui/completion.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui
+copying build/lib/ucagent/tui/handlers.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui
+copying build/lib/ucagent/tui/utils.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui
+creating build/bdist.linux-x86_64/wheel/ucagent/tui/mixins
+copying build/lib/ucagent/tui/mixins/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/mixins
+copying build/lib/ucagent/tui/mixins/auto_scroll.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/mixins
+copying build/lib/ucagent/tui/mixins/console_capture.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/mixins
+copying build/lib/ucagent/tui/mixins/sigint.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/mixins
+creating build/bdist.linux-x86_64/wheel/ucagent/tui/screens
+copying build/lib/ucagent/tui/screens/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/screens
+copying build/lib/ucagent/tui/screens/theme_picker.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/screens
+creating build/bdist.linux-x86_64/wheel/ucagent/tui/styles
+copying build/lib/ucagent/tui/styles/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/styles
+creating build/bdist.linux-x86_64/wheel/ucagent/tui/widgets
+copying build/lib/ucagent/tui/widgets/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/widgets
+copying build/lib/ucagent/tui/widgets/console.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/widgets
+copying build/lib/ucagent/tui/widgets/console_input.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/widgets
+copying build/lib/ucagent/tui/widgets/messages_panel.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/widgets
+copying build/lib/ucagent/tui/widgets/splitter.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/widgets
+copying build/lib/ucagent/tui/widgets/status_bar.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/widgets
+copying build/lib/ucagent/tui/widgets/task_panel.py -> build/bdist.linux-x86_64/wheel/./ucagent/tui/widgets
+creating build/bdist.linux-x86_64/wheel/ucagent/util
+copying build/lib/ucagent/util/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/bug_analysis_contract.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/config.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/cqueque.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/diff_ops.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/functions.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/log.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/markdown.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/models.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/test_tools.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/waveform_viewer.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+copying build/lib/ucagent/util/workspace_archive.py -> build/bdist.linux-x86_64/wheel/./ucagent/util
+creating build/bdist.linux-x86_64/wheel/ucagent/lang
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/lib
+copying build/lib/ucagent/lang/zh/skills/formal/lib/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib
+copying build/lib/ucagent/lang/zh/skills/formal/lib/formal_paths.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib
+copying build/lib/ucagent/lang/zh/skills/formal/lib/formal_tools.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib
+copying build/lib/ucagent/lang/zh/skills/formal/lib/models.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib
+copying build/lib/ucagent/lang/zh/skills/formal/lib/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/lib/templates
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/basic_info.md.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/bug_report.md.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/env_analysis.md.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/formal_summary.md.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/functions_and_checks.md.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/sby_analysis.md.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/sby_summary.md.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/verification_needs_and_plan.md.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/lib/templates/tests
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/tests/checker.sv.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates/tests
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/tests/formal.tcl.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates/tests
+copying build/lib/ucagent/lang/zh/skills/formal/lib/templates/tests/wrapper.sv.j2 -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/lib/templates/tests
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/basic-info
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/basic-info/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/basic-info/scripts/update_basic_info.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/basic-info/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/basic-info/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/basic-info
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/bug-report
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/bug-report/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/bug-report/scripts/update_bug.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/bug-report/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/bug-report/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/bug-report
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/env-config
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/env-config/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/env-config/scripts/update_extra_config.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/env-config/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/env-config/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/env-config
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/func-spec
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/func-spec/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/func-spec/scripts/update_spec.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/func-spec/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/func-spec/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/func-spec
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/plan
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/plan/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/plan/scripts/update_plan.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/plan/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/plan/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/plan
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/summary
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/summary/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/summary/scripts/update_summary.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/summary/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/summary/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/summary
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/sva-audit
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/sva-audit/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/sva-audit/scripts/env_analysis.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/sva-audit/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/sva-audit/scripts/update_analysis.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/sva-audit/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/sva-audit/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/sva-audit
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/sva-gen
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/sva-gen/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/sva-gen/scripts/generate_formal_env.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/sva-gen/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/sva-gen/scripts/update_sva_body.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/sva-gen/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/sva-gen/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/sva-gen
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/sva-opt
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/sva-opt/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/sva-opt/scripts/run_formal_verification.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/sva-opt/scripts
+copying build/lib/ucagent/lang/zh/skills/formal/sva-opt/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/sva-opt
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/cex-gen
+copying build/lib/ucagent/lang/zh/skills/formal/cex-gen/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/cex-gen
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/formal/sby
+copying build/lib/ucagent/lang/zh/skills/formal/sby/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/formal/sby
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/create-test-case-templates
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts/createtemplate.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/create-test-case-templates/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/create-test-case-templates
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts/record_dynamic_bug.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/dynamic-bug-recording
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets
+copying build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets/bug_analysis_document.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets
+copying build/lib/ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets/dynamic_bug_entry.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/functions-and-checks
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/functions-and-checks/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/functions-and-checks/scripts/update.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/functions-and-checks/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/functions-and-checks/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/functions-and-checks
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/static-bug-analysis
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts/record_static_bug.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/static-bug-analysis/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/static-bug-analysis
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/static-bug-validation
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts/linkbug.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/static-bug-validation/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/static-bug-validation
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch/scripts/__init__.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch/scripts
+copying build/lib/ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/mock-components
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/skills/unitytest/mock-components/agents
+copying build/lib/ucagent/lang/zh/skills/unitytest/mock-components/agents/openai.yaml -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/mock-components/agents
+copying build/lib/ucagent/lang/zh/skills/unitytest/mock-components/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/skills/unitytest/mock-components
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/template
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/template/unity_test
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/template/unity_test/tests
+copying build/lib/ucagent/lang/zh/template/unity_test/tests/test_example.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/unity_test/tests
+copying build/lib/ucagent/lang/zh/template/unity_test/tests/test_{{DUT}}_random_example.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/unity_test/tests
+copying build/lib/ucagent/lang/zh/template/unity_test/tests/{{DUT}}_api.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/unity_test/tests
+copying build/lib/ucagent/lang/zh/template/unity_test/tests/{{DUT}}_function_coverage_def.py -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/unity_test/tests
+copying build/lib/ucagent/lang/zh/template/unity_test/{{DUT}}_bug_analysis.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/unity_test
+copying build/lib/ucagent/lang/zh/template/unity_test/{{DUT}}_functions_and_checks.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/unity_test
+copying build/lib/ucagent/lang/zh/template/unity_test/{{DUT}}_line_coverage_analysis.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/unity_test
+copying build/lib/ucagent/lang/zh/template/unity_test/.pytest.ini -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/unity_test
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/template/formal_test
+copying build/lib/ucagent/lang/zh/template/formal_test/01_{{DUT}}_verification_needs_and_plan.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test
+copying build/lib/ucagent/lang/zh/template/formal_test/02_{{DUT}}_basic_info.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test
+copying build/lib/ucagent/lang/zh/template/formal_test/05_{{DUT}}_formal_summary.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test
+copying build/lib/ucagent/lang/zh/template/formal_test/.formal_records.yaml -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/template/formal_test copy
+copying build/lib/ucagent/lang/zh/template/formal_test copy/01_{{DUT}}_verification_needs_and_plan.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test copy
+copying build/lib/ucagent/lang/zh/template/formal_test copy/02_{{DUT}}_basic_info.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test copy
+copying build/lib/ucagent/lang/zh/template/formal_test copy/03_{{DUT}}_functions_and_checks.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test copy
+copying build/lib/ucagent/lang/zh/template/formal_test copy/05_{{DUT}}_formal_summary.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test copy
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/template/formal_test copy/tests
+copying build/lib/ucagent/lang/zh/template/formal_test copy/tests/{{DUT}}_checker.sv -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test copy/tests
+copying build/lib/ucagent/lang/zh/template/formal_test copy/tests/{{DUT}}_wrapper.sv -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test copy/tests
+copying build/lib/ucagent/lang/zh/template/formal_test copy/tests/{{DUT}}_formal.tcl -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test copy/tests
+copying build/lib/ucagent/lang/zh/template/formal_test copy/.formal_records.json -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_test copy
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/template/formal_sby
+copying build/lib/ucagent/lang/zh/template/formal_sby/.formal_records.yaml -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/template/formal_sby
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/config
+copying build/lib/ucagent/lang/zh/config/default.yaml -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/config
+copying build/lib/ucagent/lang/zh/config/formal.yaml -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/config
+copying build/lib/ucagent/lang/zh/config/formal_sby_overlay.yaml -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/config
+copying build/lib/ucagent/lang/zh/config/inc.yaml -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/config
+copying build/lib/ucagent/lang/zh/config/labeled_spec.yaml -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/config
+copying build/lib/ucagent/lang/zh/config/master.yaml -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/config
+copying build/lib/ucagent/lang/zh/config/vibe.yaml -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/config
+copying build/lib/ucagent/lang/zh/config/bug_analysis_contract.json -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/config
+copying build/lib/ucagent/lang/zh/config/formal_gui_agent.txt -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/config
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/doc
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/doc/Formal_Doc
+copying build/lib/ucagent/lang/zh/doc/Formal_Doc/bug_report.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Formal_Doc
+copying build/lib/ucagent/lang/zh/doc/Formal_Doc/checker_module.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Formal_Doc
+copying build/lib/ucagent/lang/zh/doc/Formal_Doc/coi_coverage.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Formal_Doc
+copying build/lib/ucagent/lang/zh/doc/Formal_Doc/counterexample.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Formal_Doc
+copying build/lib/ucagent/lang/zh/doc/Formal_Doc/env_analysis.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Formal_Doc
+copying build/lib/ucagent/lang/zh/doc/Formal_Doc/formal_summary.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Formal_Doc
+copying build/lib/ucagent/lang/zh/doc/Formal_Doc/functions_and_checks.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Formal_Doc
+copying build/lib/ucagent/lang/zh/doc/Formal_Doc/sva_property.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Formal_Doc
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/doc/Formal_SBY_Doc
+copying build/lib/ucagent/lang/zh/doc/Formal_SBY_Doc/formalmc_migration.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Formal_SBY_Doc
+copying build/lib/ucagent/lang/zh/doc/Formal_SBY_Doc/sby_workflow.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Formal_SBY_Doc
+creating build/bdist.linux-x86_64/wheel/ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_api_instruction.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_bug_analysis.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_fixture.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_function_coverage_def.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_functions_and_checks.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_line_coverage.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_line_func_map.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_mock.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_mock_test.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_test_case.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_test_case_random.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_test_program.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_test_summary.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/dut_test_template.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/lang/zh/doc/Guide_Doc/env_spec_template.md -> build/bdist.linux-x86_64/wheel/./ucagent/lang/zh/doc/Guide_Doc
+copying build/lib/ucagent/SKILL.md -> build/bdist.linux-x86_64/wheel/./ucagent
+copying build/lib/ucagent/setting.yaml -> build/bdist.linux-x86_64/wheel/./ucagent
+creating build/bdist.linux-x86_64/wheel/ucagent/assets
+copying build/lib/ucagent/assets/mcp_claude.json -> build/bdist.linux-x86_64/wheel/./ucagent/assets
+copying build/lib/ucagent/assets/mcp_copilot.json -> build/bdist.linux-x86_64/wheel/./ucagent/assets
+copying build/lib/ucagent/assets/mcp_iflow.json -> build/bdist.linux-x86_64/wheel/./ucagent/assets
+copying build/lib/ucagent/assets/mcp_kilo.json -> build/bdist.linux-x86_64/wheel/./ucagent/assets
+copying build/lib/ucagent/assets/mcp_opencode.json -> build/bdist.linux-x86_64/wheel/./ucagent/assets
+copying build/lib/ucagent/assets/mcp_qwen.json -> build/bdist.linux-x86_64/wheel/./ucagent/assets
+running install_egg_info
+Copying UCAgent.egg-info to build/bdist.linux-x86_64/wheel/./UCAgent-0.9.1-py3.11.egg-info
+running install_scripts
+creating build/bdist.linux-x86_64/wheel/ucagent-0.9.1.dist-info/WHEEL
+creating '/tmp/ucagent-dmac-package-review-20261005-7e1ac3/results/wheels/.tmp-ksyiytbb/ucagent-0.9.1-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+adding 'ucagent/SKILL.md'
+adding 'ucagent/__init__.py'
+adding 'ucagent/_version.py'
+adding 'ucagent/cli.py'
+adding 'ucagent/setting.yaml'
+adding 'ucagent/verify_agent.py'
+adding 'ucagent/verify_pdb.py'
+adding 'ucagent/version.py'
+adding 'ucagent/abackend/__init__.py'
+adding 'ucagent/abackend/base.py'
+adding 'ucagent/abackend/cmdline.py'
+adding 'ucagent/abackend/langchain/__init__.py'
+adding 'ucagent/abackend/langchain/agent.py'
+adding 'ucagent/abackend/langchain/middleware/__init__.py'
+adding 'ucagent/abackend/langchain/middleware/messages.py'
+adding 'ucagent/assets/mcp_claude.json'
+adding 'ucagent/assets/mcp_copilot.json'
+adding 'ucagent/assets/mcp_iflow.json'
+adding 'ucagent/assets/mcp_kilo.json'
+adding 'ucagent/assets/mcp_opencode.json'
+adding 'ucagent/assets/mcp_qwen.json'
+adding 'ucagent/checkers/__init__.py'
+adding 'ucagent/checkers/base.py'
+adding 'ucagent/checkers/bash_script.py'
+adding 'ucagent/checkers/file_linemap.py'
+adding 'ucagent/checkers/file_markdown.py'
+adding 'ucagent/checkers/formal.py'
+adding 'ucagent/checkers/formal_sby.py'
+adding 'ucagent/checkers/increment.py'
+adding 'ucagent/checkers/recorder.py'
+adding 'ucagent/checkers/static_bug.py'
+adding 'ucagent/checkers/toffee_report.py'
+adding 'ucagent/checkers/unity_test.py'
+adding 'ucagent/checkers/unity_test_mock.py'
+adding 'ucagent/checkers/unity_test_random.py'
+adding 'ucagent/eda/__init__.py'
+adding 'ucagent/eda/claude.py'
+adding 'ucagent/eda/driver.py'
+adding 'ucagent/eda/formal_workflow.py'
+adding 'ucagent/eda/formalmc_conversion.py'
+adding 'ucagent/eda/formalmc_results.py'
+adding 'ucagent/eda/input_closure.py'
+adding 'ucagent/eda/license_probe.py'
+adding 'ucagent/eda/manifest.py'
+adding 'ucagent/eda/models.py'
+adding 'ucagent/eda/npi.py'
+adding 'ucagent/eda/parsers.py'
+adding 'ucagent/eda/runner.py'
+adding 'ucagent/eda/sby_guided.py'
+adding 'ucagent/eda/sby_results.py'
+adding 'ucagent/eda/security.py'
+adding 'ucagent/eda/adapters/__init__.py'
+adding 'ucagent/eda/adapters/base.py'
+adding 'ucagent/eda/adapters/formal_mc.py'
+adding 'ucagent/eda/adapters/picker.py'
+adding 'ucagent/eda/adapters/pytest.py'
+adding 'ucagent/eda/adapters/sby.py'
+adding 'ucagent/eda/adapters/urg.py'
+adding 'ucagent/eda/adapters/vc_formal.py'
+adding 'ucagent/eda/adapters/vcs.py'
+adding 'ucagent/eda/adapters/verdi.py'
+adding 'ucagent/interaction/__init__.py'
+adding 'ucagent/interaction/advanced.py'
+adding 'ucagent/interaction/enhanced.py'
+adding 'ucagent/interaction/orchestrator.py'
+adding 'ucagent/lang/zh/config/bug_analysis_contract.json'
+adding 'ucagent/lang/zh/config/default.yaml'
+adding 'ucagent/lang/zh/config/formal.yaml'
+adding 'ucagent/lang/zh/config/formal_gui_agent.txt'
+adding 'ucagent/lang/zh/config/formal_sby_overlay.yaml'
+adding 'ucagent/lang/zh/config/inc.yaml'
+adding 'ucagent/lang/zh/config/labeled_spec.yaml'
+adding 'ucagent/lang/zh/config/master.yaml'
+adding 'ucagent/lang/zh/config/vibe.yaml'
+adding 'ucagent/lang/zh/doc/Formal_Doc/bug_report.md'
+adding 'ucagent/lang/zh/doc/Formal_Doc/checker_module.md'
+adding 'ucagent/lang/zh/doc/Formal_Doc/coi_coverage.md'
+adding 'ucagent/lang/zh/doc/Formal_Doc/counterexample.md'
+adding 'ucagent/lang/zh/doc/Formal_Doc/env_analysis.md'
+adding 'ucagent/lang/zh/doc/Formal_Doc/formal_summary.md'
+adding 'ucagent/lang/zh/doc/Formal_Doc/functions_and_checks.md'
+adding 'ucagent/lang/zh/doc/Formal_Doc/sva_property.md'
+adding 'ucagent/lang/zh/doc/Formal_SBY_Doc/formalmc_migration.md'
+adding 'ucagent/lang/zh/doc/Formal_SBY_Doc/sby_workflow.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_api_instruction.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_bug_analysis.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_fixture.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_function_coverage_def.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_functions_and_checks.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_line_coverage.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_line_func_map.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_mock.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_mock_test.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_test_case.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_test_case_random.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_test_program.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_test_summary.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/dut_test_template.md'
+adding 'ucagent/lang/zh/doc/Guide_Doc/env_spec_template.md'
+adding 'ucagent/lang/zh/skills/formal/basic-info/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/basic-info/scripts/update_basic_info.py'
+adding 'ucagent/lang/zh/skills/formal/bug-report/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/bug-report/scripts/update_bug.py'
+adding 'ucagent/lang/zh/skills/formal/cex-gen/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/env-config/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/env-config/scripts/update_extra_config.py'
+adding 'ucagent/lang/zh/skills/formal/func-spec/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/func-spec/scripts/update_spec.py'
+adding 'ucagent/lang/zh/skills/formal/lib/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/lib/__init__.py'
+adding 'ucagent/lang/zh/skills/formal/lib/formal_paths.py'
+adding 'ucagent/lang/zh/skills/formal/lib/formal_tools.py'
+adding 'ucagent/lang/zh/skills/formal/lib/models.py'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/basic_info.md.j2'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/bug_report.md.j2'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/env_analysis.md.j2'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/formal_summary.md.j2'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/functions_and_checks.md.j2'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/sby_analysis.md.j2'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/sby_summary.md.j2'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/verification_needs_and_plan.md.j2'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/tests/checker.sv.j2'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/tests/formal.tcl.j2'
+adding 'ucagent/lang/zh/skills/formal/lib/templates/tests/wrapper.sv.j2'
+adding 'ucagent/lang/zh/skills/formal/plan/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/plan/scripts/update_plan.py'
+adding 'ucagent/lang/zh/skills/formal/sby/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/summary/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/summary/scripts/update_summary.py'
+adding 'ucagent/lang/zh/skills/formal/sva-audit/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/sva-audit/scripts/env_analysis.py'
+adding 'ucagent/lang/zh/skills/formal/sva-audit/scripts/update_analysis.py'
+adding 'ucagent/lang/zh/skills/formal/sva-gen/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/sva-gen/scripts/generate_formal_env.py'
+adding 'ucagent/lang/zh/skills/formal/sva-gen/scripts/update_sva_body.py'
+adding 'ucagent/lang/zh/skills/formal/sva-opt/SKILL.md'
+adding 'ucagent/lang/zh/skills/formal/sva-opt/scripts/run_formal_verification.py'
+adding 'ucagent/lang/zh/skills/unitytest/create-test-case-templates/SKILL.md'
+adding 'ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts/__init__.py'
+adding 'ucagent/lang/zh/skills/unitytest/create-test-case-templates/scripts/createtemplate.py'
+adding 'ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/SKILL.md'
+adding 'ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets/bug_analysis_document.md'
+adding 'ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/assets/dynamic_bug_entry.md'
+adding 'ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts/__init__.py'
+adding 'ucagent/lang/zh/skills/unitytest/dynamic-bug-recording/scripts/record_dynamic_bug.py'
+adding 'ucagent/lang/zh/skills/unitytest/functions-and-checks/SKILL.md'
+adding 'ucagent/lang/zh/skills/unitytest/functions-and-checks/scripts/update.py'
+adding 'ucagent/lang/zh/skills/unitytest/mock-components/SKILL.md'
+adding 'ucagent/lang/zh/skills/unitytest/mock-components/agents/openai.yaml'
+adding 'ucagent/lang/zh/skills/unitytest/static-bug-analysis/SKILL.md'
+adding 'ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts/__init__.py'
+adding 'ucagent/lang/zh/skills/unitytest/static-bug-analysis/scripts/record_static_bug.py'
+adding 'ucagent/lang/zh/skills/unitytest/static-bug-validation/SKILL.md'
+adding 'ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts/__init__.py'
+adding 'ucagent/lang/zh/skills/unitytest/static-bug-validation/scripts/linkbug.py'
+adding 'ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch/SKILL.md'
+adding 'ucagent/lang/zh/skills/unitytest/test-case-implementation-in-batch/scripts/__init__.py'
+adding 'ucagent/lang/zh/template/formal_sby/.formal_records.yaml'
+adding 'ucagent/lang/zh/template/formal_test/.formal_records.yaml'
+adding 'ucagent/lang/zh/template/formal_test/01_{{DUT}}_verification_needs_and_plan.md'
+adding 'ucagent/lang/zh/template/formal_test/02_{{DUT}}_basic_info.md'
+adding 'ucagent/lang/zh/template/formal_test/05_{{DUT}}_formal_summary.md'
+adding 'ucagent/lang/zh/template/formal_test copy/.formal_records.json'
+adding 'ucagent/lang/zh/template/formal_test copy/01_{{DUT}}_verification_needs_and_plan.md'
+adding 'ucagent/lang/zh/template/formal_test copy/02_{{DUT}}_basic_info.md'
+adding 'ucagent/lang/zh/template/formal_test copy/03_{{DUT}}_functions_and_checks.md'
+adding 'ucagent/lang/zh/template/formal_test copy/05_{{DUT}}_formal_summary.md'
+adding 'ucagent/lang/zh/template/formal_test copy/tests/{{DUT}}_checker.sv'
+adding 'ucagent/lang/zh/template/formal_test copy/tests/{{DUT}}_formal.tcl'
+adding 'ucagent/lang/zh/template/formal_test copy/tests/{{DUT}}_wrapper.sv'
+adding 'ucagent/lang/zh/template/unity_test/.pytest.ini'
+adding 'ucagent/lang/zh/template/unity_test/{{DUT}}_bug_analysis.md'
+adding 'ucagent/lang/zh/template/unity_test/{{DUT}}_functions_and_checks.md'
+adding 'ucagent/lang/zh/template/unity_test/{{DUT}}_line_coverage_analysis.md'
+adding 'ucagent/lang/zh/template/unity_test/tests/test_example.py'
+adding 'ucagent/lang/zh/template/unity_test/tests/test_{{DUT}}_random_example.py'
+adding 'ucagent/lang/zh/template/unity_test/tests/{{DUT}}_api.py'
+adding 'ucagent/lang/zh/template/unity_test/tests/{{DUT}}_function_coverage_def.py'
+adding 'ucagent/platform/__init__.py'
+adding 'ucagent/platform/campaign.py'
+adding 'ucagent/platform/formal_session.py'
+adding 'ucagent/platform/project.py'
+adding 'ucagent/platform/uvm.py'
+adding 'ucagent/platform/workflow_catalog.py'
+adding 'ucagent/scripts/refresh_workspace_assets.py'
+adding 'ucagent/scripts/ucagent-client/SKILL.md'
+adding 'ucagent/scripts/ucagent-client/scripts/ucagent_client.py'
+adding 'ucagent/server/__init__.py'
+adding 'ucagent/server/analysis_jobs.py'
+adding 'ucagent/server/api_campaign.py'
+adding 'ucagent/server/api_cmd.py'
+adding 'ucagent/server/api_master.py'
+adding 'ucagent/server/api_mcp.py'
+adding 'ucagent/server/api_platform.py'
+adding 'ucagent/server/api_terminal.py'
+adding 'ucagent/server/campaign_service.py'
+adding 'ucagent/server/formal_agent.py'
+adding 'ucagent/server/formal_sessions.py'
+adding 'ucagent/server/npi_service.py'
+adding 'ucagent/server/platform_main.py'
+adding 'ucagent/server/platform_mcp.py'
+adding 'ucagent/server/platform_store.py'
+adding 'ucagent/server/platform_workbench.py'
+adding 'ucagent/server/portable_main.py'
+adding 'ucagent/server/fst_converter/README.md'
+adding 'ucagent/server/static/highlight-atom-one-dark.min.css'
+adding 'ucagent/server/static/highlight.min.js'
+adding 'ucagent/server/static/marked.min.js'
+adding 'ucagent/server/static/platform/index.html'
+adding 'ucagent/server/static/platform/assets/index--LAFlBh7.js'
+adding 'ucagent/server/static/platform/assets/index-CiHJkaN3.css'
+adding 'ucagent/server/static/share/ucagent-favicon.svg'
+adding 'ucagent/server/static/share/ucagent-shell.css'
+adding 'ucagent/server/static/share/ucagent-shell.js'
+adding 'ucagent/server/static/surfer/deep-link.js'
+adding 'ucagent/server/static/surfer/fst-fallback-worker.js'
+adding 'ucagent/server/static/surfer/fst-fallback.js'
+adding 'ucagent/server/static/surfer/index.html'
+adding 'ucagent/server/static/surfer/integration.js'
+adding 'ucagent/server/static/surfer/manifest.json'
+adding 'ucagent/server/static/surfer/surfer.js'
+adding 'ucagent/server/static/surfer/sw.js'
+adding 'ucagent/server/static/xterm/addon-fit.min.js'
+adding 'ucagent/server/static/xterm/addon-web-links.min.js'
+adding 'ucagent/server/static/xterm/xterm.min.css'
+adding 'ucagent/server/static/xterm/xterm.min.js'
+adding 'ucagent/server/templates/agent.html'
+adding 'ucagent/server/templates/complete.html'
+adding 'ucagent/server/templates/launch.html'
+adding 'ucagent/server/templates/master.html'
+adding 'ucagent/server/templates/task.html'
+adding 'ucagent/server/templates/terminal.html'
+adding 'ucagent/stage/__init__.py'
+adding 'ucagent/stage/vmanager.py'
+adding 'ucagent/stage/vstage.py'
+adding 'ucagent/stage/llm_suggestion/__init__.py'
+adding 'ucagent/stage/llm_suggestion/base_suggestion.py'
+adding 'ucagent/stage/llm_suggestion/langchain_suggestion.py'
+adding 'ucagent/tools/__init__.py'
+adding 'ucagent/tools/bash.py'
+adding 'ucagent/tools/context.py'
+adding 'ucagent/tools/extool.py'
+adding 'ucagent/tools/fileops.py'
+adding 'ucagent/tools/human.py'
+adding 'ucagent/tools/memory.py'
+adding 'ucagent/tools/planning.py'
+adding 'ucagent/tools/skill.py'
+adding 'ucagent/tools/testops.py'
+adding 'ucagent/tools/uctool.py'
+adding 'ucagent/tools/waveform.py'
+adding 'ucagent/tools/workdiff.py'
+adding 'ucagent/tui/__init__.py'
+adding 'ucagent/tui/app.py'
+adding 'ucagent/tui/completion.py'
+adding 'ucagent/tui/handlers.py'
+adding 'ucagent/tui/utils.py'
+adding 'ucagent/tui/mixins/__init__.py'
+adding 'ucagent/tui/mixins/auto_scroll.py'
+adding 'ucagent/tui/mixins/console_capture.py'
+adding 'ucagent/tui/mixins/sigint.py'
+adding 'ucagent/tui/screens/__init__.py'
+adding 'ucagent/tui/screens/theme_picker.py'
+adding 'ucagent/tui/styles/__init__.py'
+adding 'ucagent/tui/widgets/__init__.py'
+adding 'ucagent/tui/widgets/console.py'
+adding 'ucagent/tui/widgets/console_input.py'
+adding 'ucagent/tui/widgets/messages_panel.py'
+adding 'ucagent/tui/widgets/splitter.py'
+adding 'ucagent/tui/widgets/status_bar.py'
+adding 'ucagent/tui/widgets/task_panel.py'
+adding 'ucagent/util/__init__.py'
+adding 'ucagent/util/bug_analysis_contract.py'
+adding 'ucagent/util/config.py'
+adding 'ucagent/util/cqueque.py'
+adding 'ucagent/util/diff_ops.py'
+adding 'ucagent/util/functions.py'
+adding 'ucagent/util/log.py'
+adding 'ucagent/util/markdown.py'
+adding 'ucagent/util/models.py'
+adding 'ucagent/util/test_tools.py'
+adding 'ucagent/util/waveform_viewer.py'
+adding 'ucagent/util/workspace_archive.py'
+adding 'ucagent-0.9.1.dist-info/licenses/LICENSE'
+adding 'ucagent-0.9.1.dist-info/METADATA'
+adding 'ucagent-0.9.1.dist-info/WHEEL'
+adding 'ucagent-0.9.1.dist-info/entry_points.txt'
+adding 'ucagent-0.9.1.dist-info/top_level.txt'
+adding 'ucagent-0.9.1.dist-info/RECORD'
+removing build/bdist.linux-x86_64/wheel
+ucagent-0.9.1-py3-none-any.whl

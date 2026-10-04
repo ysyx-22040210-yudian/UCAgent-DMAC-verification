@@ -1,0 +1,15 @@
+{
+  "root": "/tmp/ucagent-dmac-package-review-20261005-7e1ac3",
+  "commands": [
+    {
+      "name": "document-regression",
+      "exit_code": 0,
+      "seconds": 1.24
+    },
+    {
+      "name": "wheel-build",
+      "exit_code": 1,
+      "seconds": 0.03
+    }
+  ]
+}

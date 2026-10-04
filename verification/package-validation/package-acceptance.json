@@ -1,0 +1,27 @@
+{
+  "root": "/tmp/ucagent-dmac-package-review-20261005-7e1ac3",
+  "execution_user": "root",
+  "commands": [
+    {
+      "name": "integrity",
+      "exit_code": 0,
+      "seconds": 0.16
+    },
+    {
+      "name": "dmac-all",
+      "exit_code": 0,
+      "seconds": 308.48
+    },
+    {
+      "name": "tool-regression",
+      "exit_code": 0,
+      "seconds": 24.54
+    },
+    {
+      "name": "project-config",
+      "exit_code": 0,
+      "seconds": 0.21
+    }
+  ],
+  "source_changes": []
+}

@@ -1,0 +1,50 @@
+SBY  3:44:19 [proof] Removing directory '/tmp/ucagent-dmac-package-review-20261005-7e1ac3/results/20261005-034042-a362c2f8/fifo_cover_f4/proof'.
+SBY  3:44:19 [proof] Copy '/tmp/ucagent-dmac-package-review-20261005-7e1ac3/results/20261005-034042-a362c2f8/fifo_cover_f4/inputs' to '/tmp/ucagent-dmac-package-review-20261005-7e1ac3/results/20261005-034042-a362c2f8/fifo_cover_f4/proof/src/inputs'.
+SBY  3:44:19 [proof] engine_0: smtbmc z3
+SBY  3:44:19 [proof] base: starting process "cd proof/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  3:44:19 [proof] base: Warning: Replacing memory \f_fifo_model with list of registers. See inputs/formal/fifo_monitor.svh:13
+SBY  3:44:19 [proof] base: Warning: Replacing memory \storage with list of registers. See inputs/rtl/dmac_fifo.sv:45
+SBY  3:44:19 [proof] base: finished (returncode=0)
+SBY  3:44:19 [proof] prep: starting process "cd proof/model; yosys -ql design_prep.log design_prep.ys"
+SBY  3:44:19 [proof] prep: finished (returncode=0)
+SBY  3:44:19 [proof] smt2: starting process "cd proof/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY  3:44:19 [proof] smt2: finished (returncode=0)
+SBY  3:44:19 [proof] engine_0: starting process "cd proof; yosys-smtbmc -s z3 --presat -c --noprogress -t 12  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Solver: z3
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Reached cover statement in step 2 at fifo_harness.dut: C_CK_FIFO_EMPTY
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 4..
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 5..
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 6..
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Reached cover statement in step 6 at fifo_harness.dut: C_CK_FIFO_FULL_REPLACE
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace1.vcd
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace1.smtc
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace1.yw
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 6..
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Reached cover statement in step 6 at fifo_harness.dut: C_CK_FIFO_FULL
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace2.vcd
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace2.smtc
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace2.yw
+SBY  3:44:19 [proof] engine_0: ##   0:00:00  Status: passed
+SBY  3:44:19 [proof] engine_0: finished (returncode=0)
+SBY  3:44:19 [proof] engine_0: Status returned by engine: pass
+SBY  3:44:19 [proof] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  3:44:19 [proof] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  3:44:19 [proof] summary: engine_0 (smtbmc z3) returned pass
+SBY  3:44:19 [proof] summary: cover trace: proof/engine_0/trace0.vcd
+SBY  3:44:19 [proof] summary:   reached cover statement fifo_harness.dut.C_CK_FIFO_EMPTY at inputs/formal/fifo_monitor.svh:32.5-32.55 step 2
+SBY  3:44:19 [proof] summary: cover trace: proof/engine_0/trace1.vcd
+SBY  3:44:19 [proof] summary:   reached cover statement fifo_harness.dut.C_CK_FIFO_FULL_REPLACE at inputs/formal/fifo_monitor.svh:30.5-30.73 step 6
+SBY  3:44:19 [proof] summary: cover trace: proof/engine_0/trace2.vcd
+SBY  3:44:19 [proof] summary:   reached cover statement fifo_harness.dut.C_CK_FIFO_FULL at inputs/formal/fifo_monitor.svh:31.5-31.58 step 6
+SBY  3:44:19 [proof] DONE (PASS, rc=0)

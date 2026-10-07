@@ -1,0 +1,59 @@
+{
+  "status": "passed",
+  "scope": "Documentation identity, links, counts and actual offline HTML interaction; no new formal proof",
+  "date": "2026-10-07",
+  "local_links_and_anchors_checked": 333,
+  "broken_links": [],
+  "duplicate_html_ids": 0,
+  "ck_rows": 88,
+  "ck_types": {
+    "环境假设": 6,
+    "组合断言": 15,
+    "时序断言": 48,
+    "业务覆盖": 19
+  },
+  "ck_states": {
+    "环境假设": 6,
+    "未决": 63,
+    "已命中": 14,
+    "未命中": 5
+  },
+  "ui_checks": {
+    "环境假设": 6,
+    "组合断言": 15,
+    "时序断言": 48,
+    "业务覆盖": 19,
+    "uncovered_business_filter": 5,
+    "all_88_formula_panels": true,
+    "ck_anchor_jump": true
+  },
+  "javascript_errors": [],
+  "external_network_requests": [],
+  "source_sha256": {
+    "verification/reports/guided/.formal_records.yaml": "9c000529033abb74ca8b4b088ef3594ee8e642d0f287b22983f134761b40c958",
+    "verification/reports/testpoint-evidence.csv": "f4a0ccacf2bb2418c601b3b4debac37a17f029f373892e8a340d9686c1698e04",
+    "verification/reports/final-state-audit.json": "216672a977b1cff92243c605018a53ae5bf788b98f02a3047e81256bdd32daca",
+    "verification/reports/guided-verified-evidence.json": "9c442df890d46eeaeaa35b08c7e099a1cfa277f5822c0f0f5f003b5fbdf8a188",
+    "verification/reports/verified-evidence.json": "d46dbbec25672f5142d076651162f9b2bd4c567ee3c3993fa0d51750bacb720f",
+    "verification/offline-validation/cli-results.json": "50e239e86fde4963b29528512d155a8394920ef3743605d1b66936e7cde4cb27",
+    "scripts/build_dmac_verification_docs.py": "df18de227c800335583be501039da4a6c22c7ef69e9102e1a320036106330c2c"
+  },
+  "document_sha256": {
+    "docs/DMAC详细验证文档.md": "4230cec0accd231817a8defd3151e4e18c8152de378f5122cda0f8b44e59b209",
+    "docs/DMAC详细验证文档.html": "9bcce61a7a9e2910f905262b1e50864888e84258ae2c165db2b2249bb3fe7135",
+    "docs/DMAC检测点清单.csv": "450f8830b371900b5f6323f0233cb79de50afa87864201a78720d7a713b9d7a2"
+  },
+  "linux_rebuild": {
+    "status": "passed",
+    "workspace": "/home/ucagent-lab/development/dmac-documentation-20261007-cf999499/source",
+    "ordinary_user_uid": 1004,
+    "renderer_source": "Existing development Markdown module, copied into isolated support directory; no pip install",
+    "document_sha256": {
+      "docs/DMAC详细验证文档.md": "4230cec0accd231817a8defd3151e4e18c8152de378f5122cda0f8b44e59b209",
+      "docs/DMAC详细验证文档.html": "9bcce61a7a9e2910f905262b1e50864888e84258ae2c165db2b2249bb3fe7135",
+      "docs/DMAC检测点清单.csv": "450f8830b371900b5f6323f0233cb79de50afa87864201a78720d7a713b9d7a2"
+    },
+    "linux_rebuild_matches_delivery": true,
+    "formal_execution": "Not rerun; documentation checks only"
+  }
+}

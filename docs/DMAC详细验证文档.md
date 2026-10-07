@@ -1,0 +1,2524 @@
+# DMAC 详细验证文档
+
+**验证方案、测试点、验证策略与实际验证报告**
+
+文档版本：1.0；整理日期：2026 年 10 月 7 日（北京时间）。设计证据基线为 2026 年 10 月 5 日的 UCAgent 完整流程；离线重跑基线为 2026 年 10 月 7 日。本次整理没有新增形式证明或更改原始结果。
+
+**当前结论：UCAgent 14 个启用阶段已完成，DMAC 主任务设计验证仍为未决。** 主任务 63 条安全断言在深度 12 内无反例，尚未获无界证明；四组 native 辅助参数实例安全证明通过。两类结果各有独立属性、输入与运行身份，不能互相替代。
+
+## 1. 文档用途与阅读顺序
+
+本文供设计人员、验证人员和验收人员共同使用：第 2–4 章定义设计、验证目标和参考模型；第 5–7 章说明环境约束、验证策略和测试点；第 8 章提供时序示例；第 9–12 章给出实际报告、故障对照、完备性评价和重跑方法；附录完整保留 88 个 CK 的表达式与默认 native 工程的逐属性结果。
+
+所有“已证明”“命中”“失败”“未决”来自保存的机器证据。后续建议与当前已执行工作分开说明。表中 `FG` 是功能分组，`FC` 是功能点，`CK` 是检测点，`NCK` 是辅助工程的规划义务标识。NCK 需要追溯到真实编译属性和 run，不能单独当作证明结果。
+
+## 2. DUT 规格与接口
+
+### 2.1 功能与参数
+
+DMAC 是单时钟、双向独立的数据搬运控制器。host 读命令驱动 `mem → DMAC → device`；host 写命令驱动 `device → DMAC → mem`。内存数据宽度为 64 bit，device 数据宽度为 16 bit，每个内存字对应四个 device 握手。
+
+| 参数 | 默认值 | 合法域与本轮验证边界 |
+| --- | --- | --- |
+| `ADDR_W` | 32 | RTL 仿真检查要求至少 4；主任务为 32，native 实测 16 和 32 |
+| `LEN_W` | 32 | 至少 1；主任务为 32，native 实测 1、8、32 |
+| `FIFO_DEPTH` | 2 | 正整数；具体实例验证 1、2、3、4，未作全部正整数参数量化 |
+| FIFO `WIDTH` | 64 | DMAC 两个 FIFO 均为 64 bit；其他位宽不在本轮验收范围 |
+
+host 读写通道分别有一个 `haddr` 字段，只在对应命令接受沿锁存。mem 读写通道各自输出地址，device 口仅有 req、ack、data，没有地址信号。当前接口没有 busy、status、dev_fixed、byte enable 或独立内存读响应通道。
+
+### 2.2 完整接口列表
+
+方向以 DMAC 为参照；下面列出全部 26 个端口，位宽采用默认参数。输入请求由外部产生，输出确认由 DMAC 产生。
+
+| 接口 | 端口 | 方向 | 位宽 | 含义 |
+| --- | --- | --- | --- | --- |
+| 时钟/复位 | `clk` | 输入 | 1 | 唯一时钟，全部协议在上升沿采样 |
+| 时钟/复位 | `rst_n` | 输入 | 1 | 低有效异步复位，可在初始阶段或活动传输中再次拉低 |
+| host | `host_rd_req` | 输入 | 1 | host 提交内存到设备读命令的请求 |
+| host | `host_rd_haddr` | 输入 | 32 | 读命令的任意 32 位内存首地址，不要求对齐 |
+| host | `host_rd_len` | 输入 | 32 | 读命令的 64 位内存拍数减一；所有位模式合法 |
+| host | `host_wr_req` | 输入 | 1 | host 提交设备到内存写命令的请求 |
+| host | `host_wr_haddr` | 输入 | 32 | 写命令的任意 32 位内存首地址，不要求对齐 |
+| host | `host_wr_len` | 输入 | 32 | 写命令的 64 位内存拍数减一；所有位模式合法 |
+| mem | `mem_rd_ready` | 输入 | 1 | 内存接受读地址且同一采样沿的 mem_rd_data 已就绪 |
+| mem | `mem_rd_data` | 输入 | 64 | mem_rd_valid&&mem_rd_ready 同沿由 DMAC 接收的完整 64 位读数据 |
+| mem | `mem_wr_ready` | 输入 | 1 | 内存可在本采样沿接受 64 位写地址和数据 |
+| dev | `dev_rd_req` | 输入 | 1 | 由 device 发起的 16 位读请求；等待 ack 时保持请求 |
+| dev | `dev_wr_req` | 输入 | 1 | 由 device 发起的 16 位写请求；等待 ack 时保持请求和数据 |
+| dev | `dev_wr_data` | 输入 | 16 | device 发给 DMAC 的 16 位写数据 |
+| host | `host_rd_ack` | 输出 | 1 | 读方向命令接受确认；req、方向空闲、非 done 且非复位时组合置位 |
+| host | `host_rd_done` | 输出 | 1 | 最后一个 16 位读数据被 device 接收后产生的单周期完成指示 |
+| host | `host_wr_ack` | 输出 | 1 | 写方向命令接受确认；req、方向空闲、非 done 且非复位时组合置位 |
+| host | `host_wr_done` | 输出 | 1 | 最后一个 64 位写数据被 memory 接收后产生的单周期完成指示 |
+| mem | `mem_rd_valid` | 输出 | 1 | 当前 32 位读地址有效；与 ready 同沿完成一次内存读传输 |
+| mem | `mem_rd_addr` | 输出 | 32 | 当前完整 64 位内存读的字节地址，首拍原样采用 haddr |
+| mem | `mem_wr_valid` | 输出 | 1 | 当前 32 位写地址及 64 位写数据有效；与 ready 同沿完成传输 |
+| mem | `mem_wr_addr` | 输出 | 32 | 当前完整 64 位内存写的字节地址，首拍原样采用 haddr |
+| mem | `mem_wr_data` | 输出 | 64 | 由四个低片段优先的 16 位 device 写拍拼成的完整内存写数据 |
+| dev | `dev_rd_ack` | 输出 | 1 | 存在可交付读数据且 device 请求时置位，并在同沿交付一个 16 位片段 |
+| dev | `dev_rd_data` | 输出 | 16 | DMAC 发给 device 的 16 位读数据，按每个 64 位字的低片段优先输出 |
+| dev | `dev_wr_ack` | 输出 | 1 | 命令尚有接收配额且当前片段可被接收时，对 device 写请求确认 |
+
+### 2.3 握手、地址、长度和数据顺序
+
+全部协议在 `posedge clk` 采样。定义六类事件：
+
+```text
+Hrd = host_rd_req && host_rd_ack    // 接受读命令
+Hwr = host_wr_req && host_wr_ack    // 接受写命令
+Mrd = mem_rd_valid && mem_rd_ready  // 接收一个 64 位内存字
+Mwr = mem_wr_valid && mem_wr_ready  // 提交一个 64 位内存字
+Drd = dev_rd_req && dev_rd_ack      // device 接收一个 16 位片段
+Dwr = dev_wr_req && dev_wr_ack      // device 发送一个 16 位片段
+```
+
+`mem_rd_ready` 表示本沿地址可接受且读数据已就绪，DMAC 在 `Mrd` 的同一个沿采样 `mem_rd_data`。没有另一个返回 valid，也不添加固定响应延迟。
+
+对每条接受的命令，令 `L` 为接受沿的 len，`A0` 为接受沿的 haddr：
+
+```text
+Nmem = zero_extend(L) + 1
+Ndev = 4 * Nmem
+mem_addr(k) = (A0 + 8*k) mod 2**ADDR_W
+```
+
+`len=0` 表示 1 拍内存、4 拍 device；`len=1` 表示 2 拍内存、8 拍 device。默认 `len=32'hFFFF_FFFF` 表示 2^32 拍内存、2^34 拍 device；数学值由扩展计数表达，不能在 32 位中先加一。长度不是字节数，也不存在奇数字节末拍。
+
+地址不要求 8 字节对齐。例如 `haddr=0x1007,len=1`，两个 mem 握手地址是 `0x1007` 与 `0x100F`。非对齐访问由 mem 端提供支持；DMAC 不拆分成额外内存拍。地址仅在实际 mem 握手后加 8，等待时不推进。
+
+读方向每个字依次交付 `[15:0]`、`[31:16]`、`[47:32]`、`[63:48]`。写方向接收的四个片段 `d0,d1,d2,d3` 拼成 `{d3,d2,d1,d0}`，第四拍必须包含本沿输入数据，不能拼入前拍旧值。
+
+### 2.4 命令与完成边界
+
+每个方向最多执行一条命令；另一方向可以独立执行。等待命令由 host 保持 req、haddr 和 len，DUT 不提供 host 命令队列。读写数据 FIFO 不等于 host 命令 FIFO。
+
+读 done 对应最后一个 device 片段握手，写 done 对应最后一个 mem 字握手。最后目标握手沿更新完成寄存器，随后一个完整周期 done 为高；下一个采样沿可观察到该高值。done 只持续一个周期，done 为高的周期不接受同方向下一命令；之后空闲周期可接受 pending 请求。
+
+### 2.5 实现结构与检查风险
+
+```mermaid
+flowchart LR
+  MR["mem 读握手 · 64 bit"] --> RF["读 FIFO"]
+  RF --> SPL["2 位 lane · 64→16"]
+  SPL --> DR["device 读握手 · 16 bit"]
+  DW["device 写握手 · 16 bit"] --> PACK["四片段拼接 · 16→64"]
+  PACK --> WF["写 FIFO"]
+  WF --> MW["mem 写握手 · 64 bit"]
+  HR["host 读命令 · 地址/配额"] -.-> RF
+  HR -.-> SPL
+  HW["host 写命令 · 地址/配额"] -.-> PACK
+  HW -.-> WF
+```
+
+读方向按 mem 握手预取整字，按 device 握手推进 lane，第 4 个 lane 才出队。写方向前三个片段可先保存在拼接寄存器；第 4 个片段需要 FIFO 空间，形成完整字后入队。FIFO 空时没有同拍输入直通，满时出队可同拍接收新字；非二次幂深度采用显式指针末端回绕。
+
+主要风险是长度加一溢出、握手与推进条件错配、片段顺序错误、满队列同拍替换错误、目标端未完成就 done，以及复位后旧片段或队首残留。这些风险分别由配额 oracle、数据参考队列、FIFO 不变量、done oracle 和复位场景检查承担。
+
+## 3. 验证方案与范围
+
+### 3.1 验证目标和验收层次
+
+本轮验证包含控制安全性、端到端数据一致性、缓冲顺序、边界时序、复位中断、双向并发和场景可达性。需求 R01–R14 是规格到 FG/FC/CK 的追踪入口。
+
+验收分三层：流程完成要求各启用阶段有记录并通过工具门禁；设计证明要求目标断言有当前输入下的 proven 证据；环境交付要求新设备能复现预期结果。三层分别报告，离线包可运行不代表所有设计要求已证明。
+
+### 3.2 主任务与辅助工程的职责
+
+| 项目 | Guided 主任务 | Native 辅助工程 |
+| --- | --- | --- |
+| 观察范围 | 只观察顶层端口，由 checker/wrapper 连接 DUT | 在独立副本中增加 FORMAL 观察与 oracle，检查内部状态和 FIFO |
+| 主要责任 | 接口合法性、背压保持、固定历史窗口、复位可见行为、业务场景 | 任意长度的扩展计数、完整数据队列、所有有效 FIFO 槽位顺序、任意积压 |
+| 当前参数 | `32/32/2` | `32/32/2`、`32/8/1`、`16/8/3`、`32/1/4` |
+| 当前安全结果 | 63 条 depth-12 BMC 无反例，仍未决 | 四组 prove 通过，共 236 条断言实例 |
+| 约束 | 初始复位与等待协议共 6 条 Assume | harness 只有初始复位 Assume；不约束请求保持、数据或 ready |
+| 结果关联 | R→FG→FC→CK→A/M/C/G 属性→当前 run | NCK 义务→实际编译属性及实例→具体参数/run |
+
+native 输入允许比 guided 更广的请求变化，独立参考模型按真实握手记录事务。但由于属性合同和 harness 不同，其通过结果不能覆盖主任务 63 条断言的未决状态。联合证明实际超时，此结论也必须单独保留。
+
+### 3.3 纳入和排除范围
+
+纳入：单时钟数字 RTL 语义、全部接口、len 全位模式、任意字节首地址及自然回绕、64/16 数据转换、任意时长背压、FIFO 合法状态、命令边界、初始及运行中复位、并发和三条命令可达性。
+
+未验收：模拟毛刺、复位恢复/移除时序、CDC、综合 RAM 实际读写模式、物理时序收敛、地址混叠内存一致性、多时钟设计、全部参数组合量化、完整空洞性、COI 和无界活性。FormalMC、VCS 的真实编译及运行未完成。没有公平性前提时不要求永久背压的事务最终完成。
+
+### 3.4 R01–R14 需求分配
+
+| 需求 | 规格要求 | Guided 责任 | Native 责任 |
+| --- | --- | --- | --- |
+| R01 | 逐一核对 26 个顶层端口的方向和位宽；读方向 mem→DMAC→device，写方向 device→DMAC→mem；两方向资源与进度相互独立。两个 device req 均由 device 发起。 | 核对展开后的全部顶层连接，并检查双向外部握手可同时发生且一侧背压不直接阻塞另一侧。 | 在辅助环境中复核参数展开和双通道内部状态独立性。 |
+| R02 | host 在 req&&ack 时接受并锁存命令；同方向活动期间不重接受；pending 请求按协议稳定，done 周期不接受，下一周期可接受新命令。 | 检查 ack 条件、参数锁存的外部效果、忙时拒绝、done 间隔及连续至少三条命令。 | 用命令序号模型核对每次接受与完成的一一对应。 |
+| R03 | 任意 haddr 直接成为首个内存地址，每次实际内存握手后加 8，等待时稳定，并按 ADDR_W=32 自然回绕。 | 以外部握手历史检查首地址、递增、稳定和回绕；不假定地址对齐。 | 以扩展参考地址模型交叉检查长序列回绕。 |
+| R04 | N=len+1；恰有 N 拍内存和 4N 拍设备传输；len=0 与全 1 均合法，计数器需 LEN_W+1 位且不得超额。 | 检查可见握手的局部边界、零长度编码、禁止完成后额外传输，并覆盖代表性进度。 | 使用 33 位参考计数和任意 len 符号模型证明接受配额、剩余配额、4:1 比例、零值及全 1 值不溢出。 |
+| R05 | mem valid 等待 ready 时保持有效；读地址稳定，写地址和 64 位写数据均稳定。 | 以顶层信号的逐周期历史直接证明两个内存通道的背压稳定性。 | 检查 FIFO 边界交互不会改变被阻塞的队首数据。 |
+| R06 | 读路径把每个 64 位内存字按 [15:0]、[31:16]、[47:32]、[63:48] 依次交给 device，全部字保持端到端顺序和一致性。 | 检查可见 lane 顺序的局部关系和交付握手边界，不声称在无白盒队列时已完成任意积压的全数据证明。 | 用无损参考队列记录每次 mem_rd 握手数据，逐拍比对所有 dev_rd 握手数据并证明队列顺序。 |
+| R07 | 写路径按低片段优先把四个 16 位 device 数据拼成一个 64 位内存字，全部字保持端到端顺序和一致性。 | 检查可见四拍拼接的局部关系、第四拍与写有效边界，不把有限历史检查当作完整队列证明。 | 用无损片段及整字参考队列逐拍记录 dev_wr 握手，逐字比对所有 mem_wr 握手数据并证明顺序。 |
+| R08 | FIFO 正确处理空、满、全部数据顺序、同拍入出队、满时替换、深度 1 和非二次幂深度，且无同拍数据直通。 | 默认深度 2 下只检查顶层可观察的流控和顺序后果；guided 不导出 FIFO 指针、计数或存储。 | 直接实例化或绑定原生 FIFO 模型，分别以 DEPTH=2、1、3 证明容量、指针回绕、计数、同拍 push/pop、满时替换、无直通和数据顺序。 |
+| R09 | done 仅在最后目标端握手后置位一个周期；每个已接受且未被复位中断的命令恰好一次完成，禁止提前、重复或超配额完成。 | 检查 done 脉冲、与最后可见目标握手的局部时序及 done 周期 ack 禁止。 | 用完整配额与命令序号模型证明任意长度下完成条件、唯一性和无超额传输。 |
+| R10 | rst_n 低有效异步复位；初始复位和传输中再次复位立即中断命令并清空部分拼接/FIFO，不为被中断命令产生 done；复位后新命令无残留。 | 检查复位期间接口静默、复位后外部控制状态、活动及各类背压期间重置的可达性。 | 检查内部 active、计数、lane、拼接和 FIFO 状态清除，并用新命令数据模型证明无残留。 |
+| R11 | 读写方向可同时接受、传输和完成，任一方向的请求或背压不得改变另一方向的配额与数据。 | 建立并发握手及同时完成 Cover，证明跨方向外部控制的非干扰安全条件。 | 用两套独立参考队列和计数模型并行核对全数据与配额。 |
+| R12 | 连续至少三条 burst、提前等待的 host 请求和关键状态均应可达；在明确且有限的 ready/req 条件下检查局部前进，不要求永久背压时完成。 | 以业务 Cover 展示连续命令、等待、并发和完成场景；局部前进条件必须显式且不得伪装无界活性。 | 补充长序列和模型边界的覆盖见证，并单独标注覆盖而非证明。 |
+| R13 | 每项环境 Assume 都有规格依据，历史引用具备足够有效条件；未决项区分工具限制、深度不足、环境错误和 RTL 缺陷。 | 维护 Assume 审查、输入签名和能力限制；guard witness 仅作触发探针，不声称完整空洞性。 | 提供辅助环境假设清单、参数及签名，便于与主任务独立审查。 |
+| R14 | 执行故障对照；真实形式反例必须经动态运行复现；静态线索需与源码位置、预期行为和当前形式证据关联。 | 走完已启用的 counterexample_python_testgen 与 static_bug_validation 分支；无 RTL_BUG 时明确记录无需回放和无 Bug 关联结论。 | 工程师提供本轮独立原生辅助运行和故障对照的当前签名证据，不继承既有工程结论。 |
+
+## 4. 参考模型与关键证明义务
+
+### 4.1 独立计数与命令身份
+
+参考模型在命令接受沿锁存地址和 `N`，按外部实际握手累计 mem/device 次数。它不直接复制 DUT 的剩余计数更新作为唯一判据。对读方向累计值 `Rm,Rd` 和写方向累计值 `Wm,Wd`，检查：
+
+```text
+rd_fetch_left   = N - Rm
+rd_deliver_left = N - floor(Rd/4)
+wr_collect_left = N - floor(Wd/4)
+wr_commit_left  = N - Wm
+0 <= Rm,Wm <= N
+0 <= Rd,Wd <= 4*N
+read_lane = Rd mod 4; write_lane = Wd mod 4
+```
+
+mem 总数与剩余配额使用 `LEN_W+1` 位，device 累计与上限使用 `LEN_W+3` 位；默认分别为 33 和 35 位。命令完成前后核对配额，不允许多采集、多提交或重复完成。只证明 safety 与完成时的因果，不由此推出环境不服务时仍一定完成。
+
+### 4.2 数据队列与 FIFO 容量
+
+读参考队列捕获每个 Mrd 的 64 位数据，Drd 时核对当前队首指定片段，第 4 次交付后才移除该字。写参考拼接寄存器捕获每个 Dwr，四片段成字后加入参考队列；Mwr 时逐字比对并出队。
+
+读缓冲字数等于 `Rm-floor(Rd/4)`；写缓冲完整字数等于 `floor(Wd/4)-Wm`。FIFO oracle 使用移位队列表示顺序，与 DUT 环形指针实现不同：比较 count、ready/valid、队首和所有有效槽位。满时 push/pop 同拍 count 不变，空时不能因为同拍 push 就把旧 out_valid 改成有效；深度 1 的替换和深度 3 的回绕必须单独核对。
+
+### 4.3 地址、done 与复位模型
+
+地址 oracle 用锁存首地址加实际 mem 握手累计值的八倍计算，按 ADDR_W 截断。读 done oracle 由最后一个 Drd 产生，写 done oracle 由最后一个 Mwr 产生；同时核对完成时全部计数达到配额、接口不会继续传输和新命令接受边界。
+
+复位清除 active、地址、配额、lane、拼接和 FIFO 有效状态；FIFO storage 不必逐槽清零，但无效旧值不能被新事务观察到。参考队列的存储内容同样只在 count 指示有效时参与比较。被中断命令不要求 done，复位后的新命令使用全新地址、长度和数据。
+
+## 5. 环境约束、采样和历史有效性
+
+### 5.1 Guided 的六条 Assume
+
+下面是源工程的实际约束；未额外限制地址对齐、len 子集、数据内容、请求出现时间或背压持续周期。
+
+| 属性身份 | 生效条件 | 约束内容 |
+| --- | --- | --- |
+| `M_CK_API_RESET_INITIAL` | `!uc_past_valid` | `!rst_n` |
+| `M_CK_API_HOST_RD_WAIT` | `uc_past_valid && rst_n && $past(rst_n && host_rd_req && !host_rd_ack)` | `host_rd_req && $stable(host_rd_haddr) && $stable(host_rd_len)` |
+| `M_CK_API_HOST_WR_WAIT` | `uc_past_valid && rst_n && $past(rst_n && host_wr_req && !host_wr_ack)` | `host_wr_req && $stable(host_wr_haddr) && $stable(host_wr_len)` |
+| `M_CK_API_DEV_RD_WAIT` | `uc_past_valid && rst_n && $past(rst_n && dev_rd_req && !dev_rd_ack)` | `dev_rd_req` |
+| `M_CK_API_DEV_WR_WAIT_REQ` | `uc_past_valid && rst_n && $past(rst_n && dev_wr_req && !dev_wr_ack)` | `dev_wr_req` |
+| `M_CK_API_DEV_WR_WAIT_DATA` | `uc_past_valid && rst_n && $past(rst_n && dev_wr_req && !dev_wr_ack)` | `dev_wr_req && $stable(dev_wr_data)` |
+
+### 5.2 复位策略和历史表达式
+
+工程配置是 `reset_policy=unconstrained`，模板不自动施加复位序列。`M_CK_API_RESET_INITIAL` 显式要求首采样 `rst_n=0`；以后可任意再次拉低。unconstrained 配置与显式初态 Assume 并不矛盾，实际约束必须以 checker 为准。
+
+一拍历史检查使用 `uc_past_valid`；引用更深 `$past(x,k)` 时，必须确认足够历史已建立，并对窗口内必要的复位样本逐项判断。不能引用完成时当前 host_len 代替接受沿锁存的 len。复位期间静默性质直接检查 rst_n 低时的输出，不能用统一 `disable iff` 把它们关闭。
+
+当前 `Comb` 属性在 `always @*` 中检查；`Seq`、Assume 和相应时序 Cover 在 `posedge clk` 中检查。安全性为 `if (guard) assert(body)`，环境为 `if (guard) assume(body)`，业务 Cover 为 `cover(guard && body)`，guard witness 为独立 `cover(guard && trigger)`。时钟和组合语义不能互换。字段 `sva_body` 在当前 SBY 流程中保存的是 Yosys 可接受的过程式检查表达式，并不表示完整并发 SVA 已通过 VCS 编译。
+
+### 5.3 约束审查原则
+
+所有 Assume 需有协议依据并绑定输入哈希。ready 和数据在握手前后不必被人为固定；mem 读只在 valid&&ready 的采样沿使用数据。device 写请求未获确认时，guided 协议要求数据保持；native harness 不施加该约束，仍只在握手沿采集。
+
+原生安全证明不添加“环境必须最终响应”的公平性 Assume。`A_CK_RD_PROGRESS`、`A_CK_WR_PROGRESS` 检查 active 且本拍 ready/req 同时满足时至少一侧握手的局部前进；它们不是无界最终完成证明。
+
+## 6. 验证策略和执行流程
+
+### 6.1 工具与编译输入
+
+实际使用 SBY、Yosys、yosys-smtbmc/Z3；动态回放使用 Icarus/vvp。当前离线重跑版本为 SBY `v0.67-4-gfea6e46`、Yosys `0.67+94`、Z3 `4.15.5`、Icarus 14.0 开发版，完整版本和来源见 [离线运行清单](../verification/offline-validation/bundle.json)。
+
+主任务源顺序为 `dmac_fifo.sv` 再 `dmac.sv`，宏 `SYNTHESIS` 排除仿真 assert...else/$fatal 和参数诊断；合法参数与端口展开另行审查。当前文件列表、include 搜索目录为空，没有内存初始化文件。native 工程在独立输入中加入 FORMAL monitor；原始 RTL 不修改。SBY 脚本内的 `async2sync` 等前端处理用于数字采样模型，不将结果扩大到模拟复位时序。
+
+### 6.2 安全证明、BMC 与 Cover 的顺序
+
+1. 先固定规格、参数、源文件、宏、checker/wrapper 和输入哈希，完成接口及 Assume 审查。
+2. 尝试 prove；若实际超时，保留 timeout/未决记录，再以同属性合同进行 BMC，不将无反例当作 proven。
+3. 独立运行 Cover：业务场景与安全断言 guard witness 分开统计。Cover 命中只说明存在路径，不说明所有路径正确。
+4. 原生辅助环境通过计数、数据和 FIFO 不变量进行归纳，参数实例分别执行。prove 配置中的 depth 是求解/归纳展开设置；prove 通过不能误读成只有该深度的 BMC 结论。
+5. 对 FAIL 检查真实 Assert failed、轨迹与输入身份；对 ERROR、缺失结果、超时分别报告，不能计为 RTL 反例。
+6. 反例和业务轨迹执行动态编译及回放，核对输出症状；静态线索必须有源码位置和证据边界。
+
+### 6.3 UCAgent 14 阶段与产物
+
+| 阶段 | 内容 | 实际产物 | 状态 |
+| --- | --- | --- | --- |
+| 1 | 需求分析与验证规划 | 01 规划与 R01–R14 | 已完成 |
+| 2 | 设计功能理解与接口分析 | 02 接口、时钟和复位 | 已完成 |
+| 3 | 功能分组 | 03 中 12 FG | 已完成 |
+| 4 | 功能点分解 | 03 中 48 FC | 已完成 |
+| 5 | 检测点设计 | 03 中 88 CK | 已完成 |
+| 6 | 功能规格汇总 | .formal_records.yaml 规格记录 | 已完成 |
+| 7 | 属性生成与审查 | checker/wrapper 与逐属性复核 | 已完成 |
+| 8 | 验证脚本生成与执行 | 实际 SBY 日志与 manifest | 已完成 |
+| 9 | 环境调试与约束审查 | 07 环境分析、6 条 Assume 审查 | 已完成 |
+| 10 | 覆盖分析与缺口审查 | 75/82 覆盖结果及 7 个未命中分析 | 已完成 |
+| 11 | 反例测试分支 | 主任务无 RTL_BUG 分支；独立 native 突变与回放 | 已完成 |
+| 12 | 验证结果与缺陷报告 | bugs=[] 与分类结果 | 已完成 |
+| 13 | 静态源码审查与证据关联 | 04 静态审查 | 已完成 |
+| 14 | 验收审查与验证总结 | 05 总结、final-state-audit.json | 已完成 |
+
+以上完成状态由原生门禁与最终审计记录提供。内置 Agent 承担规划、分解、前 12 个 CK 实现及多次门禁；工程师补充其余 76 个候选、native 环境及部分审查。因上下文和缓存问题使用新恢复会话重执行，不能表述为全程无人接续的自主验证。
+
+### 6.4 实际执行矩阵
+
+| 案例 | ADDR_W/LEN_W/FIFO_DEPTH | 模式 | 展开深度 | SBY 超时秒 | 实际结果 |
+| --- | --- | --- | --- | --- | --- |
+| accepted_cover_a32_l1_f1 | 32/1/1 | cover | 24 | 180 | 通过 |
+| accepted_cover_a32_l32_f2 | 32/32/2 | cover | 24 | 180 | 通过 |
+| accepted_prove_a16_l8_f3 | 16/8/3 | prove | 8 | 240 | 通过 |
+| accepted_prove_a32_l1_f4 | 32/1/4 | prove | 8 | 240 | 通过 |
+| accepted_prove_a32_l32_f2 | 32/32/2 | prove | 8 | 240 | 通过 |
+| accepted_prove_a32_l8_f1 | 32/8/1 | prove | 8 | 240 | 通过 |
+| fault_address_step | 16/2/2 | bmc | 24 | 120 | 预期反例 |
+| fault_early_done | 16/2/2 | bmc | 24 | 120 | 预期反例 |
+| fault_fifo_pop | 16/2/2 | bmc | 24 | 120 | 预期反例 |
+| fault_length_encoding | 16/2/2 | bmc | 24 | 120 | 预期反例 |
+| fault_read_lane | 16/2/2 | bmc | 24 | 120 | 预期反例 |
+| fault_reset_lane | 16/2/2 | bmc | 24 | 120 | 预期反例 |
+| fault_write_lane | 16/2/2 | bmc | 24 | 120 | 预期反例 |
+| fifo_cover_f1 | 32/32/1 | cover | 12 | 60 | 通过 |
+| fifo_cover_f3 | 32/32/3 | cover | 12 | 60 | 通过 |
+| fifo_cover_f4 | 32/32/4 | cover | 12 | 60 | 通过 |
+| joint_guided_prove_a32_l32_f2_4a047b61 | 32/32/2 | prove | 12 | 240 | 超时/未决 |
+| guided_bmc | 32/32/2 | bmc | 12 | 240 | 无反例/未决 |
+| guided_cover | 32/32/2 | cover | 12 | 240 | 75/82 命中/未决 |
+| guided_prove | 32/32/2 | prove | 40 | 240 | 超时/未决 |
+
+矩阵包含历史证明尝试；离线 `all` 仅重跑 16 个 native 任务与 guided BMC/Cover，共 18 个，不默认重复已知超时的 prove/联合 prove。进程级 runner 默认超时为 300 秒，与 SBY 配置的内部超时分别记录。
+
+## 7. 测试点分解与检查矩阵
+
+主任务完整分解为 **12 FG、48 FC、88 CK**，其中 6 Assume、15 Comb、48 Seq、19 Cover。63 条安全断言各增加一个 guard witness，因此生成的属性记录为 `6 + 63 + 19 + 63 = 151`。Cover 目标总数为 82，其中业务 Cover 为 19，guard witness 为 63。
+
+证据 CSV 共 1,163 行，包含不同参数、模式、重复属性实例和故障修改版，不能把行数当作 1,163 个独立测试点，也不能把 prove 模式中 disabled 的 Cover 计为命中。
+
+### 7.1 FG/FC/CK 数量与责任
+
+| FG | 功能分组 | FC | CK | 类型分布 |
+| --- | --- | --- | --- | --- |
+| FG-API | 接口环境与协议假设 | 3 | 6 | 环境假设 6 |
+| FG-HOST | 主机命令接受与排队 | 4 | 10 | 组合断言 4；时序断言 6 |
+| FG-READ | 内存到设备读通道 | 3 | 4 | 时序断言 2；组合断言 2 |
+| FG-WRITE | 设备到内存写通道 | 3 | 4 | 组合断言 2；时序断言 2 |
+| FG-ADDRESS | 内存地址生成与保持 | 4 | 8 | 时序断言 8 |
+| FG-QUOTA | 长度编码与传输配额 | 3 | 5 | 时序断言 5 |
+| FG-DATA | 数据拆分、拼接与顺序 | 4 | 5 | 时序断言 5 |
+| FG-FLOW | 背压流控与缓冲行为 | 4 | 6 | 时序断言 3；组合断言 3 |
+| FG-RESET | 异步复位与事务中断 | 4 | 9 | 组合断言 2；时序断言 7 |
+| FG-CONCURRENT | 双向并发与相互独立 | 4 | 6 | 时序断言 4；业务覆盖 2 |
+| FG-DONE | 完成时序与命令边界 | 4 | 8 | 时序断言 6；组合断言 2 |
+| FG-COVERAGE | 业务场景可达性 | 8 | 17 | 业务覆盖 17 |
+
+### 7.2 88 个检测点总表
+
+每一行对应唯一主任务 CK；点击编号可查看附录中的完整描述、guard/body/trigger 和证据路径。组合/时序安全结果列使用 BMC 状态，guard 列使用独立 Cover 结果；两列不能混为“已通过”。另附 [88 CK 独立清单](DMAC检测点清单.csv)，便于在表格软件中查看完整表达式和当前结果。
+
+| CK 检测点 | 需求 | FG | FC | 类别 | 当前结果 | guard witness |
+| --- | --- | --- | --- | --- | --- | --- |
+| [CK-API-RESET-INITIAL](#ck-api-reset-initial) | R10、R13 | FG-API | FC-API-RESET | 环境假设 | 环境假设 | 不适用 |
+| [CK-API-HOST-RD-WAIT](#ck-api-host-rd-wait) | R02、R13 | FG-API | FC-API-HOST-WAIT | 环境假设 | 环境假设 | 不适用 |
+| [CK-API-HOST-WR-WAIT](#ck-api-host-wr-wait) | R02、R13 | FG-API | FC-API-HOST-WAIT | 环境假设 | 环境假设 | 不适用 |
+| [CK-API-DEV-RD-WAIT](#ck-api-dev-rd-wait) | R01、R13 | FG-API | FC-API-DEVICE-WAIT | 环境假设 | 环境假设 | 不适用 |
+| [CK-API-DEV-WR-WAIT-REQ](#ck-api-dev-wr-wait-req) | R01、R13 | FG-API | FC-API-DEVICE-WAIT | 环境假设 | 环境假设 | 不适用 |
+| [CK-API-DEV-WR-WAIT-DATA](#ck-api-dev-wr-wait-data) | R01、R13 | FG-API | FC-API-DEVICE-WAIT | 环境假设 | 环境假设 | 不适用 |
+| [CK-HOST-RD-ACK-REQ](#ck-host-rd-ack-req) | R02 | FG-HOST | FC-HOST-ACK | 组合断言 | 未决 | 已命中 |
+| [CK-HOST-WR-ACK-REQ](#ck-host-wr-ack-req) | R02 | FG-HOST | FC-HOST-ACK | 组合断言 | 未决 | 已命中 |
+| [CK-HOST-RD-LATCH-ADDRESS](#ck-host-rd-latch-address) | R02、R03 | FG-HOST | FC-HOST-LATCH | 时序断言 | 未决 | 已命中 |
+| [CK-HOST-WR-LATCH-ADDRESS](#ck-host-wr-latch-address) | R02、R03 | FG-HOST | FC-HOST-LATCH | 时序断言 | 未决 | 已命中 |
+| [CK-HOST-RD-NO-IMMEDIATE-REACK](#ck-host-rd-no-immediate-reack) | R02 | FG-HOST | FC-HOST-BUSY | 时序断言 | 未决 | 已命中 |
+| [CK-HOST-WR-NO-IMMEDIATE-REACK](#ck-host-wr-no-immediate-reack) | R02 | FG-HOST | FC-HOST-BUSY | 时序断言 | 未决 | 已命中 |
+| [CK-HOST-RD-DONE-NO-ACK](#ck-host-rd-done-no-ack) | R02 | FG-HOST | FC-HOST-NEXT | 组合断言 | 未决 | 已命中 |
+| [CK-HOST-WR-DONE-NO-ACK](#ck-host-wr-done-no-ack) | R02 | FG-HOST | FC-HOST-NEXT | 组合断言 | 未决 | 已命中 |
+| [CK-HOST-RD-PENDING-AFTER-DONE](#ck-host-rd-pending-after-done) | R02、R12 | FG-HOST | FC-HOST-NEXT | 时序断言 | 未决 | 已命中 |
+| [CK-HOST-WR-PENDING-AFTER-DONE](#ck-host-wr-pending-after-done) | R02、R12 | FG-HOST | FC-HOST-NEXT | 时序断言 | 未决 | 已命中 |
+| [CK-READ-MEM-FIRST-AFTER-ACCEPT](#ck-read-mem-first-after-accept) | R01、R03 | FG-READ | FC-READ-MEM-HANDSHAKE | 时序断言 | 未决 | 已命中 |
+| [CK-READ-DEV-ACK-REQ](#ck-read-dev-ack-req) | R01、R06 | FG-READ | FC-READ-DEVICE-HANDSHAKE | 组合断言 | 未决 | 已命中 |
+| [CK-READ-NO-DEV-TRANSFER-WITHOUT-REQ](#ck-read-no-dev-transfer-without-req) | R01、R08 | FG-READ | FC-READ-PIPELINE | 组合断言 | 未决 | 已命中 |
+| [CK-READ-DEV-FRAGMENT-HOLD](#ck-read-dev-fragment-hold) | R06 | FG-READ | FC-READ-PIPELINE | 时序断言 | 未决 | 已命中 |
+| [CK-WRITE-DEV-ACK-REQ](#ck-write-dev-ack-req) | R01、R07 | FG-WRITE | FC-WRITE-DEVICE-HANDSHAKE | 组合断言 | 未决 | 已命中 |
+| [CK-WRITE-MEM-VALID-AFTER-WORD](#ck-write-mem-valid-after-word) | R01、R07 | FG-WRITE | FC-WRITE-MEM-HANDSHAKE | 时序断言 | 未决 | 已命中 |
+| [CK-WRITE-NO-DEV-TRANSFER-WITHOUT-REQ](#ck-write-no-dev-transfer-without-req) | R01、R08 | FG-WRITE | FC-WRITE-PIPELINE | 组合断言 | 未决 | 已命中 |
+| [CK-WRITE-STALLED-WORD-NOT-OVERWRITTEN](#ck-write-stalled-word-not-overwritten) | R05、R08 | FG-WRITE | FC-WRITE-PIPELINE | 时序断言 | 未决 | 已命中 |
+| [CK-ADDRESS-RD-FIRST](#ck-address-rd-first) | R03 | FG-ADDRESS | FC-ADDRESS-FIRST | 时序断言 | 未决 | 已命中 |
+| [CK-ADDRESS-WR-FIRST](#ck-address-wr-first) | R03 | FG-ADDRESS | FC-ADDRESS-FIRST | 时序断言 | 未决 | 已命中 |
+| [CK-ADDRESS-RD-STEP](#ck-address-rd-step) | R03 | FG-ADDRESS | FC-ADDRESS-STEP | 时序断言 | 未决 | 已命中 |
+| [CK-ADDRESS-WR-STEP](#ck-address-wr-step) | R03 | FG-ADDRESS | FC-ADDRESS-STEP | 时序断言 | 未决 | 已命中 |
+| [CK-ADDRESS-RD-HOLD](#ck-address-rd-hold) | R03、R05 | FG-ADDRESS | FC-ADDRESS-HOLD | 时序断言 | 未决 | 已命中 |
+| [CK-ADDRESS-WR-HOLD](#ck-address-wr-hold) | R03、R05 | FG-ADDRESS | FC-ADDRESS-HOLD | 时序断言 | 未决 | 已命中 |
+| [CK-ADDRESS-RD-WRAP](#ck-address-rd-wrap) | R03 | FG-ADDRESS | FC-ADDRESS-WRAP | 时序断言 | 未决 | 已命中 |
+| [CK-ADDRESS-WR-WRAP](#ck-address-wr-wrap) | R03 | FG-ADDRESS | FC-ADDRESS-WRAP | 时序断言 | 未决 | 已命中 |
+| [CK-QUOTA-ENCODING-BOUNDARY](#ck-quota-encoding-boundary) | R04 | FG-QUOTA | FC-QUOTA-ENCODING | 时序断言 | 未决 | 已命中 |
+| [CK-QUOTA-RD-ZERO](#ck-quota-rd-zero) | R04、R09 | FG-QUOTA | FC-QUOTA-ZERO | 时序断言 | 未决 | 已命中 |
+| [CK-QUOTA-WR-ZERO](#ck-quota-wr-zero) | R04、R09 | FG-QUOTA | FC-QUOTA-ZERO | 时序断言 | 未决 | 已命中 |
+| [CK-QUOTA-RD-LEN1](#ck-quota-rd-len1) | R04、R09 | FG-QUOTA | FC-QUOTA-LONG | 时序断言 | 未决 | 未命中 |
+| [CK-QUOTA-WR-LEN1](#ck-quota-wr-len1) | R04、R09 | FG-QUOTA | FC-QUOTA-LONG | 时序断言 | 未决 | 未命中 |
+| [CK-DATA-RD-LOW-FIRST](#ck-data-rd-low-first) | R06 | FG-DATA | FC-DATA-READ-FIRST | 时序断言 | 未决 | 已命中 |
+| [CK-DATA-RD-FOUR-LANES](#ck-data-rd-four-lanes) | R06 | FG-DATA | FC-DATA-READ-LANES | 时序断言 | 未决 | 已命中 |
+| [CK-DATA-WR-FOUR-LANES](#ck-data-wr-four-lanes) | R07 | FG-DATA | FC-DATA-WRITE-PACK | 时序断言 | 未决 | 已命中 |
+| [CK-DATA-RD-TWO-WORD-LOCAL-ORDER](#ck-data-rd-two-word-local-order) | R06 | FG-DATA | FC-DATA-ORDER-BOUNDARY | 时序断言 | 未决 | 已命中 |
+| [CK-DATA-WR-TWO-WORD-LOCAL-ORDER](#ck-data-wr-two-word-local-order) | R07 | FG-DATA | FC-DATA-ORDER-BOUNDARY | 时序断言 | 未决 | 已命中 |
+| [CK-FLOW-RD-VALID-ADDRESS-HOLD](#ck-flow-rd-valid-address-hold) | R05 | FG-FLOW | FC-FLOW-READ-STALL | 时序断言 | 未决 | 已命中 |
+| [CK-FLOW-WR-VALID-ADDRESS-DATA-HOLD](#ck-flow-wr-valid-address-data-hold) | R05 | FG-FLOW | FC-FLOW-WRITE-STALL | 时序断言 | 未决 | 已命中 |
+| [CK-FLOW-DEV-RD-ACK-GATED](#ck-flow-dev-rd-ack-gated) | R01、R08 | FG-FLOW | FC-FLOW-DEVICE-GATING | 组合断言 | 未决 | 已命中 |
+| [CK-FLOW-DEV-WR-ACK-GATED](#ck-flow-dev-wr-ack-gated) | R01、R08 | FG-FLOW | FC-FLOW-DEVICE-GATING | 组合断言 | 未决 | 已命中 |
+| [CK-FLOW-BUFFER-WR-VISIBLE-HOLD](#ck-flow-buffer-wr-visible-hold) | R08 | FG-FLOW | FC-FLOW-BUFFER-BOUNDARY | 时序断言 | 未决 | 已命中 |
+| [CK-FLOW-BUFFER-NO-SPURIOUS-DEV-ACK](#ck-flow-buffer-no-spurious-dev-ack) | R08 | FG-FLOW | FC-FLOW-BUFFER-BOUNDARY | 组合断言 | 未决 | 已命中 |
+| [CK-RESET-HOST-SILENCE](#ck-reset-host-silence) | R10 | FG-RESET | FC-RESET-SILENCE | 组合断言 | 未决 | 已命中 |
+| [CK-RESET-DATA-CHANNEL-SILENCE](#ck-reset-data-channel-silence) | R10 | FG-RESET | FC-RESET-SILENCE | 组合断言 | 未决 | 已命中 |
+| [CK-RESET-INTERRUPT-RD-STALL](#ck-reset-interrupt-rd-stall) | R10 | FG-RESET | FC-RESET-INTERRUPT | 时序断言 | 未决 | 已命中 |
+| [CK-RESET-INTERRUPT-WR-STALL](#ck-reset-interrupt-wr-stall) | R10 | FG-RESET | FC-RESET-INTERRUPT | 时序断言 | 未决 | 已命中 |
+| [CK-RESET-INTERRUPT-DEVICE-PARTIAL](#ck-reset-interrupt-device-partial) | R10 | FG-RESET | FC-RESET-INTERRUPT | 时序断言 | 未决 | 已命中 |
+| [CK-RESET-RD-DONE-CLEAR](#ck-reset-rd-done-clear) | R09、R10 | FG-RESET | FC-RESET-NO-DONE | 时序断言 | 未决 | 已命中 |
+| [CK-RESET-WR-DONE-CLEAR](#ck-reset-wr-done-clear) | R09、R10 | FG-RESET | FC-RESET-NO-DONE | 时序断言 | 未决 | 已命中 |
+| [CK-RESET-RD-RESTART-ADDRESS](#ck-reset-rd-restart-address) | R10 | FG-RESET | FC-RESET-RESTART | 时序断言 | 未决 | 已命中 |
+| [CK-RESET-WR-RESTART-ADDRESS](#ck-reset-wr-restart-address) | R10 | FG-RESET | FC-RESET-RESTART | 时序断言 | 未决 | 已命中 |
+| [CK-CONCURRENT-ACCEPT-AFTER-RESET](#ck-concurrent-accept-after-reset) | R01、R11 | FG-CONCURRENT | FC-CONCURRENT-ACCEPT | 时序断言 | 未决 | 已命中 |
+| [CK-CONCURRENT-MEM-TRANSFER](#ck-concurrent-mem-transfer) | R11 | FG-CONCURRENT | FC-CONCURRENT-TRANSFER | 业务覆盖 | 已命中 | 不适用 |
+| [CK-CONCURRENT-DEVICE-TRANSFER](#ck-concurrent-device-transfer) | R11 | FG-CONCURRENT | FC-CONCURRENT-TRANSFER | 业务覆盖 | 已命中 | 不适用 |
+| [CK-CONCURRENT-RD-STALL-WR-HANDSHAKE](#ck-concurrent-rd-stall-wr-handshake) | R01、R11 | FG-CONCURRENT | FC-CONCURRENT-STALL | 时序断言 | 未决 | 已命中 |
+| [CK-CONCURRENT-WR-STALL-RD-HANDSHAKE](#ck-concurrent-wr-stall-rd-handshake) | R01、R11 | FG-CONCURRENT | FC-CONCURRENT-STALL | 时序断言 | 未决 | 已命中 |
+| [CK-CONCURRENT-SIMULTANEOUS-DONE](#ck-concurrent-simultaneous-done) | R09、R11 | FG-CONCURRENT | FC-CONCURRENT-DONE | 时序断言 | 未决 | 已命中 |
+| [CK-DONE-RD-ONE-CYCLE](#ck-done-rd-one-cycle) | R09 | FG-DONE | FC-DONE-PULSE | 时序断言 | 未决 | 已命中 |
+| [CK-DONE-WR-ONE-CYCLE](#ck-done-wr-one-cycle) | R09 | FG-DONE | FC-DONE-PULSE | 时序断言 | 未决 | 已命中 |
+| [CK-DONE-RD-PREV-DEV-HANDSHAKE](#ck-done-rd-prev-dev-handshake) | R09 | FG-DONE | FC-DONE-READ-CAUSE | 时序断言 | 未决 | 已命中 |
+| [CK-DONE-WR-PREV-MEM-HANDSHAKE](#ck-done-wr-prev-mem-handshake) | R09 | FG-DONE | FC-DONE-WRITE-CAUSE | 时序断言 | 未决 | 已命中 |
+| [CK-DONE-RD-NO-ACK](#ck-done-rd-no-ack) | R02、R09 | FG-DONE | FC-DONE-ACK-GAP | 组合断言 | 未决 | 已命中 |
+| [CK-DONE-WR-NO-ACK](#ck-done-wr-no-ack) | R02、R09 | FG-DONE | FC-DONE-ACK-GAP | 组合断言 | 未决 | 已命中 |
+| [CK-DONE-RD-NEXT-ACK](#ck-done-rd-next-ack) | R02、R09 | FG-DONE | FC-DONE-ACK-GAP | 时序断言 | 未决 | 已命中 |
+| [CK-DONE-WR-NEXT-ACK](#ck-done-wr-next-ack) | R02、R09 | FG-DONE | FC-DONE-ACK-GAP | 时序断言 | 未决 | 已命中 |
+| [CK-COVER-RD-NONALIGNED](#ck-cover-rd-nonaligned) | R03、R12 | FG-COVERAGE | FC-COVER-NONALIGNED | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-WR-NONALIGNED](#ck-cover-wr-nonaligned) | R03、R12 | FG-COVERAGE | FC-COVER-NONALIGNED | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-RD-LEN0-COMPLETE](#ck-cover-rd-len0-complete) | R04、R09、R12 | FG-COVERAGE | FC-COVER-ZERO | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-WR-LEN0-COMPLETE](#ck-cover-wr-len0-complete) | R04、R09、R12 | FG-COVERAGE | FC-COVER-ZERO | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-RD-LEN1](#ck-cover-rd-len1) | R04、R12 | FG-COVERAGE | FC-COVER-LONG | 业务覆盖 | 未命中 | 不适用 |
+| [CK-COVER-WR-LEN1](#ck-cover-wr-len1) | R04、R12 | FG-COVERAGE | FC-COVER-LONG | 业务覆盖 | 未命中 | 不适用 |
+| [CK-COVER-RD-LONGER-PROGRESS](#ck-cover-rd-longer-progress) | R04、R12 | FG-COVERAGE | FC-COVER-LONG | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-WR-LONGER-PROGRESS](#ck-cover-wr-longer-progress) | R04、R12 | FG-COVERAGE | FC-COVER-LONG | 业务覆盖 | 未命中 | 不适用 |
+| [CK-COVER-RD-THREE-COMMANDS](#ck-cover-rd-three-commands) | R02、R12 | FG-COVERAGE | FC-COVER-THREE-COMMANDS | 业务覆盖 | 未命中 | 不适用 |
+| [CK-COVER-WR-THREE-COMMANDS](#ck-cover-wr-three-commands) | R02、R12 | FG-COVERAGE | FC-COVER-THREE-COMMANDS | 业务覆盖 | 未命中 | 不适用 |
+| [CK-COVER-RD-PENDING-NEXT](#ck-cover-rd-pending-next) | R02、R12 | FG-COVERAGE | FC-COVER-PENDING | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-WR-PENDING-NEXT](#ck-cover-wr-pending-next) | R02、R12 | FG-COVERAGE | FC-COVER-PENDING | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-RESET-RD-STALL](#ck-cover-reset-rd-stall) | R10、R12 | FG-COVERAGE | FC-COVER-RESET-REENTRY | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-RESET-WR-STALL](#ck-cover-reset-wr-stall) | R10、R12 | FG-COVERAGE | FC-COVER-RESET-REENTRY | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-RESET-PARTIAL-FRAGMENT](#ck-cover-reset-partial-fragment) | R10、R12 | FG-COVERAGE | FC-COVER-RESET-REENTRY | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-DUPLEX-OVERLAP](#ck-cover-duplex-overlap) | R11、R12 | FG-COVERAGE | FC-COVER-DUPLEX | 业务覆盖 | 已命中 | 不适用 |
+| [CK-COVER-SIMULTANEOUS-DONE](#ck-cover-simultaneous-done) | R09、R11、R12 | FG-COVERAGE | FC-COVER-SIMULTANEOUS-DONE | 业务覆盖 | 已命中 | 不适用 |
+
+### 7.3 Native 的九项规划义务
+
+| NCK | 义务 | 规划参数 |
+| --- | --- | --- |
+| NCK-R04-COUNT | 33 位任意长度参考计数：N=len+1、读写各 N 拍内存与 4N 拍设备、全 1 len 无溢出、禁止超额。 | ADDR_W=32、LEN_W=32、FIFO_DEPTH=2 |
+| NCK-R06-RD-DATA | 完整读数据队列：捕获每个 64 位读握手，低片段优先逐一比对所有 16 位交付，覆盖任意 FIFO 积压与任意 burst 长度。 | ADDR_W=32、LEN_W=32、FIFO_DEPTH=2 |
+| NCK-R07-WR-DATA | 完整写数据队列：捕获所有 16 位输入并按四拍拼接，逐一比对 64 位写握手，覆盖任意 FIFO 积压与任意 burst 长度。 | ADDR_W=32、LEN_W=32、FIFO_DEPTH=2 |
+| NCK-R08-FIFO-D2 | 默认深度 2 FIFO 的空满容量、顺序、指针回绕、同拍入出队、满时替换和无同拍直通。 | WIDTH=64、DEPTH=2 |
+| NCK-R08-FIFO-D1 | 深度 1 FIFO 的空满交替、满时同拍替换、顺序和无同拍直通。 | WIDTH=64、DEPTH=1；原生辅助参数实例 |
+| NCK-R08-FIFO-D3 | 非二次幂深度 3 FIFO 的显式末端回绕、容量、同拍入出队和全部数据顺序。 | WIDTH=64、DEPTH=3；原生辅助参数实例 |
+| NCK-R09-DONE | 命令序号与完整配额模型：最后目标端握手后恰好一个 done，禁止提前、重复、遗漏和完成后额外传输。 | ADDR_W=32、LEN_W=32、FIFO_DEPTH=2 |
+| NCK-R10-RESET | 初始及传输中异步复位清空内部计数、lane、部分拼接和 FIFO；复位后新命令数据与旧命令隔离。 | 默认参数，并覆盖读写各类部分进度 |
+| NCK-R11-DUPLEX | 两套完整计数和数据队列并行运行，证明读写同时接受、传输、完成时互不污染。 | ADDR_W=32、LEN_W=32、FIFO_DEPTH=2 |
+
+NCK 名称不是新增检查端口；默认实际 58 Assert/17 Cover 的编译身份与结果见附录 B，所有参数/run 对应见第 9 章及原始证据表。
+
+## 8. 读写及连续 burst 时序示例
+
+以下为依据当前 RTL 推导的**预期时序示意**，不是新采集的仿真或形式化波形。实际 VCD 和回放日志见第 10 章。表中 Ck 表示该上升沿之前的信号及该沿采样的握手；最后目标握手在 C9 时更新 done，C10 采样可观察 done=1。示例开始前已完成复位，FIFO_DEPTH=2，ready/req 在需要服务时为高。
+
+### 8.1 非对齐、两拍 mem 的读 burst
+
+`haddr=0x1007,len=1`，内存字 W0=`64'h7788_5566_3344_1122`，W1=`64'hF0F0_E0E0_D0D0_C0C0`。
+
+| 采样沿 | host | mem 读握手 | device 读握手 | done / 下一命令 |
+| --- | --- | --- | --- | --- |
+| C0 | req&&ack 接受 len=1 | 无 | 无 | done=0 |
+| C1 | 当前事务活动 | addr=0x1007，W0 | 无，空 FIFO 无同拍直通 | done=0 |
+| C2 | 活动 | addr=0x100F，W1 | 0x1122（W0 lane0） | done=0 |
+| C3 | 活动 | 无，读配额用完 | 0x3344 | done=0 |
+| C4 | 活动 | 无 | 0x5566 | done=0 |
+| C5 | 活动 | 无 | 0x7788，W0 出队 | 首字交付不能 done |
+| C6–C8 | 活动 | 无 | 依次 0xC0C0、0xD0D0、0xE0E0 | done=0 |
+| C9 | 活动至本沿 | 无 | 0xF0F0，最终片段握手 | 沿后置 done |
+| C10 | pending req 可保持 | 无 | 无 | done=1，ack=0 |
+| C11 | pending req&&ack | 新命令尚未传数据 | 无 | done=0，接受新命令 |
+
+总量为 2 个 Mrd 和 8 个 Drd，done 与最后 Drd 关联，与 C2 的最后 Mrd 不关联。
+
+### 8.2 非对齐、两拍 mem 的写 burst
+
+同样使用 `haddr=0x1007,len=1`，device 先后发送上表的八个片段。
+
+| 采样沿 | device 写握手 | mem 写握手 | 完成观察 |
+| --- | --- | --- | --- |
+| C0 | 无，host req&&ack 接受命令 | 无 | done=0 |
+| C1–C3 | 0x1122、0x3344、0x5566 | 无 | 仅部分字，不能提交 |
+| C4 | 0x7788，第 4 片段，W0 入队 | 无，空队列无同拍直通 | done=0 |
+| C5 | 0xC0C0，第二字第 1 片段 | addr=0x1007，W0 | 首字提交不能 done |
+| C6–C7 | 0xD0D0、0xE0E0 | 无 | done=0 |
+| C8 | 0xF0F0，第 8 片段，W1 入队 | 无 | device 配额用完 |
+| C9 | 无 | addr=0x100F，W1 | 最终 mem 握手后置 done |
+| C10 | 无 | 无 | done=1，同方向 host ack=0 |
+| C11 | 下一命令可接受 | 新命令尚未提交 | done=0 |
+
+总量为 8 个 Dwr 和 2 个 Mwr，done 与最后 Mwr 关联，不能在 C8 接完 device 数据就提前完成。
+
+### 8.3 连续三条 len=0 命令
+
+本示例每条命令包含 1 个 mem 字和 4 个 device 片段。读、写为独立的两种示例，均假设环境连续服务；这只是展示可达路径，不是给所有输入增加持续服务约束。
+
+| 命令 | host 接受 | 读方向：Mrd / 四个 Drd | 写方向：四个 Dwr / Mwr | done 高值观察 | 下一命令最早接受 |
+| --- | --- | --- | --- | --- | --- |
+| 第 1 条 | C0 | C1 / C2–C5 | C1–C4 / C5 | C6 | C7 |
+| 第 2 条 | C7 | C8 / C9–C12 | C8–C11 / C12 | C13 | C14 |
+| 第 3 条 | C14 | C15 / C16–C19 | C15–C18 / C19 | C20 | C21 |
+
+这解释了当前固定 21 拍历史窗口的三命令 Cover 不能由 depth-12 结果闭合。native Cover 使用自己的计数型目标并在 depth 24 运行，两个结果应分开报告。
+
+### 8.4 背压、满替换与中途复位
+
+mem valid 高且 ready 低时，地址、valid 和写数据需要跨采样沿保持；没有握手就不更新 mem 地址和 mem 计数。device req 等待 ack 的保持由协议 Assume 表达。读 FIFO 满且第四 lane 正被 device 接收时，可以同拍接收新 mem 字；写 FIFO 满且本拍 mem 接收旧字时，可以同拍接收第四片段形成新字。
+
+如果 rst_n 在以上任一部分进度拉低，接口确认/有效被关闭，活动命令与缓冲有效状态被清除。不要等待被取消命令的 done；复位解除后的新命令应从新 haddr 和 lane0 起步。该时序说明限数字 RTL 行为，亚周期复位毛刺没有本轮验证证据。
+
+## 9. 实际验证报告
+
+### 9.1 汇总结论
+
+| 项目 | 实际结果 | 解释 |
+| --- | --- | --- |
+| 流程门禁 | 14/14 已完成 | 流程状态与设计结论分别保存 |
+| 主任务安全断言 | 63 条 BMC 深度 12 无反例，0 条获无界证明 | 63 条均 inconclusive |
+| guard witness | 61/63 命中（96.83%） | 仅触发可达，不是完整空洞性 |
+| 业务 Cover | 14/19 命中（73.68%） | 场景覆盖，不是 RTL 代码覆盖率 |
+| 全部 Cover 目标 | 75/82 命中（91.46%） | 包含业务目标与 guard，不能替代安全证明 |
+| 主任务/联合 prove | 两类实际尝试均 240 秒超时 | 无逐属性 proven 结论 |
+| native 安全 | 四组参数，共 236 断言实例获证 | 默认实例 58；不是 236 个唯一 CK 或全参数证明 |
+| native Cover | 两组 DMAC 共 34、三组 FIFO 共 9 个目标命中 | 43 个目标实例各有轨迹 |
+| 故障对照 | 7/7 检出预期反例 | 修改版 FAIL，不是原始 DUT Bug |
+| 回放 | 19/19 符合预期 | 7 mutant 匹配、7 baseline 不匹配、5 业务匹配 |
+| 历史工具回归 | 66 项通过，0 失败、0 跳过 | 工具回归不是新增设计断言 |
+| 离线版相关回归 | 19 项通过 | 与历史 66 项范围可能重叠，不合并为独立总数 |
+| 原始 RTL | 未修改，当前 0 个已确认缺陷 | 未决保留，不能推导完全无缺陷 |
+| FormalMC / VCS | 尚未实测 | 不继承 SBY 通过结论 |
+
+### 9.2 Guided 当前运行与未命中列表
+
+| 运行 | 模式 | 结果 | 证据 |
+| --- | --- | --- | --- |
+| sby-872c6e8dd8bc4642988787232188507c | bmc depth 12 | 63 inconclusive，82 Cover disabled | [manifest](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json) |
+| sby-36b62d07a5ac4849952f6b3aca922448 | cover depth 12 | 75 covered、7 uncovered，63 Assert disabled | [manifest](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json) |
+
+| 属性 | CK | 类别 | 当前状态 |
+| --- | --- | --- | --- |
+| G_A_CK_QUOTA_RD_LEN1 | CK-QUOTA-RD-LEN1 | 触发可达见证 | 未命中 |
+| G_A_CK_QUOTA_WR_LEN1 | CK-QUOTA-WR-LEN1 | 触发可达见证 | 未命中 |
+| C_CK_COVER_RD_LEN1 | CK-COVER-RD-LEN1 | 业务覆盖 | 未命中 |
+| C_CK_COVER_WR_LEN1 | CK-COVER-WR-LEN1 | 业务覆盖 | 未命中 |
+| C_CK_COVER_WR_LONGER_PROGRESS | CK-COVER-WR-LONGER-PROGRESS | 业务覆盖 | 未命中 |
+| C_CK_COVER_RD_THREE_COMMANDS | CK-COVER-RD-THREE-COMMANDS | 业务覆盖 | 未命中 |
+| C_CK_COVER_WR_THREE_COMMANDS | CK-COVER-WR-THREE-COMMANDS | 业务覆盖 | 未命中 |
+
+这些未命中目标属于当前深度/触发审查缺口，没有不可达证明。主任务有 63 条安全未决和 7 个未命中目标，共 70 个分析项，均与当前输入绑定并保留 INCONCLUSIVE 分类。
+
+### 9.3 Native 逐运行结果
+
+参数顺序为 ADDR_W、LEN_W、FIFO_DEPTH；断言/Cover 数是该次编译的数量。prove 不执行 Cover，cover 不证明 Assert。
+
+| 案例 | 参数 | 模式 | Assert | Cover | 结果 | run / manifest |
+| --- | --- | --- | --- | --- | --- | --- |
+| accepted_cover_a32_l1_f1 | [32, 1, 1] | cover | 56 | 17 | 通过 | [771482a2f50b4eeaad0a42b735af37f6](../verification/reports/evidence/accepted_cover_a32_l1_f1/manifest.json) |
+| accepted_cover_a32_l32_f2 | [32, 32, 2] | cover | 58 | 17 | 通过 | [6bd1ef7edf434402ae0cff36679bdc70](../verification/reports/evidence/accepted_cover_a32_l32_f2/manifest.json) |
+| accepted_prove_a16_l8_f3 | [16, 8, 3] | prove | 60 | 17 | 通过 | [002c3b05dd484c44b0f87d05f6bdad1e](../verification/reports/evidence/accepted_prove_a16_l8_f3/manifest.json) |
+| accepted_prove_a32_l1_f4 | [32, 1, 4] | prove | 62 | 17 | 通过 | [189ae4514756471e80a9c740c35920f5](../verification/reports/evidence/accepted_prove_a32_l1_f4/manifest.json) |
+| accepted_prove_a32_l32_f2 | [32, 32, 2] | prove | 58 | 17 | 通过 | [da585410434c4cf889b18eba50cec087](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| accepted_prove_a32_l8_f1 | [32, 8, 1] | prove | 56 | 17 | 通过 | [04fd27d2cd08450d803dcd78a17be70a](../verification/reports/evidence/accepted_prove_a32_l8_f1/manifest.json) |
+| fault_address_step | [16, 2, 2] | bmc | 58 | 17 | 预期反例（修改版） | [d59c7d3dd3204f01be461e91f436ded1](../verification/reports/evidence/fault_address_step/manifest.json) |
+| fault_early_done | [16, 2, 2] | bmc | 58 | 17 | 预期反例（修改版） | [f8e23590e32241bda34650aee357a63f](../verification/reports/evidence/fault_early_done/manifest.json) |
+| fault_fifo_pop | [16, 2, 2] | bmc | 58 | 17 | 预期反例（修改版） | [2475baf0201845afb6084971f2a4a6ee](../verification/reports/evidence/fault_fifo_pop/manifest.json) |
+| fault_length_encoding | [16, 2, 2] | bmc | 58 | 17 | 预期反例（修改版） | [1531039948d84f03885f2c3c9287b9e8](../verification/reports/evidence/fault_length_encoding/manifest.json) |
+| fault_read_lane | [16, 2, 2] | bmc | 58 | 17 | 预期反例（修改版） | [06d87e8edb7a487d910a21177c46ed75](../verification/reports/evidence/fault_read_lane/manifest.json) |
+| fault_reset_lane | [16, 2, 2] | bmc | 58 | 17 | 预期反例（修改版） | [28a15a4880044065afb58a618c16ea1d](../verification/reports/evidence/fault_reset_lane/manifest.json) |
+| fault_write_lane | [16, 2, 2] | bmc | 58 | 17 | 预期反例（修改版） | [993f857b1cfe46529ace5d520d7a6622](../verification/reports/evidence/fault_write_lane/manifest.json) |
+| fifo_cover_f1 | [32, 32, 1] | cover | 7 | 3 | 通过 | [8bfc22f0ac7249fcb620f88a1cfad99e](../verification/reports/evidence/fifo_cover_f1/manifest.json) |
+| fifo_cover_f3 | [32, 32, 3] | cover | 9 | 3 | 通过 | [40e9409f1a20473a96f426b594bc4b0f](../verification/reports/evidence/fifo_cover_f3/manifest.json) |
+| fifo_cover_f4 | [32, 32, 4] | cover | 10 | 3 | 通过 | [e8c5b9732679472b9538ffa119cf8313](../verification/reports/evidence/fifo_cover_f4/manifest.json) |
+| joint_guided_prove_a32_l32_f2_4a047b61 | [32, 32, 2] | prove | 0 | 0 | 超时/未决 | [6fe692e2e61d49f78a3caf1103bab687](../verification/reports/evidence/joint_guided_prove_a32_l32_f2_4a047b61/manifest.json) |
+
+联合 prove 所存 0/0 统计表示未取得有效逐属性结果，并不表示联合工程没有验证义务。单独 default native 的 58 条 proven 不能填入 guided 的 63 条结果。
+
+### 9.4 离线搬迁与再运行报告
+
+2026-10-07 在 CentOS 7 x86_64、UID 1004 普通用户、只有 loopback 的独立网络命名空间、含空格的新根目录运行。包内 40,929 项完整性检查匹配，四工程首次自动导入且旧 run 数为 0；实际 Tk 窗口显示项目列表，重启保留修改和新历史。Counter 正向证明通过，故障 Counter 显示失败；DMAC-native 默认 58 条证明通过，DMAC-main BMC 仍显示未决。
+
+| 本次实际重跑 | 结果 |
+| --- | --- |
+| accepted_cover_a32_l1_f1 | PASS；覆盖全部命中 |
+| accepted_cover_a32_l32_f2 | PASS；覆盖全部命中 |
+| accepted_prove_a16_l8_f3 | PASS；本参数实例安全证明通过 |
+| accepted_prove_a32_l1_f4 | PASS；本参数实例安全证明通过 |
+| accepted_prove_a32_l32_f2 | PASS；本参数实例安全证明通过 |
+| accepted_prove_a32_l8_f1 | PASS；本参数实例安全证明通过 |
+| fault_address_step | FAIL；故障对照有效：检测到预期断言反例 |
+| fault_early_done | FAIL；故障对照有效：检测到预期断言反例 |
+| fault_fifo_pop | FAIL；故障对照有效：检测到预期断言反例 |
+| fault_length_encoding | FAIL；故障对照有效：检测到预期断言反例 |
+| fault_read_lane | FAIL；故障对照有效：检测到预期断言反例 |
+| fault_reset_lane | FAIL；故障对照有效：检测到预期断言反例 |
+| fault_write_lane | FAIL；故障对照有效：检测到预期断言反例 |
+| fifo_cover_f1 | PASS；覆盖全部命中 |
+| fifo_cover_f3 | PASS；覆盖全部命中 |
+| fifo_cover_f4 | PASS；覆盖全部命中 |
+| guided_bmc | PASS；有界深度内无反例，仍未决 |
+| guided_cover | FAIL；覆盖仍有未命中项，结论未决 |
+
+另完成 19 次实际 Icarus 回放，全部 compile_code=0 且达到各自预期结果。离线重跑是新执行证据，不替换原 UCAgent 会话的 run ID。详见 [离线验收报告](离线版验收.md) 和 [新执行 results.json](../verification/offline-validation/cli-results.json)。
+
+## 10. 故障对照、反例与动态回放
+
+### 10.1 七类故障对照
+
+故意修改仅发生在独立输入副本，原始 RTL 保持不变。每个失败运行须有真实断言失败和 VCD，不能用编译 ERROR 代替检测成功。下表的失效属性来自实际逐属性证据，提前完成和长度编码可能同时触发多个不变量。
+
+| 案例 | 故障类别 | 实际失效属性 | 轨迹 | 对照回放 |
+| --- | --- | --- | --- | --- |
+| fault_address_step | 地址步进错误 | A_CK_RD_ADDRESS | [反例](../verification/reports/evidence/fault_address_step/proof/engine_0/trace.vcd) | mutant 匹配；baseline 不匹配 |
+| fault_early_done | 提前完成 | A_CK_RD_ACTIVE、A_CK_RD_COMPLETE_COUNTS、A_CK_RD_DONE、A_CK_RD_PROGRESS、A_CK_RD_STALL_VALID | [反例](../verification/reports/evidence/fault_early_done/proof/engine_0/trace.vcd) | mutant 匹配；baseline 不匹配 |
+| fault_fifo_pop | 错误 FIFO 出队 | A_CK_FIFO_POINTER | [反例](../verification/reports/evidence/fault_fifo_pop/proof/engine_0/trace.vcd) | mutant 匹配；baseline 不匹配 |
+| fault_length_encoding | len 编码错误 | A_CK_RD_DELIVER_LEFT、A_CK_RD_FETCH_LEFT、A_CK_RD_PROGRESS | [反例](../verification/reports/evidence/fault_length_encoding/proof/engine_0/trace.vcd) | mutant 匹配；baseline 不匹配 |
+| fault_read_lane | 读片段顺序错误 | A_CK_RD_DATA | [反例](../verification/reports/evidence/fault_read_lane/proof/engine_0/trace.vcd) | mutant 匹配；baseline 不匹配 |
+| fault_reset_lane | 复位后 lane 残留 | A_CK_RD_LANE | [反例](../verification/reports/evidence/fault_reset_lane/proof/engine_0/trace.vcd) | mutant 匹配；baseline 不匹配 |
+| fault_write_lane | 写拼接顺序错误 | A_CK_WR_ASSEMBLY | [反例](../verification/reports/evidence/fault_write_lane/proof/engine_0/trace.vcd) | mutant 匹配；baseline 不匹配 |
+
+### 10.2 全部 19 次回放
+
+同一反例输入在 mutant 上复现，在原始 RTL 上应出现预期 VECTOR_MISMATCH，说明该轨迹能区分修改版与原版。baseline 退出码 1 在这里是对照有效，不能解释为原始设计被证明有缺陷。业务回放匹配也只证明这条轨迹符合原始 RTL。
+
+| 回放 | 向量数 | 编译码 | 运行码 | 预期运行码 | 含义 | 证据 |
+| --- | --- | --- | --- | --- | --- | --- |
+| fault_address_step_mutant | 5 | 0 | 0 | 0 | 修改版反例匹配 | [日志](../verification/offline-validation/runs/replay_fault_address_step_mutant/run.log) |
+| fault_address_step_baseline | 5 | 0 | 1 | 1 | 原版区分对照：预期不匹配 | [日志](../verification/offline-validation/runs/replay_fault_address_step_baseline/run.log) |
+| fault_early_done_mutant | 9 | 0 | 0 | 0 | 修改版反例匹配 | [日志](../verification/offline-validation/runs/replay_fault_early_done_mutant/run.log) |
+| fault_early_done_baseline | 9 | 0 | 1 | 1 | 原版区分对照：预期不匹配 | [日志](../verification/offline-validation/runs/replay_fault_early_done_baseline/run.log) |
+| fault_fifo_pop_mutant | 9 | 0 | 0 | 0 | 修改版反例匹配 | [日志](../verification/offline-validation/runs/replay_fault_fifo_pop_mutant/run.log) |
+| fault_fifo_pop_baseline | 9 | 0 | 1 | 1 | 原版区分对照：预期不匹配 | [日志](../verification/offline-validation/runs/replay_fault_fifo_pop_baseline/run.log) |
+| fault_length_encoding_mutant | 4 | 0 | 0 | 0 | 修改版反例匹配 | [日志](../verification/offline-validation/runs/replay_fault_length_encoding_mutant/run.log) |
+| fault_length_encoding_baseline | 4 | 0 | 1 | 1 | 原版区分对照：预期不匹配 | [日志](../verification/offline-validation/runs/replay_fault_length_encoding_baseline/run.log) |
+| fault_read_lane_mutant | 5 | 0 | 0 | 0 | 修改版反例匹配 | [日志](../verification/offline-validation/runs/replay_fault_read_lane_mutant/run.log) |
+| fault_read_lane_baseline | 5 | 0 | 1 | 1 | 原版区分对照：预期不匹配 | [日志](../verification/offline-validation/runs/replay_fault_read_lane_baseline/run.log) |
+| fault_reset_lane_mutant | 3 | 0 | 0 | 0 | 修改版反例匹配 | [日志](../verification/offline-validation/runs/replay_fault_reset_lane_mutant/run.log) |
+| fault_reset_lane_baseline | 3 | 0 | 1 | 1 | 原版区分对照：预期不匹配 | [日志](../verification/offline-validation/runs/replay_fault_reset_lane_baseline/run.log) |
+| fault_write_lane_mutant | 4 | 0 | 0 | 0 | 修改版反例匹配 | [日志](../verification/offline-validation/runs/replay_fault_write_lane_mutant/run.log) |
+| fault_write_lane_baseline | 4 | 0 | 1 | 1 | 原版区分对照：预期不匹配 | [日志](../verification/offline-validation/runs/replay_fault_write_lane_baseline/run.log) |
+| C_CK_RESET_ABORT_RD | 5 | 0 | 0 | 0 | 原始业务轨迹匹配 | [日志](../verification/offline-validation/runs/replay_C_CK_RESET_ABORT_RD/run.log) |
+| C_CK_RESET_ABORT_WR | 9 | 0 | 0 | 0 | 原始业务轨迹匹配 | [日志](../verification/offline-validation/runs/replay_C_CK_RESET_ABORT_WR/run.log) |
+| C_CK_DUPLEX_DONE | 9 | 0 | 0 | 0 | 原始业务轨迹匹配 | [日志](../verification/offline-validation/runs/replay_C_CK_DUPLEX_DONE/run.log) |
+| C_CK_THREE_RD | 23 | 0 | 0 | 0 | 原始业务轨迹匹配 | [日志](../verification/offline-validation/runs/replay_C_CK_THREE_RD/run.log) |
+| C_CK_THREE_WR | 23 | 0 | 0 | 0 | 原始业务轨迹匹配 | [日志](../verification/offline-validation/runs/replay_C_CK_THREE_WR/run.log) |
+
+主任务当前没有 RTL_BUG，启用的主任务反例分支走“无确认缺陷”路径。以上七项反例是 native 辅助突变实验，不冒充主任务发现的七个 Bug。静态审查与原始缺陷报告分别保留。
+
+## 11. 验证完备性评价与未闭合项
+
+### 11.1 已有充分证据的部分
+
+需求已落到 12 FG、48 FC、88 CK，接口、握手、地址、长度、数据、缓冲、复位和并发都有检查责任。默认 native 实例含自由 32 位 len 的扩展计数不变量，以及任意数据和背压下的完整参考队列；深度 1/3/4 的实际参数证明补充了 FIFO 边界。故障对照显示 oracle 对七类具体突变敏感；反例有真实动态执行；已有项目断网搬迁可复现预期结果。
+
+### 11.2 仍不足以宣布整体验证通过的部分
+
+| 缺口 | 当前证据边界 | 后续闭合条件 |
+| --- | --- | --- |
+| 主任务无界证明 | 63 条断言仅 BMC 深度 12，无界和联合 prove 均超时 | 划分属性、建立经独立证明的辅助不变量，保留同一合同或明确新版本，并获得逐属性 proven |
+| 7 个 Cover/guard 未命中 | 深度不足或触发需要检查，没有不可达证明 | 不更改目标含义和协议约束，增加深度并分析轨迹；固定三命令窗口至少超过当前 12 拍预算 |
+| 完整空洞性 | 61/63 guard 命中只证明部分触发可达 | 审查约束可满足性、断言 trigger/body 与 reset/history；采用完整工具支持，不把 witness 当作 vacuity 结论 |
+| COI | 当前引擎不支持 | 使用可提供影响范围证据的工具或独立分析，单独报告 |
+| 全部参数量化 | 只执行四组 DMAC prove 和列出的 Cover 参数实例 | 为合法域建立参数化证明，或按产品配置扩展实际运行矩阵；不能由抽样推全域 |
+| 无界活性 | 只有条件满足本拍的局部 progress，没有最终完成证明 | 与规格确认服务公平性后建立单独活性义务，保留原 safety 假设；永久背压仍允许不完成 |
+| 最大默认 len 的完整轨迹 | 33/35 位不变量可表达全域，但未动态执行 2^32/2^34 拍 | 说明数学安全证明与有限回放的不同范围；不得声称有限仿真穷举最大长度 |
+| 模拟/物理复位 | 数字采样 RTL 模型和若干轨迹 | 单独做复位同步释放、恢复/移除和实现级检查，不从本轮 Cover 推出电气时序正确 |
+| 商用工具交叉验收 | FormalMC/VCS 未实测 | 用固定输入在目标机编译、求解、回放并保存版本/日志/逐属性结果；新工具结果从尚未运行开始 |
+| 内存一致性及实现 | mem 是同沿 ready/data 协议，数据由环境自由提供 | 如产品要求地址别名、读后写一致性或真实 RAM 模式，另建系统环境和实现级验收 |
+
+后续建议的优先级：先使主任务安全性质获得逐属性证明并闭合七个目标；再完成空洞性与目标工具交叉检查；按产品需要扩展参数域、活性和实现级检查。这些是待执行事项，本次文档整理不把它们标为完成。
+
+### 11.3 当前缺陷状态
+
+原始设计 `bugs=[]`，当前没有已确认 RTL 缺陷；静态审查逐项核对计数扩展、地址更新、lane/拼接、done、FIFO、复位和双通道，详见 [静态审查报告](../verification/reports/guided/04_dmac_static_bug_analysis.md)。无已确认缺陷不表示设计不存在任何缺陷，主任务未决项和能力限制仍保留。
+
+曾处理的环境/工具问题包括：前端不能直接处理仿真参数检查语法，通过明确 SYNTHESIS 宏重新编译；旧会话检查点缓存不能恢复，修复后在新恢复会话重执行门禁；离线搬入含空格路径后 Icarus 内部辅助程序启动失败，改用临时私有无空格别名并重新验收。它们不是原始 DMAC RTL 缺陷，历史失败记录未被删除。
+
+## 12. 重跑、证据保存与验收标准
+
+### 12.1 完整离线版运行
+
+Linux x86_64 下载 [完整离线发行包](https://github.com/ysyx-22040210-yudian/UCAgent-DMAC-verification/releases/tag/v2026.10.07-offline)，目标机无需另装 Python、SBY 或求解器；已有验证项目执行不调用模型。新规格和属性的模型生成仍需用户配置模型服务。
+
+```sh
+sha256sum -c UCAgent-DMAC-20261007-linux-x86_64.tar.gz.sha256
+tar -xzf UCAgent-DMAC-20261007-linux-x86_64.tar.gz
+cd UCAgent-DMAC-20261007-linux-x86_64
+./Check-Package
+./Start-UCAgent                   # 有桌面显示环境
+./Run-DMAC --suite smoke          # 一组证明、一项突变、19 次回放
+./Run-DMAC --suite all            # 18 个 SBY 任务、19 次回放
+```
+
+`native` 运行 16 个辅助任务，`guided` 运行主任务 BMC/Cover，`replay` 运行 19 次回放。使用 `--output-root /路径` 可指定结果目录；每次建立独立子目录，保存命令、日志和 results.json。桌面首次导入 DMAC-native、DMAC-main 和两个 Counter 项目，新结果不继承旧审批或通过状态。服务需 10 GiB 可用磁盘门槛，解压约 2.8 GiB；GUI 需要显示环境，纯 SSH 可用命令行。
+
+### 12.2 每次重跑的证据要求
+
+保存 RTL、checker/wrapper、参数、源顺序、宏、约束和工具版本；记录输入哈希、run ID、命令及退出码；保存逐属性结果、未命中项和反例/VCD；动态回放同时保留编译及执行日志。签名密钥不发布，当前仓库中的证据身份依赖各级文件清单和原执行端已记录的核验。
+
+缺少结果、编译错误、许可证错误或超时不能显示为通过。运行入口返回 0 只说明所选 suite 观察到预期证据：故障对照 FAIL 和原版反例不匹配也是预期；必须继续查看设计整体未决状态。
+
+### 12.3 宣布“完整设计验收通过”所需条件
+
+目标规格和合法参数范围冻结；所有必须的安全性质有当前合同下的证明，或由批准的等价验证策略完整覆盖；业务目标命中或有经审查的不可达证明；Assume、复位、历史和空洞性完成审查；真实缺陷关闭并回归；所有未决项明确处理；环境迁移与目标工具有实际证据。目前尚不满足这些完整验收条件。
+
+## 13. 证据索引与输入身份
+
+| 资料 | 内容 |
+| --- | --- |
+| [原完整流程报告](../verification/reports/DMAC_完整流程验证报告.md) | 历史 14 阶段与结论 |
+| [需求规划](../verification/reports/guided/01_dmac_verification_needs_and_plan.md) | 范围、责任、需求与原生义务 |
+| [原测试点文档](../verification/reports/guided/03_dmac_functions_and_checks.md) | 12 FG / 48 FC / 88 CK 的原始分解 |
+| [需求追踪表](../verification/reports/guided/08_dmac_requirement_traceability.md) | R 到两类工程证据和边界 |
+| [逐属性证据 CSV](../verification/reports/testpoint-evidence.csv) | 1,163 行跨模式/实例记录 |
+| [原交互证据页面](../verification/reports/testpoints.html) | 按需求、CK、参数与结果筛选 |
+| [机器规格记录](../verification/reports/guided/.formal_records.yaml) | 本详细文档的 CK 表达式来源 |
+| [流程最终审计](../verification/reports/final-state-audit.json) | 14/14、当前输入审查与未决统计 |
+| [Guided 输入核验](../verification/reports/guided-verified-evidence.json) | 当前两次运行的 staged 输入哈希 |
+| [Native 输入核验](../verification/reports/verified-evidence.json) | 具体参数/run 与输入 fingerprint |
+| [联合证明记录](../verification/reports/joint-proof.json) | 超时身份与范围 |
+| [原回放清单](../verification/reports/replay/results.json) | VCD 身份、实际编译/运行结果 |
+| [离线重跑结果](../verification/offline-validation/cli-results.json) | 18 SBY / 19 回放的新执行 |
+| [离线后端验收](../verification/offline-validation/acceptance.json) | 逐属性、断网/搬迁/桌面证据 |
+| [历史工具回归](../verification/reports/tool-fix/regression.xml) | 66 项工具测试 |
+| [离线版回归](../verification/offline-validation/regression.xml) | 19 项相关测试 |
+
+当前 guided 输入 SHA-256：`fce2c3069ac3096abbfa9e4340c84b40bf787a604d067f46695d02a6bbb8b51c`。恢复任务 ID：`5081ad7183fe40ef84bec88043a12d95`；前序任务 ID：`e266f8230d2140f184854271dcf7d864`。
+
+| 原始文件 | SHA-256 |
+| --- | --- |
+| dmac/rtl/dmac.sv | `45b7898ce7eb5458c886189747ef703696365a02692810ef4aae879970895340` |
+| dmac/rtl/dmac_fifo.sv | `1e3c2eb8d75487f52920695db28db03b5b06d7b08b5ae8d453f8dfb8defacc61` |
+
+## 附录 A. 全部 88 个 CK 的详细定义与实际表达式
+
+下述 FC、CK 描述及表达式从固定机器记录读取，原自动生成文档不被修改。每个检查按原类型保持组合或采样语义；状态来自 guided-current 合并证据。某些属性描述的责任较宽，其实际 guard/body 只覆盖固定局部窗口，不能据标题扩大已验证范围。
+
+### A.1 FG-API · 接口环境与协议假设
+
+对应 R01、R02、R13；在 host 或 device 请求等待确认以及初始复位样本等环境触发场景，期望环境仅遵守已确认的等待保持和初始复位协议，同时不限制地址对齐、len、数据或背压时长；guided 仅能约束顶层输入，不能导出内部状态或把公平性作为隐含前提。
+
+#### FC-API-RESET
+
+对应 R10、R13；在形式运行的首个采样点触发，期望只要求一个低有效复位样本以建立已知初态，其后 rst_n 仍可任意再次拉低；guided 仅对顶层复位输入建模，不假定只复位一次或同步断言。
+
+##### CK-API-RESET-INITIAL
+
+对应 R10、R13；仅在形式时间零的首个采样点触发，要求 rst_n 为低以建立确定初态；此 Assume 不约束后续采样，必须允许运行中再次复位。
+
+类型：环境假设；属性：`M_CK_API_RESET_INITIAL`；当前结果：**环境假设**。
+
+```systemverilog
+// guard：生效条件
+!uc_past_valid
+// body：检查或覆盖内容
+!rst_n
+// trigger：guard witness 的触发探针
+!uc_past_valid
+```
+
+环境假设不是已证明性质；六项审查绑定当前输入。 [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-API-HOST-WAIT
+
+对应 R02、R13；当某方向 host req 已提出但尚未 ack 时触发，期望该方向 req、haddr 和 len 保持到接受；guided 只加入规格明确的顶层等待保持，不限制地址、长度取值或请求等待时长。
+
+##### CK-API-HOST-RD-WAIT
+
+对应 R02、R13；当前一采样沿 host_rd_req 有效且 host_rd_ack 无效、期间未复位时触发，要求本采样沿 host_rd_req、host_rd_haddr、host_rd_len 保持；不限制其数值或等待周期数。
+
+类型：环境假设；属性：`M_CK_API_HOST_RD_WAIT`；当前结果：**环境假设**。
+
+```systemverilog
+// guard：生效条件
+uc_past_valid && rst_n && $past(rst_n && host_rd_req && !host_rd_ack)
+// body：检查或覆盖内容
+host_rd_req && $stable(host_rd_haddr) && $stable(host_rd_len)
+// trigger：guard witness 的触发探针
+uc_past_valid && rst_n && $past(rst_n && host_rd_req && !host_rd_ack)
+```
+
+环境假设不是已证明性质；六项审查绑定当前输入。 [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-API-HOST-WR-WAIT
+
+对应 R02、R13；当前一采样沿 host_wr_req 有效且 host_wr_ack 无效、期间未复位时触发，要求本采样沿 host_wr_req、host_wr_haddr、host_wr_len 保持；不限制其数值或等待周期数。
+
+类型：环境假设；属性：`M_CK_API_HOST_WR_WAIT`；当前结果：**环境假设**。
+
+```systemverilog
+// guard：生效条件
+uc_past_valid && rst_n && $past(rst_n && host_wr_req && !host_wr_ack)
+// body：检查或覆盖内容
+host_wr_req && $stable(host_wr_haddr) && $stable(host_wr_len)
+// trigger：guard witness 的触发探针
+uc_past_valid && rst_n && $past(rst_n && host_wr_req && !host_wr_ack)
+```
+
+环境假设不是已证明性质；六项审查绑定当前输入。 [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-API-DEVICE-WAIT
+
+对应 R01、R13；当 device 发起的读或写 req 尚未 ack 时触发，期望读 req 保持、写 req 与写数据保持；guided 不要求 device 必须在有限周期内请求或持续请求，因此不引入公平性。
+
+##### CK-API-DEV-RD-WAIT
+
+对应 R01、R13；当前一采样沿 dev_rd_req 有效且 dev_rd_ack 无效、期间未复位时触发，要求本采样沿 dev_rd_req 保持；不要求 device 在空闲时发起请求。
+
+类型：环境假设；属性：`M_CK_API_DEV_RD_WAIT`；当前结果：**环境假设**。
+
+```systemverilog
+// guard：生效条件
+uc_past_valid && rst_n && $past(rst_n && dev_rd_req && !dev_rd_ack)
+// body：检查或覆盖内容
+dev_rd_req
+// trigger：guard witness 的触发探针
+uc_past_valid && rst_n && $past(rst_n && dev_rd_req && !dev_rd_ack)
+```
+
+环境假设不是已证明性质；六项审查绑定当前输入。 [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-API-DEV-WR-WAIT-REQ
+
+对应 R01、R13；当前一采样沿 dev_wr_req 有效且 dev_wr_ack 无效、期间未复位时触发，要求本采样沿 dev_wr_req 保持。
+
+类型：环境假设；属性：`M_CK_API_DEV_WR_WAIT_REQ`；当前结果：**环境假设**。
+
+```systemverilog
+// guard：生效条件
+uc_past_valid && rst_n && $past(rst_n && dev_wr_req && !dev_wr_ack)
+// body：检查或覆盖内容
+dev_wr_req
+// trigger：guard witness 的触发探针
+uc_past_valid && rst_n && $past(rst_n && dev_wr_req && !dev_wr_ack)
+```
+
+环境假设不是已证明性质；六项审查绑定当前输入。 [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-API-DEV-WR-WAIT-DATA
+
+对应 R01、R13；当前一采样沿 dev_wr_req 有效且 dev_wr_ack 无效、期间未复位时触发，要求本采样沿 dev_wr_data 保持；不限制数据内容。
+
+类型：环境假设；属性：`M_CK_API_DEV_WR_WAIT_DATA`；当前结果：**环境假设**。
+
+```systemverilog
+// guard：生效条件
+uc_past_valid && rst_n && $past(rst_n && dev_wr_req && !dev_wr_ack)
+// body：检查或覆盖内容
+dev_wr_req && $stable(dev_wr_data)
+// trigger：guard witness 的触发探针
+uc_past_valid && rst_n && $past(rst_n && dev_wr_req && !dev_wr_ack)
+```
+
+环境假设不是已证明性质；六项审查绑定当前输入。 [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.2 FG-HOST · 主机命令接受与排队
+
+对应 R02、R12；在读写 req 到达、命令活动、done 周期及等待中的下一命令场景，期望 ack 准确表示接受、同方向不重接受且随后可接收新命令；guided 通过顶层 req/ack/done 和后续可见行为检查，不声称拥有内部 busy 信号或无限命令队列。
+
+#### FC-HOST-ACK
+
+对应 R02；当任一 host ack 置位时触发，期望同方向 req 同时有效且该沿唯一接受命令；guided 可直接判定 ack 不得脱离 req，但不引用不存在的 busy 端口。
+
+##### CK-HOST-RD-ACK-REQ
+
+对应 R02；当 host_rd_ack 为高时触发，期望同拍 host_rd_req 与 rst_n 均为高，禁止无请求或复位中确认读命令。
+
+类型：组合断言；属性：`A_CK_HOST_RD_ACK_REQ`；当前结果：**未决**。 guard witness：`G_A_CK_HOST_RD_ACK_REQ`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+!host_rd_ack || (host_rd_req && rst_n)
+// trigger：guard witness 的触发探针
+host_rd_ack
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-HOST-WR-ACK-REQ
+
+对应 R02；当 host_wr_ack 为高时触发，期望同拍 host_wr_req 与 rst_n 均为高，禁止无请求或复位中确认写命令。
+
+类型：组合断言；属性：`A_CK_HOST_WR_ACK_REQ`；当前结果：**未决**。 guard witness：`G_A_CK_HOST_WR_ACK_REQ`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+!host_wr_ack || (host_wr_req && rst_n)
+// trigger：guard witness 的触发探针
+host_wr_ack
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-HOST-LATCH
+
+对应 R02、R03、R04；当 req&&ack 接受命令时触发，期望随后首地址和零长度等外部行为使用该沿的 haddr 与 len；guided 通过顶层后续行为检查可见锁存效果，不读取内部地址或计数寄存器。
+
+##### CK-HOST-RD-LATCH-ADDRESS
+
+对应 R02、R03；读命令接受后的紧邻周期出现首个 mem_rd_valid 且两拍 rst_n 均高时，期望 mem_rd_addr 等于接受沿 host_rd_haddr；只检查无等待的一拍固定窗口。
+
+类型：时序断言；属性：`A_CK_HOST_RD_LATCH_ADDRESS`；当前结果：**未决**。 guard witness：`G_A_CK_HOST_RD_LATCH_ADDRESS`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+uc_past_valid && rst_n && $past(rst_n && host_rd_req && host_rd_ack) && mem_rd_valid
+// body：检查或覆盖内容
+mem_rd_addr == $past(host_rd_haddr)
+// trigger：guard witness 的触发探针
+uc_past_valid && rst_n && $past(rst_n && host_rd_req && host_rd_ack) && mem_rd_valid
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-HOST-WR-LATCH-ADDRESS
+
+对应 R02、R03；写命令接受后紧接四拍连续 device 写握手，并在再下一拍首次出现 mem_wr_valid 的固定窗口中，期望 mem_wr_addr 等于接受沿 host_wr_haddr；任意等待下的锁存归 native 模型。
+
+类型：时序断言；属性：`A_CK_HOST_WR_LATCH_ADDRESS`；当前结果：**未决**。 guard witness：`G_A_CK_HOST_WR_LATCH_ADDRESS`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+$past(uc_past_valid, 4) && rst_n && $past(rst_n, 1) && $past(rst_n, 2) && $past(rst_n, 3) && $past(rst_n, 4) && $past(rst_n, 5) && $past(host_wr_req && host_wr_ack, 5) && $past(dev_wr_req && dev_wr_ack, 4) && $past(dev_wr_req && dev_wr_ack, 3) && $past(dev_wr_req && dev_wr_ack, 2) && $past(dev_wr_req && dev_wr_ack, 1) && mem_wr_valid
+// body：检查或覆盖内容
+mem_wr_addr == $past(host_wr_haddr, 5)
+// trigger：guard witness 的触发探针
+$past(uc_past_valid, 4) && rst_n && $past(rst_n, 1) && $past(rst_n, 2) && $past(rst_n, 3) && $past(rst_n, 4) && $past(rst_n, 5) && $past(host_wr_req && host_wr_ack, 5) && $past(dev_wr_req && dev_wr_ack, 4) && $past(dev_wr_req && dev_wr_ack, 3) && $past(dev_wr_req && dev_wr_ack, 2) && $past(dev_wr_req && dev_wr_ack, 1) && mem_wr_valid
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-HOST-BUSY
+
+对应 R02；当已接受命令尚未完成且未复位时触发，期望同方向即使保持或重新提出 req 也不出现第二次 ack；guided 以可见接受/完成历史维护局部活动状态，不把另一方向活动误作阻塞条件。
+
+##### CK-HOST-RD-NO-IMMEDIATE-REACK
+
+对应 R02；当前一采样沿接受读命令、本采样尚未复位且不可能已完成时触发，期望 host_rd_ack 为低，即使 host_rd_req 继续为高也不重复接受。
+
+类型：时序断言；属性：`A_CK_HOST_RD_NO_IMMEDIATE_REACK`；当前结果：**未决**。 guard witness：`G_A_CK_HOST_RD_NO_IMMEDIATE_REACK`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+uc_past_valid && rst_n && $past(rst_n && host_rd_req && host_rd_ack)
+// body：检查或覆盖内容
+!host_rd_ack
+// trigger：guard witness 的触发探针
+uc_past_valid && rst_n && $past(rst_n && host_rd_req && host_rd_ack)
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-HOST-WR-NO-IMMEDIATE-REACK
+
+对应 R02；当前一采样沿接受写命令、本采样尚未复位且不可能已完成时触发，期望 host_wr_ack 为低，即使 host_wr_req 继续为高也不重复接受。
+
+类型：时序断言；属性：`A_CK_HOST_WR_NO_IMMEDIATE_REACK`；当前结果：**未决**。 guard witness：`G_A_CK_HOST_WR_NO_IMMEDIATE_REACK`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+uc_past_valid && rst_n && $past(rst_n && host_wr_req && host_wr_ack)
+// body：检查或覆盖内容
+!host_wr_ack
+// trigger：guard witness 的触发探针
+uc_past_valid && rst_n && $past(rst_n && host_wr_req && host_wr_ack)
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-HOST-NEXT
+
+对应 R02、R12；当 pending req 跨越 done 周期时触发，期望 done 当周期不 ack，而后续空闲周期可以接受；guided 检查有限边界时序，不承诺在 req 未遵守保持或复位重入时接受。
+
+##### CK-HOST-RD-DONE-NO-ACK
+
+对应 R02；当 host_rd_done 为高时触发，期望 host_rd_ack 同拍为低，完成报告周期不得接受下一读命令。
+
+类型：组合断言；属性：`A_CK_HOST_RD_DONE_NO_ACK`；当前结果：**未决**。 guard witness：`G_A_CK_HOST_RD_DONE_NO_ACK`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+!host_rd_done || !host_rd_ack
+// trigger：guard witness 的触发探针
+host_rd_done
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-HOST-WR-DONE-NO-ACK
+
+对应 R02；当 host_wr_done 为高时触发，期望 host_wr_ack 同拍为低，完成报告周期不得接受下一写命令。
+
+类型：组合断言；属性：`A_CK_HOST_WR_DONE_NO_ACK`；当前结果：**未决**。 guard witness：`G_A_CK_HOST_WR_DONE_NO_ACK`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+!host_wr_done || !host_wr_ack
+// trigger：guard witness 的触发探针
+host_wr_done
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-HOST-RD-PENDING-AFTER-DONE
+
+对应 R02、R12；当读 req 按协议保持跨越前一拍 host_rd_done、前后两拍 rst_n 均高时，期望当前空闲拍 host_rd_ack 为高并接受等待命令。
+
+类型：时序断言；属性：`A_CK_HOST_RD_PENDING_AFTER_DONE`；当前结果：**未决**。 guard witness：`G_A_CK_HOST_RD_PENDING_AFTER_DONE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_rd_req) && ($past(host_rd_done && host_rd_req))
+// body：检查或覆盖内容
+host_rd_ack && !host_rd_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-HOST-WR-PENDING-AFTER-DONE
+
+对应 R02、R12；当写 req 按协议保持跨越前一拍 host_wr_done、前后两拍 rst_n 均高时，期望当前空闲拍 host_wr_ack 为高并接受等待命令。
+
+类型：时序断言；属性：`A_CK_HOST_WR_PENDING_AFTER_DONE`；当前结果：**未决**。 guard witness：`G_A_CK_HOST_WR_PENDING_AFTER_DONE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_wr_req) && ($past(host_wr_done && host_wr_req))
+// body：检查或覆盖内容
+host_wr_ack && !host_wr_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.3 FG-READ · 内存到设备读通道
+
+对应 R01、R05、R06；在读命令接受、mem 读握手、设备读请求和背压场景，期望 64 位数据经独立读通道按握手送往 16 位设备端；guided 检查顶层读通道控制和可表达的局部数据关系，任意积压下完整数据队列证明保留给 native 义务。
+
+#### FC-READ-MEM-HANDSHAKE
+
+对应 R01、R05；在 mem_rd_valid 与 mem_rd_ready 组合变化时触发，期望仅两者同高的上升沿接收一拍 64 位数据，ready 同沿携带有效读数据；guided 仅依据顶层握手判定传输，不构造独立响应通道。
+
+##### CK-READ-MEM-FIRST-AFTER-ACCEPT
+
+对应 R01、R03；读命令在前一拍接受且当前未复位时，期望当前拍呈现以接受地址为首地址的 mem_rd_valid；若当前 ready 为高则同沿接收 mem_rd_data。
+
+类型：时序断言；属性：`A_CK_READ_MEM_FIRST_AFTER_ACCEPT`；当前结果：**未决**。 guard witness：`G_A_CK_READ_MEM_FIRST_AFTER_ACCEPT`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_rd_req && host_rd_ack))
+// body：检查或覆盖内容
+mem_rd_valid && mem_rd_addr == $past(host_rd_haddr)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-READ-DEVICE-HANDSHAKE
+
+对应 R01、R06；当 device 发起 dev_rd_req 时触发，期望仅在有可交付数据时由 dev_rd_ack 同沿交付一个 16 位片段，ack 不得脱离 req；guided 检查顶层 req/ack/data，不读取 FIFO 有效位。
+
+##### CK-READ-DEV-ACK-REQ
+
+对应 R01、R06；当 dev_rd_ack 为高时触发，期望同拍 dev_rd_req 与 rst_n 为高；该沿的 dev_rd_data 才解释为一个有效 16 位交付。
+
+类型：组合断言；属性：`A_CK_READ_DEV_ACK_REQ`；当前结果：**未决**。 guard witness：`G_A_CK_READ_DEV_ACK_REQ`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+!dev_rd_ack || (dev_rd_req && rst_n)
+// trigger：guard witness 的触发探针
+dev_rd_ack
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-READ-PIPELINE
+
+对应 R05、R08；当 memory 与 device 的背压模式不同时触发，期望读侧可预取并按握手独立推进，且未握手时不误计传输；guided 只检查外部握手和稳定性，内部深度、空满及全部排队顺序由 native 模型承担。
+
+##### CK-READ-NO-DEV-TRANSFER-WITHOUT-REQ
+
+对应 R01、R08；当 dev_rd_req 为低时触发，期望 dev_rd_ack 为低，无论 memory 是否正在预取，禁止无 device 请求交付。
+
+类型：组合断言；属性：`A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ`；当前结果：**未决**。 guard witness：`G_A_CK_READ_NO_DEV_TRANSFER_WITHOUT_REQ`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+dev_rd_req || !dev_rd_ack
+// trigger：guard witness 的触发探针
+!dev_rd_req
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-READ-DEV-FRAGMENT-HOLD
+
+对应 R06；当无积压歧义的 len=0 读命令接受、下一拍完成唯一 mem 读，并在再下一拍发生首个 device 交付的固定三拍窗口中，期望首片段等于该 mem 字的低 16 位；完整读数据顺序仍由 NCK-R06-RD-DATA 负责。
+
+类型：时序断言；属性：`A_CK_READ_DEV_FRAGMENT_HOLD`；当前结果：**未决**。 guard witness：`G_A_CK_READ_DEV_FRAGMENT_HOLD`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))) && ($past(host_rd_req && host_rd_ack && host_rd_len == 0,2)) && ($past(mem_rd_valid && mem_rd_ready)) && (dev_rd_req && dev_rd_ack)
+// body：检查或覆盖内容
+dev_rd_data == ($past(mem_rd_data) & 64'hffff)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.4 FG-WRITE · 设备到内存写通道
+
+对应 R01、R05、R07；在写命令接受、设备写请求、四片段收集、mem 写握手和背压场景，期望 16 位数据经独立写通道组成 64 位写拍；guided 检查顶层控制和可表达的局部拼接关系，任意积压下完整数据队列证明保留给 native 义务。
+
+#### FC-WRITE-DEVICE-HANDSHAKE
+
+对应 R01、R07；当 device 发起 dev_wr_req 时触发，期望仅 dev_wr_req&&dev_wr_ack 的上升沿接收一拍 16 位数据，ack 不得脱离 req；guided 观察顶层握手，不读取收集剩余计数或 lane。
+
+##### CK-WRITE-DEV-ACK-REQ
+
+对应 R01、R07；当 dev_wr_ack 为高时触发，期望同拍 dev_wr_req 与 rst_n 为高；仅该沿采样 dev_wr_data。
+
+类型：组合断言；属性：`A_CK_WRITE_DEV_ACK_REQ`；当前结果：**未决**。 guard witness：`G_A_CK_WRITE_DEV_ACK_REQ`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+!dev_wr_ack || (dev_wr_req && rst_n)
+// trigger：guard witness 的触发探针
+dev_wr_ack
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-WRITE-MEM-HANDSHAKE
+
+对应 R01、R05、R07；当 mem_wr_valid 置位或遭遇 ready 背压时触发，期望 valid&&ready 同沿提交完整地址和 64 位数据，未握手不提交；guided 直接检查顶层 valid/ready/address/data。
+
+##### CK-WRITE-MEM-VALID-AFTER-WORD
+
+对应 R01、R07；写命令接受后紧接四拍连续 dev_wr_req&&dev_wr_ack，在再下一拍的固定窗口中期望 mem_wr_valid 呈现所拼完整字；只判定该连续窗口，不要求环境总是连续请求。
+
+类型：时序断言；属性：`A_CK_WRITE_MEM_VALID_AFTER_WORD`；当前结果：**未决**。 guard witness：`G_A_CK_WRITE_MEM_VALID_AFTER_WORD`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_wr_req && host_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,4))
+// body：检查或覆盖内容
+mem_wr_valid
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-WRITE-PIPELINE
+
+对应 R07、R08；当 device 连续提供片段而 memory 背压时触发，期望允许顶层可见范围内的片段收集并在容量边界施加反压，不出现越权 ack；guided 不推断内部 FIFO 空满，完整容量与排队顺序保留给 native 模型。
+
+##### CK-WRITE-NO-DEV-TRANSFER-WITHOUT-REQ
+
+对应 R01、R08；当 dev_wr_req 为低时触发，期望 dev_wr_ack 为低，禁止无 device 请求采样写片段。
+
+类型：组合断言；属性：`A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ`；当前结果：**未决**。 guard witness：`G_A_CK_WRITE_NO_DEV_TRANSFER_WITHOUT_REQ`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+dev_wr_req || !dev_wr_ack
+// trigger：guard witness 的触发探针
+!dev_wr_req
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-WRITE-STALLED-WORD-NOT-OVERWRITTEN
+
+对应 R05、R08；当前一采样 mem_wr_valid 高且 mem_wr_ready 低、期间未复位时触发，期望本采样仍呈现同一 mem_wr_valid、地址和数据，即使 device 侧继续具备局部收集条件。
+
+类型：时序断言；属性：`A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN`；当前结果：**未决**。 guard witness：`G_A_CK_WRITE_STALLED_WORD_NOT_OVERWRITTEN`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid && !mem_wr_ready))
+// body：检查或覆盖内容
+mem_wr_valid && $stable(mem_wr_addr) && $stable(mem_wr_data)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.5 FG-ADDRESS · 内存地址生成与保持
+
+对应 R03、R05；在命令首拍、每次实际 mem 握手、无握手等待和地址溢出场景，期望地址原样从任意 haddr 起步、握手后加 8、等待时稳定并按 32 位回绕；guided 可直接观察顶层地址和握手，不添加对齐约束。
+
+#### FC-ADDRESS-FIRST
+
+对应 R03；在读命令接受后紧邻读 valid，或写命令接受后四拍连续 device 握手再出现首个写 valid 的固定窗口中，期望 mem 地址等于接受沿任意 haddr；任意等待下完整命令关联由 native 模型承担。
+
+##### CK-ADDRESS-RD-FIRST
+
+对应 R03；读命令接受后的紧邻周期出现首个 mem_rd_valid 且两拍 rst_n 均高时，期望 mem_rd_addr 等于接受沿 host_rd_haddr，包括低三位非零值。
+
+类型：时序断言；属性：`A_CK_ADDRESS_RD_FIRST`；当前结果：**未决**。 guard witness：`G_A_CK_ADDRESS_RD_FIRST`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_rd_req && host_rd_ack))
+// body：检查或覆盖内容
+mem_rd_addr == $past(host_rd_haddr)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-ADDRESS-WR-FIRST
+
+对应 R03；写命令接受后紧接四拍连续 device 写握手，并在再下一拍出现首个 mem_wr_valid 时，期望 mem_wr_addr 等于接受沿 host_wr_haddr，包括低三位非零值。
+
+类型：时序断言；属性：`A_CK_ADDRESS_WR_FIRST`；当前结果：**未决**。 guard witness：`G_A_CK_ADDRESS_WR_FIRST`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_wr_req && host_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,4)) && (mem_wr_valid)
+// body：检查或覆盖内容
+mem_wr_addr == $past(host_wr_haddr,5)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-ADDRESS-STEP
+
+对应 R03；当前一采样沿发生对应 mem valid&&ready 且事务继续时触发，期望下一可见地址按 32 位加 8；guided 检查局部相邻握手关系，长序列参考地址可由 native 模型交叉检查。
+
+##### CK-ADDRESS-RD-STEP
+
+对应 R03；当前一采样沿 mem_rd_valid&&mem_rd_ready 且下一读拍仍有效、期间未复位时触发，期望 mem_rd_addr 等于前一地址按 32 位加 8。
+
+类型：时序断言；属性：`A_CK_ADDRESS_RD_STEP`；当前结果：**未决**。 guard witness：`G_A_CK_ADDRESS_RD_STEP`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_rd_valid && mem_rd_ready)) && (mem_rd_valid)
+// body：检查或覆盖内容
+mem_rd_addr == ($past(mem_rd_addr) + 32'd8)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-ADDRESS-WR-STEP
+
+对应 R03；当前一采样沿 mem_wr_valid&&mem_wr_ready 且下一写拍仍有效、期间未复位时触发，期望 mem_wr_addr 等于前一地址按 32 位加 8。
+
+类型：时序断言；属性：`A_CK_ADDRESS_WR_STEP`；当前结果：**未决**。 guard witness：`G_A_CK_ADDRESS_WR_STEP`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid && mem_wr_ready)) && (mem_wr_valid)
+// body：检查或覆盖内容
+mem_wr_addr == ($past(mem_wr_addr) + 32'd8)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-ADDRESS-HOLD
+
+对应 R03、R05；当 mem valid 高而 ready 低时触发，期望同方向地址在持续等待期间保持；guided 可直接检查顶层稳定性，不限制背压持续时间。
+
+##### CK-ADDRESS-RD-HOLD
+
+对应 R03、R05；当前一采样 mem_rd_valid 高且 mem_rd_ready 低、期间未复位时触发，期望 mem_rd_valid 继续为高且 mem_rd_addr 不变。
+
+类型：时序断言；属性：`A_CK_ADDRESS_RD_HOLD`；当前结果：**未决**。 guard witness：`G_A_CK_ADDRESS_RD_HOLD`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_rd_valid && !mem_rd_ready))
+// body：检查或覆盖内容
+(mem_rd_valid) && ($stable(mem_rd_addr))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-ADDRESS-WR-HOLD
+
+对应 R03、R05；当前一采样 mem_wr_valid 高且 mem_wr_ready 低、期间未复位时触发，期望 mem_wr_valid 继续为高且 mem_wr_addr 不变。
+
+类型：时序断言；属性：`A_CK_ADDRESS_WR_HOLD`；当前结果：**未决**。 guard witness：`G_A_CK_ADDRESS_WR_HOLD`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid && !mem_wr_ready))
+// body：检查或覆盖内容
+(mem_wr_valid) && ($stable(mem_wr_addr)) && ($stable(mem_wr_data))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-ADDRESS-WRAP
+
+对应 R03；当地址接近 32 位上界并发生 mem 握手时触发，期望加 8 后按 32 位自然回绕而非饱和或对齐；guided 通过顶层相邻地址判定并以 Cover 展示边界可达。
+
+##### CK-ADDRESS-RD-WRAP
+
+对应 R03；当前一读地址位于 32 位上界附近并完成握手、下一读拍有效时触发，期望下一 mem_rd_addr 为前值加 8 的低 32 位。
+
+类型：时序断言；属性：`A_CK_ADDRESS_RD_WRAP`；当前结果：**未决**。 guard witness：`G_A_CK_ADDRESS_RD_WRAP`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_rd_valid && mem_rd_ready)) && (mem_rd_valid)) && ($past(mem_rd_addr > 32'hfffffff7))
+// body：检查或覆盖内容
+mem_rd_addr == ($past(mem_rd_addr) + 32'd8)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-ADDRESS-WR-WRAP
+
+对应 R03；当前一写地址位于 32 位上界附近并完成握手、下一写拍有效时触发，期望下一 mem_wr_addr 为前值加 8 的低 32 位。
+
+类型：时序断言；属性：`A_CK_ADDRESS_WR_WRAP`；当前结果：**未决**。 guard witness：`G_A_CK_ADDRESS_WR_WRAP`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid && mem_wr_ready)) && (mem_wr_valid)) && ($past(mem_wr_addr > 32'hfffffff7))
+// body：检查或覆盖内容
+mem_wr_addr == ($past(mem_wr_addr) + 32'd8)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.6 FG-QUOTA · 长度编码与传输配额
+
+对应 R04、R09；在任意 len 命令、零长度、较长长度以及完成边界场景，期望 N=len+1 个 mem 拍和 4N 个 device 拍且不超额；guided 只规划顶层可观察的固定有限窗口，完整 33 位任意长度及任意背压配额证明由 planning.native_ck_obligations 中的 native 模型承担。
+
+#### FC-QUOTA-ENCODING
+
+对应 R04；只在无等待的固定有限窗口中核对接受沿 len=0/1 与一/两拍 64 位 mem 字及四/八拍 16 位 device 数据的关系；不限制其他命令 len，任意 32 位编码由 NCK-R04-COUNT 证明。
+
+##### CK-QUOTA-ENCODING-BOUNDARY
+
+对应 R04；当固定窗口内可由过去的 host req&&ack 明确归属 len=0 或 len=1 命令时，检查窗口中的 mem/device 拍数按 1:4 编码；不使用完成时当前 host_len，任意等待和全长度由 NCK-R04-COUNT 证明。
+
+类型：时序断言；属性：`A_CK_QUOTA_ENCODING_BOUNDARY`；当前结果：**未决**。 guard witness：`G_A_CK_QUOTA_ENCODING_BOUNDARY`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+uc_past_valid
+// body：检查或覆盖内容
+(!((($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))) && ($past(host_rd_req && host_rd_ack,6)) && ($past(host_rd_len == 0,6)) && ($past(mem_rd_valid && mem_rd_ready,5)) && ($past(dev_rd_req && dev_rd_ack,4)) && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack))) || host_rd_done) && (!((($past(uc_past_valid,9)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))) && ($past(host_rd_req && host_rd_ack,10)) && ($past(host_rd_len == 1,10)) && ($past(mem_rd_valid && mem_rd_ready,9)) && ($past(mem_rd_valid && mem_rd_ready,8)) && ($past(dev_rd_req && dev_rd_ack,8)) && ($past(dev_rd_req && dev_rd_ack,7)) && ($past(dev_rd_req && dev_rd_ack,6)) && ($past(dev_rd_req && dev_rd_ack,5)) && ($past(dev_rd_req && dev_rd_ack,4)) && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack))) || host_rd_done) && (!((($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))) && ($past(host_wr_req && host_wr_ack,6)) && ($past(host_wr_len == 0,6)) && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(mem_wr_valid && mem_wr_ready))) || host_wr_done) && (!((($past(uc_past_valid,9)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))) && ($past(host_wr_req && host_wr_ack,10)) && ($past(host_wr_len == 1,10)) && ($past(dev_wr_req && dev_wr_ack,9)) && ($past(dev_wr_req && dev_wr_ack,8)) && ($past(dev_wr_req && dev_wr_ack,7)) && ($past(dev_wr_req && dev_wr_ack,6)) && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(mem_wr_valid && mem_wr_ready,5)) && ($past(mem_wr_valid && mem_wr_ready))) || host_wr_done)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-QUOTA-ZERO
+
+对应 R04、R09；仅在 len=0 命令接受后紧接唯一 mem 拍和四个连续 device 拍的固定窗口中检查完成边界；不添加强迫连续握手的 Assume，任意背压配额由 native 模型承担。
+
+##### CK-QUOTA-RD-ZERO
+
+对应 R04、R09；固定窗口为过去接受 host_rd_len=0、下一拍唯一 mem 读、随后四拍连续 device 读，当前期望 done；该局部窗口不声称覆盖任意等待。
+
+类型：时序断言；属性：`A_CK_QUOTA_RD_ZERO`；当前结果：**未决**。 guard witness：`G_A_CK_QUOTA_RD_ZERO`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))) && ($past(host_rd_req && host_rd_ack,6)) && ($past(host_rd_len == 0,6)) && ($past(mem_rd_valid && mem_rd_ready,5)) && ($past(dev_rd_req && dev_rd_ack,4)) && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack))
+// body：检查或覆盖内容
+host_rd_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-QUOTA-WR-ZERO
+
+对应 R04、R09；固定窗口为过去接受 host_wr_len=0、随后四拍连续 device 写、再下一拍唯一 mem 写握手，当前期望 done；该局部窗口不声称覆盖任意等待。
+
+类型：时序断言；属性：`A_CK_QUOTA_WR_ZERO`；当前结果：**未决**。 guard witness：`G_A_CK_QUOTA_WR_ZERO`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))) && ($past(host_wr_req && host_wr_ack,6)) && ($past(host_wr_len == 0,6)) && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(mem_wr_valid && mem_wr_ready))
+// body：检查或覆盖内容
+host_wr_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-QUOTA-LONG
+
+对应 R04、R12；仅在 len=1 命令的两拍 mem 与八拍 device 均落入明确连续窗口时检查首字边界不提前完成及第二字完成；任意背压和 33 位全空间由 NCK-R04-COUNT 与 NCK-R09-DONE 负责。
+
+##### CK-QUOTA-RD-LEN1
+
+对应 R04、R09；以过去接受沿 host_rd_len=1 关联两拍连续 mem 读和随后八拍连续 device 读的固定窗口，检查首字边界无 done、第二字边界后 done；不约束环境必须形成该窗口。
+
+类型：时序断言；属性：`A_CK_QUOTA_RD_LEN1`；当前结果：**未决**。 guard witness：`G_A_CK_QUOTA_RD_LEN1`，**未命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,9)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))) && ($past(host_rd_req && host_rd_ack,10)) && ($past(host_rd_len == 1,10)) && ($past(mem_rd_valid && mem_rd_ready,9)) && ($past(mem_rd_valid && mem_rd_ready,8)) && ($past(dev_rd_req && dev_rd_ack,8)) && ($past(dev_rd_req && dev_rd_ack,7)) && ($past(dev_rd_req && dev_rd_ack,6)) && ($past(dev_rd_req && dev_rd_ack,5)) && ($past(dev_rd_req && dev_rd_ack,4)) && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack))
+// body：检查或覆盖内容
+(host_rd_done) && (!$past(host_rd_done,4))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-QUOTA-WR-LEN1
+
+对应 R04、R09；以过去接受沿 host_wr_len=1 关联八拍连续 device 写及两个固定位置 mem 写握手的有限窗口，检查首字提交无 done、第二字提交后 done；任意等待由 native 模型负责。
+
+类型：时序断言；属性：`A_CK_QUOTA_WR_LEN1`；当前结果：**未决**。 guard witness：`G_A_CK_QUOTA_WR_LEN1`，**未命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,9)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))) && ($past(host_wr_req && host_wr_ack,10)) && ($past(host_wr_len == 1,10)) && ($past(dev_wr_req && dev_wr_ack,9)) && ($past(dev_wr_req && dev_wr_ack,8)) && ($past(dev_wr_req && dev_wr_ack,7)) && ($past(dev_wr_req && dev_wr_ack,6)) && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(mem_wr_valid && mem_wr_ready,5)) && ($past(mem_wr_valid && mem_wr_ready))
+// body：检查或覆盖内容
+(host_wr_done) && (!$past(host_wr_done,4))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.7 FG-DATA · 数据拆分、拼接与顺序
+
+对应 R06、R07；在有效数据握手及四个片段边界场景，期望每个 64 位字按 [15:0]、[31:16]、[47:32]、[63:48] 的顺序拆分或拼接；guided 只检查过去接受沿可唯一关联的固定连续窗口，不以猜测或空洞断言替代 native 完整队列和全顺序证明。
+
+#### FC-DATA-READ-FIRST
+
+对应 R06；在过去接受 len=0、下一拍唯一 mem 读、再下一拍首个 device 读的无积压固定窗口中，期望交付该字 [15:0]；任意 FIFO 积压由 NCK-R06-RD-DATA 负责。
+
+##### CK-DATA-RD-LOW-FIRST
+
+对应 R06；固定三拍窗口由过去 host_rd_req&&host_rd_ack 且 host_rd_len=0、下一拍 mem_rd_valid&&mem_rd_ready、当前首个 dev_rd_req&&dev_rd_ack 组成，期望当前 dev_rd_data 等于该 mem 字 [15:0]。
+
+类型：时序断言；属性：`A_CK_DATA_RD_LOW_FIRST`；当前结果：**未决**。 guard witness：`G_A_CK_DATA_RD_LOW_FIRST`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2))) && ($past(host_rd_req && host_rd_ack && host_rd_len == 0,2)) && ($past(mem_rd_valid && mem_rd_ready)) && (dev_rd_req && dev_rd_ack)
+// body：检查或覆盖内容
+dev_rd_data == ($past(mem_rd_data) & 64'hffff)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-DATA-READ-LANES
+
+对应 R06；仅在过去接受 len=0、唯一 mem 读后连续四拍有效 device 握手的固定窗口中，期望依次匹配四个 16 位片段；不声明覆盖等待或积压数据。
+
+##### CK-DATA-RD-FOUR-LANES
+
+对应 R06；固定窗口由过去接受 len=0、唯一 mem 读及随后四拍连续 dev_rd_req&&dev_rd_ack 构成，期望四拍数据依次为该 mem 字 [15:0]、[31:16]、[47:32]、[63:48]；深历史须充分有效。
+
+类型：时序断言；属性：`A_CK_DATA_RD_FOUR_LANES`；当前结果：**未决**。 guard witness：`G_A_CK_DATA_RD_FOUR_LANES`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_rd_req && host_rd_ack,5)) && ($past(host_rd_len == 0,5)) && ($past(mem_rd_valid && mem_rd_ready,4)) && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack)) && (dev_rd_req && dev_rd_ack)
+// body：检查或覆盖内容
+($past(dev_rd_data,3) == (($past(mem_rd_data,4) >> 0) & 64'hffff)) && ($past(dev_rd_data,2) == (($past(mem_rd_data,4) >> 16) & 64'hffff)) && ($past(dev_rd_data) == (($past(mem_rd_data,4) >> 32) & 64'hffff)) && (dev_rd_data == (($past(mem_rd_data,4) >> 48) & 64'hffff))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-DATA-WRITE-PACK
+
+对应 R07；仅在过去接受 len=0 后连续四拍 device 写并在下一拍出现首个 mem 写字的固定窗口中，期望低片段优先拼接；任意等待与积压由 NCK-R07-WR-DATA 负责。
+
+##### CK-DATA-WR-FOUR-LANES
+
+对应 R07；固定窗口由过去 host_wr_req&&host_wr_ack 且 len=0、随后四拍连续 dev_wr_req&&dev_wr_ack、当前首个 mem_wr_valid 构成，期望 mem_wr_data 四个片段按四次接收先后映射。
+
+类型：时序断言；属性：`A_CK_DATA_WR_FOUR_LANES`；当前结果：**未决**。 guard witness：`G_A_CK_DATA_WR_FOUR_LANES`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_wr_req && host_wr_ack,5)) && ($past(host_wr_len == 0,5)) && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack)) && (mem_wr_valid)
+// body：检查或覆盖内容
+mem_wr_data == {$past(dev_wr_data),$past(dev_wr_data,2),$past(dev_wr_data,3),$past(dev_wr_data,4)}
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-DATA-ORDER-BOUNDARY
+
+对应 R06、R07；仅在过去接受 len=1 且两个完整字按预定连续握手窗口传输时检查两个字的局部先后及数据映射；任意等待、积压与完整无损顺序保持为 native 义务。
+
+##### CK-DATA-RD-TWO-WORD-LOCAL-ORDER
+
+对应 R06；固定窗口由过去接受 len=1、两拍连续 mem 读及随后八拍连续 device 读构成，期望前四片段来自先接收字、后四片段来自后接收字；不覆盖任意 FIFO 积压。
+
+类型：时序断言；属性：`A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER`；当前结果：**未决**。 guard witness：`G_A_CK_DATA_RD_TWO_WORD_LOCAL_ORDER`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,8)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9))) && ($past(host_rd_req && host_rd_ack,9)) && ($past(host_rd_len == 1,9)) && ($past(mem_rd_valid && mem_rd_ready,8)) && ($past(mem_rd_valid && mem_rd_ready,7)) && ($past(dev_rd_req && dev_rd_ack,7)) && ($past(dev_rd_req && dev_rd_ack,6)) && ($past(dev_rd_req && dev_rd_ack,5)) && ($past(dev_rd_req && dev_rd_ack,4)) && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack)) && (dev_rd_req && dev_rd_ack)
+// body：检查或覆盖内容
+($past(dev_rd_data,7) == (($past(mem_rd_data,8) >> 0) & 64'hffff)) && ($past(dev_rd_data,6) == (($past(mem_rd_data,8) >> 16) & 64'hffff)) && ($past(dev_rd_data,5) == (($past(mem_rd_data,8) >> 32) & 64'hffff)) && ($past(dev_rd_data,4) == (($past(mem_rd_data,8) >> 48) & 64'hffff)) && ($past(dev_rd_data,3) == (($past(mem_rd_data,7) >> 0) & 64'hffff)) && ($past(dev_rd_data,2) == (($past(mem_rd_data,7) >> 16) & 64'hffff)) && ($past(dev_rd_data) == (($past(mem_rd_data,7) >> 32) & 64'hffff)) && (dev_rd_data == (($past(mem_rd_data,7) >> 48) & 64'hffff))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-DATA-WR-TWO-WORD-LOCAL-ORDER
+
+对应 R07；固定窗口由过去接受 len=1、八拍连续 device 写及两个固定位置 mem 写字构成，期望第一组四片段字先提交、第二组后提交；任意积压由 NCK-R07-WR-DATA 负责。
+
+类型：时序断言；属性：`A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER`；当前结果：**未决**。 guard witness：`G_A_CK_DATA_WR_TWO_WORD_LOCAL_ORDER`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,8)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9))) && ($past(host_wr_req && host_wr_ack,9)) && ($past(host_wr_len == 1,9)) && ($past(dev_wr_req && dev_wr_ack,8)) && ($past(dev_wr_req && dev_wr_ack,7)) && ($past(dev_wr_req && dev_wr_ack,6)) && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(mem_wr_valid && mem_wr_ready,4)) && (mem_wr_valid && mem_wr_ready)
+// body：检查或覆盖内容
+(mem_wr_data == {$past(dev_wr_data),$past(dev_wr_data,2),$past(dev_wr_data,3),$past(dev_wr_data,4)}) && ($past(mem_wr_data,4) == {$past(dev_wr_data,5),$past(dev_wr_data,6),$past(dev_wr_data,7),$past(dev_wr_data,8)})
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.8 FG-FLOW · 背压流控与缓冲行为
+
+对应 R05、R08；在 mem ready 低、device 请求等待、缓冲空满影响外部握手及连续流动场景，期望 valid、地址、写数据稳定且不发生可见丢拍或越权确认；guided 仅检查默认深度 2 的顶层可见后果，FIFO 指针、计数、全部数据顺序及深度 1/3 参数证明保持为 native 白盒义务。
+
+#### FC-FLOW-READ-STALL
+
+对应 R05；当 mem_rd_valid 高而 mem_rd_ready 低时触发，期望 valid 保持且 mem_rd_addr 稳定直至握手或复位；guided 直接检查顶层信号，不限制背压长度。
+
+##### CK-FLOW-RD-VALID-ADDRESS-HOLD
+
+对应 R05；当前一采样 mem_rd_valid 高且 mem_rd_ready 低、期间未复位时触发，期望本采样 mem_rd_valid 仍高且 mem_rd_addr 稳定；任意长背压逐拍适用。
+
+类型：时序断言；属性：`A_CK_FLOW_RD_VALID_ADDRESS_HOLD`；当前结果：**未决**。 guard witness：`G_A_CK_FLOW_RD_VALID_ADDRESS_HOLD`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_rd_valid && !mem_rd_ready))
+// body：检查或覆盖内容
+(mem_rd_valid) && ($stable(mem_rd_addr))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-FLOW-WRITE-STALL
+
+对应 R05；当 mem_wr_valid 高而 mem_wr_ready 低时触发，期望 valid、mem_wr_addr 和 mem_wr_data 均稳定直至握手或复位；guided 可完整表达此顶层安全义务。
+
+##### CK-FLOW-WR-VALID-ADDRESS-DATA-HOLD
+
+对应 R05；当前一采样 mem_wr_valid 高且 mem_wr_ready 低、期间未复位时触发，期望本采样 mem_wr_valid 仍高，mem_wr_addr 与 mem_wr_data 均稳定；不限制背压持续时间。
+
+类型：时序断言；属性：`A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD`；当前结果：**未决**。 guard witness：`G_A_CK_FLOW_WR_VALID_ADDRESS_DATA_HOLD`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid && !mem_wr_ready))
+// body：检查或覆盖内容
+(mem_wr_valid) && ($stable(mem_wr_addr)) && ($stable(mem_wr_data))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-FLOW-DEVICE-GATING
+
+对应 R01、R08；当 device req 低或命令无可见传输资格时触发，期望对应 ack 不形成脱离请求的传输；guided 检查 req/ack 关系，不以内部 FIFO 空满作为属性前提。
+
+##### CK-FLOW-DEV-RD-ACK-GATED
+
+对应 R01、R08；当 dev_rd_req 为低或 rst_n 为低时触发，期望 dev_rd_ack 为低；不以内层 FIFO valid 作为前提。
+
+类型：组合断言；属性：`A_CK_FLOW_DEV_RD_ACK_GATED`；当前结果：**未决**。 guard witness：`G_A_CK_FLOW_DEV_RD_ACK_GATED`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+(dev_rd_req && rst_n) || !dev_rd_ack
+// trigger：guard witness 的触发探针
+!dev_rd_req || !rst_n
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-FLOW-DEV-WR-ACK-GATED
+
+对应 R01、R08；当 dev_wr_req 为低或 rst_n 为低时触发，期望 dev_wr_ack 为低；不以内层配额或 FIFO ready 作为前提。
+
+类型：组合断言；属性：`A_CK_FLOW_DEV_WR_ACK_GATED`；当前结果：**未决**。 guard witness：`G_A_CK_FLOW_DEV_WR_ACK_GATED`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+(dev_wr_req && rst_n) || !dev_wr_ack
+// trigger：guard witness 的触发探针
+!dev_wr_req || !rst_n
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-FLOW-BUFFER-BOUNDARY
+
+对应 R08；当读预取或写提交遭遇连续不对称背压时触发，期望顶层不会覆盖被阻塞的有效写拍或产生无请求设备握手；guided 仅检查可见后果，FIFO 容量、同拍替换、指针和深度 1/3 由 NCK-R08 系列负责。
+
+##### CK-FLOW-BUFFER-WR-VISIBLE-HOLD
+
+对应 R08；当外部可见 mem 写队首遭遇背压时触发，期望地址和数据保持而不被后续 device 片段覆盖；只判定顶层后果。
+
+类型：时序断言；属性：`A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD`；当前结果：**未决**。 guard witness：`G_A_CK_FLOW_BUFFER_WR_VISIBLE_HOLD`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid && !mem_wr_ready))
+// body：检查或覆盖内容
+mem_wr_valid && $stable(mem_wr_addr) && $stable(mem_wr_data)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-FLOW-BUFFER-NO-SPURIOUS-DEV-ACK
+
+对应 R08；当任一 device req 无效时触发，期望其 ack 无效，不因内部同拍 FIFO 入出队或替换产生可见伪传输；内部 FIFO 行为由 NCK-R08 系列另证。
+
+类型：组合断言；属性：`A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK`；当前结果：**未决**。 guard witness：`G_A_CK_FLOW_BUFFER_NO_SPURIOUS_DEV_ACK`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+(dev_rd_req || !dev_rd_ack) && (dev_wr_req || !dev_wr_ack)
+// trigger：guard witness 的触发探针
+!dev_rd_req || !dev_wr_req
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.9 FG-RESET · 异步复位与事务中断
+
+对应 R10、R13；在初始低有效复位以及读写传输、部分片段或背压期间再次拉低 rst_n 的场景，期望接口立即静默、被中断命令不产生 done 且复位后可开始无残留的新命令；guided 检查顶层可见清零和恢复，内部 FIFO、计数及部分拼接彻底清除由 native 义务补足。
+
+#### FC-RESET-SILENCE
+
+对应 R10；只要 rst_n 为低即触发，期望 host ack/done、mem valid 和 device ack 均为低；guided 不通过 disable 条件跳过复位周期，而是直接检查顶层复位行为。
+
+##### CK-RESET-HOST-SILENCE
+
+对应 R10；任一采样或组合观察中 rst_n 为低时触发，期望 host_rd_ack、host_wr_ack、host_rd_done、host_wr_done 全部为低。
+
+类型：组合断言；属性：`A_CK_RESET_HOST_SILENCE`；当前结果：**未决**。 guard witness：`G_A_CK_RESET_HOST_SILENCE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+!rst_n
+// body：检查或覆盖内容
+!host_rd_ack && !host_wr_ack && !host_rd_done && !host_wr_done
+// trigger：guard witness 的触发探针
+!rst_n
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-RESET-DATA-CHANNEL-SILENCE
+
+对应 R10；任一采样或组合观察中 rst_n 为低时触发，期望 mem_rd_valid、mem_wr_valid、dev_rd_ack、dev_wr_ack 全部为低。
+
+类型：组合断言；属性：`A_CK_RESET_DATA_CHANNEL_SILENCE`；当前结果：**未决**。 guard witness：`G_A_CK_RESET_DATA_CHANNEL_SILENCE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+!rst_n
+// body：检查或覆盖内容
+!mem_rd_valid && !mem_wr_valid && !dev_rd_ack && !dev_wr_ack
+// trigger：guard witness 的触发探针
+!rst_n
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-RESET-INTERRUPT
+
+对应 R10；当读写活动、mem 背压或设备部分片段期间 rst_n 再次拉低时触发，期望当前命令立即中断且接口静默；guided 用顶层历史和 Cover 检查中断，内部状态清除由 NCK-R10-RESET 补足。
+
+##### CK-RESET-INTERRUPT-RD-STALL
+
+对应 R10；当前一采样 mem_rd_valid 高且被背压、随后 rst_n 拉低时触发，期望复位采样的 mem_rd_valid 与读侧 ack/done 均为低。
+
+类型：时序断言；属性：`A_CK_RESET_INTERRUPT_RD_STALL`；当前结果：**未决**。 guard witness：`G_A_CK_RESET_INTERRUPT_RD_STALL`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(uc_past_valid) && (!rst_n) && ($past(rst_n && mem_rd_valid && !mem_rd_ready))
+// body：检查或覆盖内容
+(!mem_rd_valid) && (!host_rd_ack) && (!host_rd_done)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-RESET-INTERRUPT-WR-STALL
+
+对应 R10；当前一采样 mem_wr_valid 高且被背压、随后 rst_n 拉低时触发，期望复位采样的 mem_wr_valid 与写侧 ack/done 均为低。
+
+类型：时序断言；属性：`A_CK_RESET_INTERRUPT_WR_STALL`；当前结果：**未决**。 guard witness：`G_A_CK_RESET_INTERRUPT_WR_STALL`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(uc_past_valid) && (!rst_n) && ($past(rst_n && mem_wr_valid && !mem_wr_ready))
+// body：检查或覆盖内容
+(!mem_wr_valid) && (!host_wr_ack) && (!host_wr_done)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-RESET-INTERRUPT-DEVICE-PARTIAL
+
+对应 R10；固定两拍窗口中前一拍发生任一 device 握手而当前 rst_n 拉低时，期望当前两个 device ack 和两个 done 均为低；内部 lane 与部分拼接清除留给 NCK-R10-RESET。
+
+类型：时序断言；属性：`A_CK_RESET_INTERRUPT_DEVICE_PARTIAL`；当前结果：**未决**。 guard witness：`G_A_CK_RESET_INTERRUPT_DEVICE_PARTIAL`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(uc_past_valid) && (!rst_n) && ($past(rst_n && ((dev_rd_req && dev_rd_ack) || (dev_wr_req && dev_wr_ack))))
+// body：检查或覆盖内容
+!dev_rd_ack && !dev_wr_ack && !host_rd_done && !host_wr_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-RESET-NO-DONE
+
+对应 R09、R10；当命令在最终目标握手前被复位中断时触发，期望复位期间及释放后的旧命令不产生 done；guided 检查可见 done 因果窗口，完整命令身份隔离由 native 模型承担。
+
+##### CK-RESET-RD-DONE-CLEAR
+
+对应 R09、R10；当当前 rst_n 低，或前一拍 rst_n 低而当前已释放且尚未接受新读命令时，期望 host_rd_done 为低；旧命令不得在释放后一拍补发完成。
+
+类型：时序断言；属性：`A_CK_RESET_RD_DONE_CLEAR`；当前结果：**未决**。 guard witness：`G_A_CK_RESET_RD_DONE_CLEAR`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(uc_past_valid) && (!rst_n || !$past(rst_n))
+// body：检查或覆盖内容
+!host_rd_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-RESET-WR-DONE-CLEAR
+
+对应 R09、R10；当当前 rst_n 低，或前一拍 rst_n 低而当前已释放且尚未接受新写命令时，期望 host_wr_done 为低；旧命令不得在释放后一拍补发完成。
+
+类型：时序断言；属性：`A_CK_RESET_WR_DONE_CLEAR`；当前结果：**未决**。 guard witness：`G_A_CK_RESET_WR_DONE_CLEAR`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(uc_past_valid) && (!rst_n || !$past(rst_n))
+// body：检查或覆盖内容
+!host_wr_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-RESET-RESTART
+
+对应 R10、R12；仅在复位释放后紧接新命令接受及无等待首地址窗口中检查使用新 haddr 且旧 done 不残留；任意等待及完整旧数据隔离由 native 数据模型证明。
+
+##### CK-RESET-RD-RESTART-ADDRESS
+
+对应 R10；过去两拍依次为复位低、接受新读命令，当前紧邻出现 mem_rd_valid 时，期望 mem_rd_addr 使用该接受沿的新 host_rd_haddr 且旧 host_rd_done 未出现。
+
+类型：时序断言；属性：`A_CK_RESET_RD_RESTART_ADDRESS`；当前结果：**未决**。 guard witness：`G_A_CK_RESET_RD_RESTART_ADDRESS`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_rd_req && host_rd_ack))) && ($past(uc_past_valid)) && (!$past(rst_n,2))
+// body：检查或覆盖内容
+(mem_rd_addr == $past(host_rd_haddr)) && (!host_rd_done)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-RESET-WR-RESTART-ADDRESS
+
+对应 R10；复位释放后接受新写命令，紧接四拍连续 device 写并在下一拍出现 mem_wr_valid 的固定窗口中，期望 mem_wr_addr 使用接受沿的新 host_wr_haddr 且旧 done 未出现。
+
+类型：时序断言；属性：`A_CK_RESET_WR_RESTART_ADDRESS`；当前结果：**未决**。 guard witness：`G_A_CK_RESET_WR_RESTART_ADDRESS`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_wr_req && host_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,4)) && (mem_wr_valid)) && ($past(uc_past_valid,5)) && (!$past(rst_n,6))
+// body：检查或覆盖内容
+(mem_wr_addr == $past(host_wr_haddr,5)) && (!host_wr_done)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.10 FG-CONCURRENT · 双向并发与相互独立
+
+对应 R01、R11；在读写同时请求、同时接受、同时传输、单侧背压和同时完成场景，期望两方向可并发且顶层控制互不阻塞；guided 的同时传输项只作可达 Cover，外部进度安全由各方向属性检查，完整跨通道独立性由 native oracle 与 RD/WR_PROGRESS 证明。
+
+#### FC-CONCURRENT-ACCEPT
+
+对应 R01、R11；当复位释放后的空闲边界读写 host req 同时有效时，期望两个方向可在同一拍各自 ack；guided 检查该固定边界，不以另一方向为约束。
+
+##### CK-CONCURRENT-ACCEPT-AFTER-RESET
+
+对应 R01、R11；当前一采样处于复位、释放后读写 req 同时有效且两个 done 均低时触发，期望 host_rd_ack 与 host_wr_ack 同拍均为高，检查接受路径不互斥。
+
+类型：时序断言；属性：`A_CK_CONCURRENT_ACCEPT_AFTER_RESET`；当前结果：**未决**。 guard witness：`G_A_CK_CONCURRENT_ACCEPT_AFTER_RESET`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(uc_past_valid) && (rst_n) && (!$past(rst_n)) && (host_rd_req && host_wr_req && !host_rd_done && !host_wr_done)
+// body：检查或覆盖内容
+host_rd_ack && host_wr_ack
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-CONCURRENT-TRANSFER
+
+对应 R11；分别探测 mem 侧和 device 侧读写握手同拍成立的可达性；这些 Cover 不证明互不干扰，跨通道安全由各方向进度属性及独立 native oracle 负责。
+
+##### CK-CONCURRENT-MEM-TRANSFER
+
+对应 R11；以 mem_rd_valid&&mem_rd_ready 与 mem_wr_valid&&mem_wr_ready 同拍成立为触发场景，期望获得两个 64 位 mem 传输并发可达见证；Cover 不证明互不干扰。
+
+类型：业务覆盖；属性：`C_CK_CONCURRENT_MEM_TRANSFER`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+rst_n && mem_rd_valid && mem_rd_ready && mem_wr_valid && mem_wr_ready
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+##### CK-CONCURRENT-DEVICE-TRANSFER
+
+对应 R11；以 dev_rd_req&&dev_rd_ack 与 dev_wr_req&&dev_wr_ack 同拍成立为触发场景，期望获得两个 16 位 device 传输并发可达见证；Cover 不证明互不干扰。
+
+类型：业务覆盖；属性：`C_CK_CONCURRENT_DEVICE_TRANSFER`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+rst_n && dev_rd_req && dev_rd_ack && dev_wr_req && dev_wr_ack
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+#### FC-CONCURRENT-STALL
+
+对应 R01、R11；在一侧 mem valid 被背压且另一侧同拍已具备完整握手的局部窗口，检查被阻塞侧保持并记录另一侧实际握手；不要求背压解除，完整无跨通道约束行为由 native RD/WR_PROGRESS oracle 负责。
+
+##### CK-CONCURRENT-RD-STALL-WR-HANDSHAKE
+
+对应 R01、R11；当前拍写 mem 握手成立且前一拍读 mem valid 被 ready 低阻塞、两拍未复位时，期望读 valid 和地址保持；写握手本身只作为观察条件，不作同义后件。
+
+类型：时序断言；属性：`A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE`；当前结果：**未决**。 guard witness：`G_A_CK_CONCURRENT_RD_STALL_WR_HANDSHAKE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_rd_valid && !mem_rd_ready)) && (mem_wr_valid && mem_wr_ready)
+// body：检查或覆盖内容
+mem_rd_valid && $stable(mem_rd_addr)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-CONCURRENT-WR-STALL-RD-HANDSHAKE
+
+对应 R01、R11；当前拍读 mem 握手成立且前一拍写 mem valid 被 ready 低阻塞、两拍未复位时，期望写 valid、地址和数据保持；读握手本身只作为观察条件。
+
+类型：时序断言；属性：`A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE`；当前结果：**未决**。 guard witness：`G_A_CK_CONCURRENT_WR_STALL_RD_HANDSHAKE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(mem_wr_valid && !mem_wr_ready)) && (mem_rd_valid && mem_rd_ready)
+// body：检查或覆盖内容
+mem_wr_valid && $stable(mem_wr_addr) && $stable(mem_wr_data)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-CONCURRENT-DONE
+
+对应 R09、R11；在可由固定 len=0 窗口确认读最终 device 握手与写最终 mem 握手同沿发生时，期望下一拍两个 done 同时呈现；任意长度最终身份由 NCK-R11-DUPLEX 负责。
+
+##### CK-CONCURRENT-SIMULTANEOUS-DONE
+
+对应 R09、R11；当前两个 done 同时为高时检查前一拍读 dev 与写 mem 目标握手均成立；并发完成的固定窗口可达性另由 Cover 检查，任意长度最终身份由 native 双模型补足。
+
+类型：时序断言；属性：`A_CK_CONCURRENT_SIMULTANEOUS_DONE`；当前结果：**未决**。 guard witness：`G_A_CK_CONCURRENT_SIMULTANEOUS_DONE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+uc_past_valid && host_rd_done && host_wr_done
+// body：检查或覆盖内容
+$past(rst_n && dev_rd_req && dev_rd_ack) && $past(rst_n && mem_wr_valid && mem_wr_ready)
+// trigger：guard witness 的触发探针
+host_rd_done && host_wr_done
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.11 FG-DONE · 完成时序与命令边界
+
+对应 R02、R09；在读方向最后一个 device 握手、写方向最后一个 mem 握手、done 周期及后续命令场景，期望 done 在最终目标端握手后一拍呈现单周期脉冲、期间不 ack 且不得提前或重复；guided 检查顶层局部时序，任意长度下一命令一完成的全配额证明由 native 模型承担。
+
+#### FC-DONE-PULSE
+
+对应 R09；当 host_rd_done 或 host_wr_done 置位时触发，期望下一采样周期回落，不连续保持或重复；guided 可直接检查脉冲宽度，命令级唯一性由 native 序号模型补足。
+
+##### CK-DONE-RD-ONE-CYCLE
+
+对应 R09；当前一采样 host_rd_done 为高且本采样未复位时触发，期望 host_rd_done 已回落，禁止连续两个周期保持读完成。
+
+类型：时序断言；属性：`A_CK_DONE_RD_ONE_CYCLE`；当前结果：**未决**。 guard witness：`G_A_CK_DONE_RD_ONE_CYCLE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_rd_done))
+// body：检查或覆盖内容
+!host_rd_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-DONE-WR-ONE-CYCLE
+
+对应 R09；当前一采样 host_wr_done 为高且本采样未复位时触发，期望 host_wr_done 已回落，禁止连续两个周期保持写完成。
+
+类型：时序断言；属性：`A_CK_DONE_WR_ONE_CYCLE`；当前结果：**未决**。 guard witness：`G_A_CK_DONE_WR_ONE_CYCLE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_wr_done))
+// body：检查或覆盖内容
+!host_wr_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-DONE-READ-CAUSE
+
+对应 R09；当 host_rd_done 置位时触发，期望前一采样沿发生 dev_rd_req&&dev_rd_ack；guided 证明可见目标端因果，任意长度最终拍身份由 NCK-R09-DONE 负责。
+
+##### CK-DONE-RD-PREV-DEV-HANDSHAKE
+
+对应 R09；当 host_rd_done 为高时触发，期望前一采样沿 dev_rd_req&&dev_rd_ack 成立且 rst_n 为高；不把后件直接用作 guard，最终配额身份由 NCK-R09-DONE 证明。
+
+类型：时序断言；属性：`A_CK_DONE_RD_PREV_DEV_HANDSHAKE`；当前结果：**未决**。 guard witness：`G_A_CK_DONE_RD_PREV_DEV_HANDSHAKE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(uc_past_valid) && (host_rd_done)
+// body：检查或覆盖内容
+$past(dev_rd_req && dev_rd_ack && rst_n)
+// trigger：guard witness 的触发探针
+host_rd_done
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-DONE-WRITE-CAUSE
+
+对应 R09；当 host_wr_done 置位时触发，期望前一采样沿发生 mem_wr_valid&&mem_wr_ready；guided 证明可见目标端因果，完整任意长度因果由 native 配额模型负责。
+
+##### CK-DONE-WR-PREV-MEM-HANDSHAKE
+
+对应 R09；当 host_wr_done 为高时触发，期望前一采样沿 mem_wr_valid&&mem_wr_ready 成立且 rst_n 为高；不把后件直接用作 guard，最终配额身份由 NCK-R09-DONE 证明。
+
+类型：时序断言；属性：`A_CK_DONE_WR_PREV_MEM_HANDSHAKE`；当前结果：**未决**。 guard witness：`G_A_CK_DONE_WR_PREV_MEM_HANDSHAKE`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+(uc_past_valid) && (host_wr_done)
+// body：检查或覆盖内容
+$past(mem_wr_valid && mem_wr_ready && rst_n)
+// trigger：guard witness 的触发探针
+host_wr_done
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+#### FC-DONE-ACK-GAP
+
+对应 R02、R09；当某方向 done 为高且 host req 等待时触发，期望同方向 ack 为低，随后空闲周期方可接受；guided 直接检查顶层 ack/done 边界，不要求请求在复位时保持。
+
+##### CK-DONE-RD-NO-ACK
+
+对应 R02、R09；当 host_rd_done 为高时触发，期望 host_rd_ack 为低，无论 host_rd_req 是否等待。
+
+类型：组合断言；属性：`A_CK_DONE_RD_NO_ACK`；当前结果：**未决**。 guard witness：`G_A_CK_DONE_RD_NO_ACK`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+!host_rd_done || !host_rd_ack
+// trigger：guard witness 的触发探针
+host_rd_done
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-DONE-WR-NO-ACK
+
+对应 R02、R09；当 host_wr_done 为高时触发，期望 host_wr_ack 为低，无论 host_wr_req 是否等待。
+
+类型：组合断言；属性：`A_CK_DONE_WR_NO_ACK`；当前结果：**未决**。 guard witness：`G_A_CK_DONE_WR_NO_ACK`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+!host_wr_done || !host_wr_ack
+// trigger：guard witness 的触发探针
+host_wr_done
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-DONE-RD-NEXT-ACK
+
+对应 R02、R09；当读 req 按协议跨越前一拍 done 保持且当前未复位时，期望当前 host_rd_done 已低并由 host_rd_ack 接受新命令。
+
+类型：时序断言；属性：`A_CK_DONE_RD_NEXT_ACK`；当前结果：**未决**。 guard witness：`G_A_CK_DONE_RD_NEXT_ACK`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_rd_req) && ($past(host_rd_done && host_rd_req))
+// body：检查或覆盖内容
+host_rd_ack && !host_rd_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+##### CK-DONE-WR-NEXT-ACK
+
+对应 R02、R09；当写 req 按协议跨越前一拍 done 保持且当前未复位时，期望当前 host_wr_done 已低并由 host_wr_ack 接受新命令。
+
+类型：时序断言；属性：`A_CK_DONE_WR_NEXT_ACK`；当前结果：**未决**。 guard witness：`G_A_CK_DONE_WR_NEXT_ACK`，**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_wr_req) && ($past(host_wr_done && host_wr_req))
+// body：检查或覆盖内容
+host_wr_ack && !host_wr_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-872c6e8dd8bc4642988787232188507c/manifest.json)。
+
+### A.12 FG-COVERAGE · 业务场景可达性
+
+对应 R03、R04、R10、R11、R12；在非对齐地址、零长度、较长长度、固定连续三命令窗口、等待请求、传输中复位、并发握手及同时完成场景，期望获得独立业务 Cover 见证；Cover 不添加连续握手 Assume，且不是 COI、正确性证明、完整空洞性检查或无界活性证明。
+
+#### FC-COVER-NONALIGNED
+
+对应 R03、R12；读侧探测接受后紧邻首 valid，写侧探测接受后四拍连续 device 写再出现首 valid，且接受沿 haddr 低三位非零并原样呈现；不将非对齐或连续握手作为 Assume。
+
+##### CK-COVER-RD-NONALIGNED
+
+对应 R03、R12；固定两拍窗口中先接受 host_rd_haddr[2:0] 非零的读命令，当前首个 mem_rd_valid 使用该接受沿地址，期望获得非对齐读见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_RD_NONALIGNED`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+(((uc_past_valid) && (rst_n) && ($past(rst_n))) && ($past(host_rd_req && host_rd_ack))) && ($past(host_rd_haddr[2:0] != 3'b0))
+// body：检查或覆盖内容
+(mem_rd_valid) && (mem_rd_addr == $past(host_rd_haddr))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+##### CK-COVER-WR-NONALIGNED
+
+对应 R03、R12；固定六拍窗口中先接受 host_wr_haddr[2:0] 非零的写命令，随后四拍连续 device 写，当前首个 mem_wr_valid 使用接受沿地址，期望获得非对齐写见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_WR_NONALIGNED`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+((($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_wr_req && host_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,4)) && (mem_wr_valid)) && ($past(host_wr_haddr[2:0] != 3'b0,5))
+// body：检查或覆盖内容
+(mem_wr_valid) && (mem_wr_addr == $past(host_wr_haddr,5))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+#### FC-COVER-ZERO
+
+对应 R04、R09、R12；探测 len=0 接受后无等待形成完整固定事务窗口；不添加连续握手 Assume，Cover 也不替代任意背压安全判定。
+
+##### CK-COVER-RD-LEN0-COMPLETE
+
+对应 R04、R09、R12；固定七拍窗口依次为接受 host_rd_len=0、唯一 mem 读、四拍连续 device 读、当前 host_rd_done，期望获得读见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_RD_LEN0_COMPLETE`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))) && ($past(host_rd_req && host_rd_ack,6)) && ($past(host_rd_len == 0,6)) && ($past(mem_rd_valid && mem_rd_ready,5)) && ($past(dev_rd_req && dev_rd_ack,4)) && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack))
+// body：检查或覆盖内容
+host_rd_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+##### CK-COVER-WR-LEN0-COMPLETE
+
+对应 R04、R09、R12；固定七拍窗口依次为接受 host_wr_len=0、四拍连续 device 写、唯一 mem 写、当前 host_wr_done，期望获得写见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_WR_LEN0_COMPLETE`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,5)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6))) && ($past(host_wr_req && host_wr_ack,6)) && ($past(host_wr_len == 0,6)) && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(mem_wr_valid && mem_wr_ready))
+// body：检查或覆盖内容
+host_wr_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+#### FC-COVER-LONG
+
+对应 R04、R12；探测 len=1 完整连续窗口，以及 len>1 的固定连续多拍前缀；不限制其他输入，也不将有限见证称为全长度或任意背压证明。
+
+##### CK-COVER-RD-LEN1
+
+对应 R04、R12；固定窗口中由过去接受沿 host_rd_len=1 关联两拍连续 mem 读、八拍连续 device 读及当前完成，期望获得两字读见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_RD_LEN1`；当前结果：**未命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,9)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))) && ($past(host_rd_req && host_rd_ack,10)) && ($past(host_rd_len == 1,10)) && ($past(mem_rd_valid && mem_rd_ready,9)) && ($past(mem_rd_valid && mem_rd_ready,8)) && ($past(dev_rd_req && dev_rd_ack,8)) && ($past(dev_rd_req && dev_rd_ack,7)) && ($past(dev_rd_req && dev_rd_ack,6)) && ($past(dev_rd_req && dev_rd_ack,5)) && ($past(dev_rd_req && dev_rd_ack,4)) && ($past(dev_rd_req && dev_rd_ack,3)) && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack))
+// body：检查或覆盖内容
+host_rd_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+##### CK-COVER-WR-LEN1
+
+对应 R04、R12；固定窗口中由过去接受沿 host_wr_len=1 关联八拍连续 device 写、两个固定位置 mem 写及当前完成，期望获得两字写见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_WR_LEN1`；当前结果：**未命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,9)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10))) && ($past(host_wr_req && host_wr_ack,10)) && ($past(host_wr_len == 1,10)) && ($past(dev_wr_req && dev_wr_ack,9)) && ($past(dev_wr_req && dev_wr_ack,8)) && ($past(dev_wr_req && dev_wr_ack,7)) && ($past(dev_wr_req && dev_wr_ack,6)) && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(mem_wr_valid && mem_wr_ready,5)) && ($past(mem_wr_valid && mem_wr_ready))
+// body：检查或覆盖内容
+host_wr_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+##### CK-COVER-RD-LONGER-PROGRESS
+
+对应 R04、R12；固定窗口中接受沿 host_rd_len>1 后出现三拍连续 mem 读及连续 device 读前缀，期望展示更长读事务局部进度；不要求完成任意 len。
+
+类型：业务覆盖；属性：`C_CK_COVER_RD_LONGER_PROGRESS`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+(($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past(host_rd_req && host_rd_ack && host_rd_len > 1,5))
+// body：检查或覆盖内容
+(mem_rd_valid && mem_rd_ready) && ($past(mem_rd_valid && mem_rd_ready,3)) && ($past(mem_rd_valid && mem_rd_ready,4)) && ($past(dev_rd_req && dev_rd_ack)) && ($past(dev_rd_req && dev_rd_ack,2)) && ($past(dev_rd_req && dev_rd_ack,3)) && (dev_rd_req && dev_rd_ack)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+##### CK-COVER-WR-LONGER-PROGRESS
+
+对应 R04、R12；固定窗口中接受沿 host_wr_len>1 后出现十二拍连续 device 写及三个固定位置 mem 写，期望展示更长写事务局部进度；不要求完成任意 len。
+
+类型：业务覆盖；属性：`C_CK_COVER_WR_LONGER_PROGRESS`；当前结果：**未命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+(($past(uc_past_valid,12)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10)) && ($past(rst_n,11)) && ($past(rst_n,12)) && ($past(rst_n,13))) && ($past(host_wr_req && host_wr_ack && host_wr_len > 1,13)) && ($past(dev_wr_req && dev_wr_ack)) && ($past(dev_wr_req && dev_wr_ack,2)) && ($past(dev_wr_req && dev_wr_ack,3)) && ($past(dev_wr_req && dev_wr_ack,4)) && ($past(dev_wr_req && dev_wr_ack,5)) && ($past(dev_wr_req && dev_wr_ack,6)) && ($past(dev_wr_req && dev_wr_ack,7)) && ($past(dev_wr_req && dev_wr_ack,8)) && ($past(dev_wr_req && dev_wr_ack,9)) && ($past(dev_wr_req && dev_wr_ack,10)) && ($past(dev_wr_req && dev_wr_ack,11)) && ($past(dev_wr_req && dev_wr_ack,12)) && ($past(mem_wr_valid && mem_wr_ready,8)) && ($past(mem_wr_valid && mem_wr_ready,4)) && (mem_wr_valid && mem_wr_ready)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+#### FC-COVER-THREE-COMMANDS
+
+对应 R02、R12；在深度 40 内探测同方向三条 len=0 命令各按固定无等待七拍节奏接受和完成；这是特定连续窗口 Cover，不证明任意等待或无限持续服务。
+
+##### CK-COVER-RD-THREE-COMMANDS
+
+对应 R02、R12；固定 21 拍窗口中三次接受沿均携带 host_rd_len=0，且按接受、唯一 mem 读、四拍 device 读、done、下一拍接受的节奏连续出现，期望获得三读命令见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_RD_THREE_COMMANDS`；当前结果：**未命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+(($past(uc_past_valid,19)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10)) && ($past(rst_n,11)) && ($past(rst_n,12)) && ($past(rst_n,13)) && ($past(rst_n,14)) && ($past(rst_n,15)) && ($past(rst_n,16)) && ($past(rst_n,17)) && ($past(rst_n,18)) && ($past(rst_n,19)) && ($past(rst_n,20))) && (host_rd_done) && ($past(host_rd_done,7)) && ($past(host_rd_done,14)) && ($past(host_rd_req && host_rd_ack && host_rd_len == 0,6)) && ($past(host_rd_req && host_rd_ack && host_rd_len == 0,13)) && ($past(host_rd_req && host_rd_ack && host_rd_len == 0,20))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+##### CK-COVER-WR-THREE-COMMANDS
+
+对应 R02、R12；固定 21 拍窗口中三次接受沿均携带 host_wr_len=0，且按接受、四拍 device 写、唯一 mem 写、done、下一拍接受的节奏连续出现，期望获得三写命令见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_WR_THREE_COMMANDS`；当前结果：**未命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+(($past(uc_past_valid,19)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5)) && ($past(rst_n,6)) && ($past(rst_n,7)) && ($past(rst_n,8)) && ($past(rst_n,9)) && ($past(rst_n,10)) && ($past(rst_n,11)) && ($past(rst_n,12)) && ($past(rst_n,13)) && ($past(rst_n,14)) && ($past(rst_n,15)) && ($past(rst_n,16)) && ($past(rst_n,17)) && ($past(rst_n,18)) && ($past(rst_n,19)) && ($past(rst_n,20))) && (host_wr_done) && ($past(host_wr_done,7)) && ($past(host_wr_done,14)) && ($past(host_wr_req && host_wr_ack && host_wr_len == 0,6)) && ($past(host_wr_req && host_wr_ack && host_wr_len == 0,13)) && ($past(host_wr_req && host_wr_ack && host_wr_len == 0,20))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+#### FC-COVER-PENDING
+
+对应 R02、R12；探测 req 在前一拍 done 周期保持等待并于紧邻下一拍获 ack 的两拍窗口；环境等待保持 Assume 仍不限制此前等待长度。
+
+##### CK-COVER-RD-PENDING-NEXT
+
+对应 R02、R12；固定两拍窗口中 host_rd_req 在前一拍 host_rd_done 时有效且无 ack，当前仍有效并获得 host_rd_ack，期望获得等待读命令见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_RD_PENDING_NEXT`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_rd_req) && ($past(host_rd_done && host_rd_req))
+// body：检查或覆盖内容
+host_rd_ack
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+##### CK-COVER-WR-PENDING-NEXT
+
+对应 R02、R12；固定两拍窗口中 host_wr_req 在前一拍 host_wr_done 时有效且无 ack，当前仍有效并获得 host_wr_ack，期望获得等待写命令见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_WR_PENDING_NEXT`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+((uc_past_valid) && (rst_n) && ($past(rst_n))) && (host_wr_req) && ($past(host_wr_done && host_wr_req))
+// body：检查或覆盖内容
+host_wr_ack
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+#### FC-COVER-RESET-REENTRY
+
+对应 R10、R12；以紧邻采样的背压或 device 握手、再次复位及释放后新命令接受组成有限窗口，覆盖中断与恢复；不假定初始样本后复位保持高。
+
+##### CK-COVER-RESET-RD-STALL
+
+对应 R10、R12；固定四拍窗口依次观察读 mem 背压、rst_n 再次拉低、释放并接受新读命令，期望获得读背压中断恢复见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_RESET_RD_STALL`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+($past(uc_past_valid)) && (rst_n) && (!$past(rst_n)) && ($past(rst_n && mem_rd_valid && !mem_rd_ready,2)) && (host_rd_req && host_rd_ack)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+##### CK-COVER-RESET-WR-STALL
+
+对应 R10、R12；固定四拍窗口依次观察写 mem 背压、rst_n 再次拉低、释放并接受新写命令，期望获得写背压中断恢复见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_RESET_WR_STALL`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+($past(uc_past_valid)) && (rst_n) && (!$past(rst_n)) && ($past(rst_n && mem_wr_valid && !mem_wr_ready,2)) && (host_wr_req && host_wr_ack)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+##### CK-COVER-RESET-PARTIAL-FRAGMENT
+
+对应 R10、R12；固定四拍窗口依次观察任一 device 握手、rst_n 再次拉低、释放并接受同方向新命令，期望获得部分进度中断见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_RESET_PARTIAL_FRAGMENT`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+($past(uc_past_valid)) && (rst_n) && (!$past(rst_n)) && ($past(rst_n && ((dev_rd_req && dev_rd_ack) || (dev_wr_req && dev_wr_ack)),2)) && ((host_rd_req && host_rd_ack) || (host_wr_req && host_wr_ack))
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+#### FC-COVER-DUPLEX
+
+对应 R11、R12；以读写同拍接受并在固定短窗口中出现同拍读写有效握手为目标，期望获得双向并发见证；Cover 不证明内部双队列数据独立。
+
+##### CK-COVER-DUPLEX-OVERLAP
+
+对应 R11、R12；固定短窗口由过去读写命令同拍接受及当前读写 mem 或 device 握手同拍成立构成，期望获得双向并发传输见证。
+
+类型：业务覆盖；属性：`C_CK_COVER_DUPLEX_OVERLAP`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+(($past(uc_past_valid,4)) && (rst_n) && ($past(rst_n)) && ($past(rst_n,2)) && ($past(rst_n,3)) && ($past(rst_n,4)) && ($past(rst_n,5))) && ($past((host_rd_req && host_rd_ack) && (host_wr_req && host_wr_ack),5)) && (mem_rd_valid && mem_rd_ready) && (dev_wr_req && dev_wr_ack)
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+#### FC-COVER-SIMULTANEOUS-DONE
+
+对应 R09、R11、R12；以两个方向当前 host done 同拍为触发目标，期望获得同时完成见证；命中只表明场景可达，不证明完成配额正确。
+
+##### CK-COVER-SIMULTANEOUS-DONE
+
+对应 R09、R11、R12；以 host_rd_done 与 host_wr_done 同一采样周期均为高为触发场景，期望获得双向同时完成见证；Cover 命中不证明完成配额正确。
+
+类型：业务覆盖；属性：`C_CK_COVER_SIMULTANEOUS_DONE`；当前结果：**已命中**。
+
+```systemverilog
+// guard：生效条件
+1'b1
+// body：检查或覆盖内容
+rst_n && host_rd_done && host_wr_done
+// trigger：guard witness 的触发探针
+1'b1
+```
+
+ [编译与运行身份](../verification/reports/guided/tests/sby_runs/sby-36b62d07a5ac4849952f6b3aca922448/manifest.json)。
+
+## 附录 B. 默认 Native 实例的逐属性结果
+
+本表以 `accepted_prove_a32_l32_f2` 的实际 58 个安全编译实例和 `accepted_cover_a32_l32_f2` 的 17 个覆盖实例为准。FIFO 属性可在读/写两个实例中同名，使用“编译对象与位置”区分；匿名槽位顺序属性保留原编译身份。安全列来自 prove，覆盖列来自 cover，不把 disabled 状态隐藏后冒充一次运行全部通过。
+
+| 属性/CK 身份 | 需求 | 类别 | 实际结果 | 编译对象与位置 | 轨迹/记录 |
+| --- | --- | --- | --- | --- | --- |
+| C_CK_RESET_ABORT_RD | R10 | 业务覆盖 | 已命中 | Property COVER in dmac_harness at inputs/formal/dmac_harness.sv:25.9-25.84 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace3.vcd) |
+| C_CK_RESET_ABORT_WR | R10 | 业务覆盖 | 已命中 | Property COVER in dmac_harness at inputs/formal/dmac_harness.sv:26.9-26.84 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace10.vcd) |
+| C_CK_DUPLEX_DONE | R09、R11 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:99.5-99.59 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace11.vcd) |
+| C_CK_HIGH_LEN_RD | R04 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:106.9-106.67 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace1.vcd) |
+| C_CK_HIGH_LEN_WR | R04 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:107.9-107.67 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace8.vcd) |
+| C_CK_PENDING_RD | R02、R12 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:109.5-109.84 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace2.vcd) |
+| C_CK_PENDING_WR | R02、R12 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:110.5-110.86 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace6.vcd) |
+| C_CK_READ_WRAP | R03 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:100.5-100.87 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace0.vcd) |
+| C_CK_THREE_RD | R12 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:97.5-97.60 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace14.vcd) |
+| C_CK_THREE_WR | R12 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:98.5-98.60 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace15.vcd) |
+| C_CK_WRITE_WRAP | R03 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut at inputs/formal/dmac_monitor.svh:101.5-101.88 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace9.vcd) |
+| C_CK_FIFO_EMPTY | R08、R12 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:32.5-32.55 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace0.vcd) |
+| C_CK_FIFO_FULL | R08、R12 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:31.5-31.58 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace4.vcd) |
+| C_CK_FIFO_FULL_REPLACE | R08、R12 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:30.5-30.73 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace7.vcd) |
+| C_CK_FIFO_EMPTY | R08、R12 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:32.5-32.55 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace5.vcd) |
+| C_CK_FIFO_FULL | R08、R12 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:31.5-31.58 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace12.vcd) |
+| C_CK_FIFO_FULL_REPLACE | R08、R12 | 业务覆盖 | 已命中 | Property COVER in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:30.5-30.73 | [VCD](../verification/reports/evidence/accepted_cover_a32_l32_f2/proof/engine_0/trace13.vcd) |
+| A_CK_RD_ACK_ADMISSION | R02 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:84.5-84.93 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_ACTIVE | R02 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:60.5-60.54 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_ADDRESS | R03 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:80.5-80.82 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_BUSY_QUOTA | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:70.5-70.69 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_COMPLETE_COUNTS | R04、R09 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:93.5-93.102 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_DATA | R06 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:91.5-91.105 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_DELIVER_LEFT | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:63.5-63.83 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_DONE | R09 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:82.5-82.53 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_FETCH_LEFT | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:62.5-62.72 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_HEAD_VALID | R06、R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:95.5-95.68 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_IDLE_EMPTY | R02、R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:86.5-86.82 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_LANE | R06 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:66.5-66.54 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_NO_EXTRA | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:74.5-74.69 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_NO_EXTRA_DEV | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:75.5-75.73 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_OCCUPANCY | R06、R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:72.5-72.71 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_PROGRESS | R12 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:78.5-78.104 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_QUOTA | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:68.5-68.77 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_STALL_ADDRESS | R03、R05 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:58.9-58.61 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_RD_STALL_VALID | R05 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:57.9-57.51 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_ACK_ADMISSION | R02 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:85.5-85.93 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_ACTIVE | R02 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:61.5-61.54 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_ADDRESS | R03 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:81.5-81.82 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_ASSEMBLY | R07 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:90.5-90.75 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_BUSY_QUOTA | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:71.5-71.69 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_COLLECT_LEFT | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:64.5-64.83 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_COMMIT_LEFT | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:65.5-65.74 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_COMPLETE_COUNTS | R04、R09 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:94.5-94.102 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_DATA | R07 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:92.5-92.68 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_DONE | R09 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:83.5-83.53 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_HEAD_VALID | R07、R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:96.5-96.68 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_IDLE_EMPTY | R02、R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:87.5-87.82 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_LANE | R07 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:67.5-67.54 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_NO_EXTRA | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:76.5-76.69 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_NO_EXTRA_MEM | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:77.5-77.73 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_OCCUPANCY | R07、R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:73.5-73.71 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_PACK | R07 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:88.5-88.47 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_PACK_UNUSED_ZERO | R07 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:89.5-89.75 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_PROGRESS | R12 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:79.5-79.104 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_QUOTA | R04 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:69.5-69.77 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_STALL_ADDRESS | R03、R05 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:53.9-53.61 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_STALL_DATA | R05、R07 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:54.9-54.58 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_WR_STALL_VALID | R05 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut at inputs/formal/dmac_monitor.svh:52.9-52.51 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_COUNT | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:24.5-24.54 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_HEAD | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:29.5-29.71 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_POINTER | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:26.5-26.85 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_RANGE | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:25.5-25.87 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_READY | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:28.5-28.95 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_VALID | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:27.5-27.63 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| _witness_.check_assert_inputs_formal_fifo_monitor_svh_36_519 | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_519] | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| _witness_.check_assert_inputs_formal_fifo_monitor_svh_36_532 | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_rd_fifo at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_532] | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_COUNT | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:24.5-24.54 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_HEAD | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:29.5-29.71 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_POINTER | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:26.5-26.85 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_RANGE | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:25.5-25.87 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_READY | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:28.5-28.95 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| A_CK_FIFO_VALID | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:27.5-27.63 | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| _witness_.check_assert_inputs_formal_fifo_monitor_svh_36_519 | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_519] | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+| _witness_.check_assert_inputs_formal_fifo_monitor_svh_36_532 | R08 | 安全断言 | 已证明 | Property ASSERT in dmac_harness/dut/u_wr_fifo at inputs/formal/fifo_monitor.svh:36.9-36.72 [_witness_.check_assert_inputs_formal_fifo_monitor_svh_36_532] | [manifest](../verification/reports/evidence/accepted_prove_a32_l32_f2/manifest.json) |
+

@@ -4,10 +4,12 @@
 
 适用普通 Linux x86_64 用户。图形界面需要已有 Linux 桌面显示环境；纯 SSH 可直接使用命令行重跑。模型生成新属性仍需要另行配置模型账号；打开和重跑本包的已有 SBY 项目不调用模型。
 
+[下载 ZIP 版](https://github.com/ysyx-22040210-yudian/UCAgent-DMAC-verification/releases/download/v2026.10.07-offline/UCAgent-DMAC-20261007-linux-x86_64.zip)。ZIP 直接包含完整工程文件，Windows 可用 WinRAR 解压到自己的可写目录；没有内层压缩包，也不需要创建符号链接。运行工具仍使用 Linux x86_64。
+
 ## 解压与启动
 
 ```sh
-tar -xzf UCAgent-DMAC-20261007-linux-x86_64.tar.gz
+unzip UCAgent-DMAC-20261007-linux-x86_64.zip
 cd UCAgent-DMAC-20261007-linux-x86_64
 ./Start-UCAgent
 ```

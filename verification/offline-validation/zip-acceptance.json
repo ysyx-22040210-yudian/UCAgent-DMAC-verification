@@ -1,0 +1,216 @@
+{
+  "date": "2026-10-07",
+  "build": {
+    "source_sha256": "9976a3520fb4c04cff30949614247b7a262013f6b941f6988be5ce9990e3e8e7",
+    "zip_sha256": "b8cad0053d296ad21a5950cb199fc7746ea662be608d8d32d2f4c574e856a393",
+    "zip_bytes": 992063001,
+    "source_members": 45017,
+    "copied_links": 62,
+    "remaining_links": 0,
+    "inventory_files": 40992,
+    "zip_crc": "passed",
+    "file_hashes": "passed"
+  },
+  "windows": {
+    "extractor": "Windows System32/tar.exe",
+    "archive": "UCAgent-DMAC-20261007-linux-x86_64.zip",
+    "extraction_exit_code": 0,
+    "inventory_files": 40992,
+    "hashes": "passed",
+    "symlinks": 0,
+    "seconds": 234.06,
+    "winrar_actual_test": "not_available"
+  },
+  "linux": {
+    "user": "ucagent",
+    "uid": 1004,
+    "network": "isolated namespace; loopback only",
+    "extraction": "system unzip",
+    "path_contains_spaces": true,
+    "checks": [
+      {
+        "check": "integrity",
+        "exit_code": 0,
+        "seconds": 21.19
+      },
+      {
+        "check": "startup",
+        "exit_code": 0,
+        "seconds": 8.49
+      },
+      {
+        "check": "smoke",
+        "exit_code": 0,
+        "seconds": 9.94
+      }
+    ]
+  },
+  "smoke": {
+    "suite": "smoke",
+    "tool_paths": {
+      "sby": "/home/ucagent-lab/development/dmac-zip-20261007/extracted with spaces/UCAgent-DMAC-20261007-linux-x86_64/oss-cad-suite/bin/sby",
+      "iverilog": "/home/ucagent-lab/development/dmac-zip-20261007/extracted with spaces/UCAgent-DMAC-20261007-linux-x86_64/oss-cad-suite/bin/iverilog",
+      "vvp": "/home/ucagent-lab/development/dmac-zip-20261007/extracted with spaces/UCAgent-DMAC-20261007-linux-x86_64/oss-cad-suite/bin/vvp"
+    },
+    "verification_status": "按预期产生证据；设计总体验证结论仍未决",
+    "runs": [
+      {
+        "case": "accepted_prove_a32_l1_f4",
+        "mode": "prove",
+        "exit_code": 0,
+        "tool_status": "PASS",
+        "conclusion": "本参数实例安全证明通过",
+        "expected_observation": true
+      },
+      {
+        "case": "fault_address_step",
+        "mode": "bmc",
+        "exit_code": 2,
+        "tool_status": "FAIL",
+        "conclusion": "故障对照有效：检测到预期断言反例",
+        "expected_observation": true
+      }
+    ],
+    "replay": [
+      {
+        "case": "fault_address_step_mutant",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_address_step_baseline",
+        "compile_code": 0,
+        "run_code": 1,
+        "expected_run_code": 1,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_early_done_mutant",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_early_done_baseline",
+        "compile_code": 0,
+        "run_code": 1,
+        "expected_run_code": 1,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_fifo_pop_mutant",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_fifo_pop_baseline",
+        "compile_code": 0,
+        "run_code": 1,
+        "expected_run_code": 1,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_length_encoding_mutant",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_length_encoding_baseline",
+        "compile_code": 0,
+        "run_code": 1,
+        "expected_run_code": 1,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_read_lane_mutant",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_read_lane_baseline",
+        "compile_code": 0,
+        "run_code": 1,
+        "expected_run_code": 1,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_reset_lane_mutant",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_reset_lane_baseline",
+        "compile_code": 0,
+        "run_code": 1,
+        "expected_run_code": 1,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_write_lane_mutant",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "fault_write_lane_baseline",
+        "compile_code": 0,
+        "run_code": 1,
+        "expected_run_code": 1,
+        "expected_observation": true
+      },
+      {
+        "case": "C_CK_RESET_ABORT_RD",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "C_CK_RESET_ABORT_WR",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "C_CK_DUPLEX_DONE",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "C_CK_THREE_RD",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      },
+      {
+        "case": "C_CK_THREE_WR",
+        "compile_code": 0,
+        "run_code": 0,
+        "expected_run_code": 0,
+        "expected_observation": true
+      }
+    ],
+    "version_commands": {
+      "sby": 0,
+      "iverilog": 0,
+      "vvp": 0
+    }
+  },
+  "scope": "ZIP repackaging acceptance; does not change the unresolved DMAC design conclusion"
+}

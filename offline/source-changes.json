@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-07",
+  "description": "完整离线版：首次注册 DMAC 工程，保留已有数据与状态",
+  "changes": {
+    "ucagent/server/portable_main.py": {
+      "original_sha256": "cb0f7b362b95e4021a2ee0b03ee7c3c3d464fa871fb55e37dc446f0509c6ba9b",
+      "current_sha256": "f169119000c20b3a36f016a0f122c85e213631233d95f1f507f46e48f1f189eb"
+    }
+  }
+}

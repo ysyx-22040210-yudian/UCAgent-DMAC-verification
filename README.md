@@ -2,6 +2,12 @@
 
 本仓库包含 **DMAC 验证项目、实际使用的 UCAgent 源码与桌面客户端、中文报告和使用手册**。
 
+**在其他 Linux x86_64 设备上使用，请下载完整离线发行包，而不是仅下载仓库源码 ZIP。** 离线包自带 Python、执行服务、SBY、Yosys、Z3 与 Icarus，无需在目标机安装 SBY。
+
+[下载完整离线版](https://github.com/ysyx-22040210-yudian/UCAgent-DMAC-verification/releases/tag/v2026.10.07-offline) · [离线版启动说明](offline/README.md)
+
+解压后运行 `./Start-UCAgent`，首次启动自动显示已准备好的 `DMAC-native` 和 `DMAC-main` 工程。无桌面时运行 `./Run-DMAC --suite all`。新设备运行结果独立保存，不继承旧机的通过和审批状态。
+
 **14 个启用阶段已完成；主任务设计验证结论仍为未决。** 63 条主任务断言在深度 12 内无反例；触发可达见证命中 61/63，业务覆盖命中 14/19。四组原生辅助安全证明通过，七项故障对照被检测，19 次动态回放完成。工具回归 66 项通过。辅助证明不等于全部主任务属性获证；FormalMC 和 VCS 尚未实测。
 
 - [中文使用手册](docs/使用手册.md)：安装、启动桌面客户端、14 阶段流程、迁移与重跑方法。
@@ -28,6 +34,18 @@
 
 ## 快速开始
 
+完整离线版：
+
+```sh
+tar -xzf UCAgent-DMAC-20261007-linux-x86_64.tar.gz
+cd UCAgent-DMAC-20261007-linux-x86_64
+./Start-UCAgent
+# 纯 SSH 环境：
+./Run-DMAC --suite smoke
+```
+
+以下为仅下载源码时的开发者入口；普通用户使用上述离线版即可。
+
 仅查看报告：无需安装 UCAgent 或求解器。
 
 校验交付文件（Python 3.8+）：
@@ -51,4 +69,3 @@ python3 bin/UCAgent-Desktop.pyz --server http://127.0.0.1:8800
 ```
 
 后端需要 Python 3.11+ 与依赖，部署步骤见手册。已有证据不会自动恢复成可编辑的完成会话；在新机器新建任务、运行并形成新证据。
-

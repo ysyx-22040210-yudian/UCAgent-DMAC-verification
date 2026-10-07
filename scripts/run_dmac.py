@@ -102,23 +102,34 @@ def main():
     """A successful runner means expected evidence was observed, not that all DUT checks passed."""
     parser = argparse.ArgumentParser(description='DMAC 可搬运 SBY 与回放入口（不调用模型）')
     parser.add_argument('--suite', choices=['smoke', 'native', 'guided', 'replay', 'all'], default='smoke')
-    parser.add_argument('--sby', default='sby')
-    parser.add_argument('--iverilog', default='iverilog')
-    parser.add_argument('--vvp', default='vvp')
+    parser.add_argument('--runtime-bundle', type=Path, help='完整离线包目录；自动使用包内工具，无需系统安装 SBY')
+    parser.add_argument('--sby', help='仅源码模式下覆盖工具路径')
+    parser.add_argument('--iverilog', help='仅源码模式下覆盖工具路径')
+    parser.add_argument('--vvp', help='仅源码模式下覆盖工具路径')
     parser.add_argument('--timeout', type=int, default=300, help='每个工具进程的时间上限（秒）')
     parser.add_argument('--output-root', type=Path, default=ROOT / 'results')
     args = parser.parse_args()
     verify(ROOT)
     if args.timeout <= 0:
         parser.error('--timeout 必须为正整数')
-    tools = {} if args.suite == 'replay' else {'sby': args.sby}
+    bundled = args.runtime_bundle or (ROOT.parent if (ROOT.parent / 'bundle.json').is_file() else None)
+    if bundled:
+        bundled = bundled.resolve(strict=True)
+        metadata = json.loads((bundled / 'bundle.json').read_text(encoding='utf-8'))
+        if metadata.get('platform') != 'linux-x86_64':
+            parser.error('离线运行时必须为 Linux x86_64')
+    def tool(name):
+        return str(bundled / 'oss-cad-suite/bin' / name) if bundled else getattr(args, name) or name
+    tools = {} if args.suite == 'replay' else {'sby': tool('sby')}
     if args.suite in ('smoke', 'replay', 'all'):
-        tools.update(iverilog=args.iverilog, vvp=args.vvp)
+        tools.update(iverilog=tool('iverilog'), vvp=tool('vvp'))
     for key, value in list(tools.items()):
         resolved = shutil.which(value)
         if not resolved:
             parser.error('缺少工具 %s：%s；请配置 PATH 或对应启动参数' % (key, value))
         tools[key] = resolved
+    if bundled:
+        os.environ['PATH'] = str(bundled / 'oss-cad-suite/bin') + ':/usr/bin:/bin'
     target = args.output_root.resolve() / (datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '-' + uuid.uuid4().hex[:8])
     target.mkdir(parents=True, exist_ok=False)
     result = dict(suite=args.suite, tool_paths=tools, verification_status='尚未运行', runs=[], replay=[])

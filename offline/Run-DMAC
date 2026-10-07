@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+bundle_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+export PYTHONDONTWRITEBYTECODE=1
+exec "$bundle_dir/oss-cad-suite/bin/tabbypy3" -B "$bundle_dir/project/scripts/run_dmac.py" --runtime-bundle "$bundle_dir" --output-root "${XDG_DATA_HOME:-$HOME/.local/share}/ucagent-dmac/results" "$@"

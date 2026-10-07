@@ -16,6 +16,34 @@ from .api_platform import ProjectCreateRequest
 from .platform_main import create_platform_app
 
 
+def seed_projects(bundle: Path, data: Path) -> list[tuple[str, Path]]:
+    """Import declared offline projects once, preserving all existing user edits and runs."""
+    manifest = json.loads((bundle / "bundle.json").read_text(encoding="utf-8"))
+    names = manifest.get("projects", ["sby_counter", "sby_counter_bug"])
+    if not isinstance(names, list) or not names or len(names) != len(set(names)):
+        raise ValueError("Offline project list must contain unique names")
+    import re
+    projects = data / "projects"
+    projects.mkdir(exist_ok=True)
+    imported = []
+    for name in names:
+        if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,99}", name):
+            raise ValueError("Invalid offline project name")
+        source = bundle / "examples" / name
+        source.resolve(strict=True).relative_to(bundle.resolve(strict=True))
+        destination = projects / name
+        if destination.is_symlink():
+            raise ValueError("Offline project destination must not be a symbolic link")
+        if not destination.exists():
+            staging = projects / ("." + name + ".tmp")
+            if staging.exists():
+                raise ValueError(f"An interrupted project import needs inspection: {staging}")
+            shutil.copytree(source, staging)
+            os.replace(staging, destination)
+        imported.append((name, destination))
+    return imported
+
+
 def main() -> None:
     """Resolve bundle-owned tools, protect per-user state and announce a private listener."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -62,24 +90,15 @@ def main() -> None:
     toolchains = args.toolchains.expanduser().resolve() if args.toolchains else Path.home() / ".ucagent/toolchains.yaml"
     if args.toolchains and not toolchains.is_file():
         raise SystemExit("The explicitly selected host toolchain file does not exist.")
+    imported = seed_projects(bundle, data)
     examples = data / "projects"
-    examples.mkdir(exist_ok=True)
-    for name in ("sby_counter", "sby_counter_bug"):
-        destination = examples / name
-        if not destination.exists():
-            staging = examples / ("." + name + ".tmp")
-            if staging.exists():
-                raise SystemExit(f"An interrupted example import needs inspection: {staging}")
-            shutil.copytree(bundle / "examples" / name, staging)
-            os.replace(staging, destination)
     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     listener.bind(("127.0.0.1", 0))
     port = listener.getsockname()[1]
     app = create_platform_app(workspace=data / "state", port=port, toolchains_file=toolchains, import_roots=[Path.home(), examples], password=token, builtin_toolchains=config["profiles"])
     platform = app.state.platform_runtime
     existing = {project["source_root"] for project in platform.store.list_projects()}
-    for name in ("sby_counter", "sby_counter_bug"):
-        path = examples / name
+    for name, path in imported:
         if str(path) not in existing:
             platform.create_project(ProjectCreateRequest(name=name, path=str(path)))
     ready = args.ready_file.resolve()

@@ -1,0 +1,147 @@
+SBY 13:00:23 [proof] Removing directory '/home/ucagent-lab/development/dmac-offline-20261007/offline-acceptance/final-cli-results/20261007-130022-adf33de4/accepted_cover_a32_l1_f1/proof'.
+SBY 13:00:23 [proof] Copy '/home/ucagent-lab/development/dmac-offline-20261007/offline-acceptance/final-cli-results/20261007-130022-adf33de4/accepted_cover_a32_l1_f1/inputs' to '/home/ucagent-lab/development/dmac-offline-20261007/offline-acceptance/final-cli-results/20261007-130022-adf33de4/accepted_cover_a32_l1_f1/proof/src/inputs'.
+SBY 13:00:23 [proof] engine_0: smtbmc z3
+SBY 13:00:23 [proof] base: starting process "cd proof/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 13:00:23 [proof] base: Warning: Replacing memory \f_fifo_model with list of registers. See inputs/formal/fifo_monitor.svh:13
+SBY 13:00:23 [proof] base: Warning: Replacing memory \storage with list of registers. See inputs/rtl/dmac_fifo.sv:45
+SBY 13:00:23 [proof] base: Warning: Replacing memory \f_fifo_model with list of registers. See inputs/formal/fifo_monitor.svh:15
+SBY 13:00:23 [proof] base: finished (returncode=0)
+SBY 13:00:23 [proof] prep: starting process "cd proof/model; yosys -ql design_prep.log design_prep.ys"
+SBY 13:00:23 [proof] prep: finished (returncode=0)
+SBY 13:00:23 [proof] smt2: starting process "cd proof/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY 13:00:23 [proof] smt2: finished (returncode=0)
+SBY 13:00:23 [proof] engine_0: starting process "cd proof; yosys-smtbmc -s z3 --presat -c --noprogress -t 24  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Solver: z3
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Reached cover statement in step 3 at dmac_harness.dut.u_rd_fifo: C_CK_FIFO_EMPTY
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Reached cover statement in step 3 at dmac_harness.dut: C_CK_READ_WRAP
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace1.vcd
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace1.smtc
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace1.yw
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 4..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Reached cover statement in step 4 at dmac_harness: C_CK_RESET_ABORT_RD
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace2.vcd
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace2.smtc
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace2.yw
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 4..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Reached cover statement in step 4 at dmac_harness.dut: C_CK_PENDING_RD
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Reached cover statement in step 4 at dmac_harness.dut.u_rd_fifo: C_CK_FIFO_FULL
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace3.vcd
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace3_tb.v
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace3.smtc
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace3.yw
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 4..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 5..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 6..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Reached cover statement in step 6 at dmac_harness.dut.u_wr_fifo: C_CK_FIFO_EMPTY
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace4.vcd
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace4_tb.v
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace4.smtc
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace4.yw
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 6..
+SBY 13:00:23 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 7..
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Reached cover statement in step 7 at dmac_harness.dut: C_CK_PENDING_WR
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Reached cover statement in step 7 at dmac_harness.dut: C_CK_WRITE_WRAP
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace5.vcd
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace5_tb.v
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace5.smtc
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace5.yw
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 7..
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Reached cover statement in step 7 at dmac_harness.dut.u_wr_fifo: C_CK_FIFO_FULL
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace6.vcd
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace6_tb.v
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace6.smtc
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace6.yw
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 7..
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Reached cover statement in step 7 at dmac_harness.dut.u_rd_fifo: C_CK_FIFO_FULL_REPLACE
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace7.vcd
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace7_tb.v
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace7.smtc
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace7.yw
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 7..
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 8..
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Reached cover statement in step 8 at dmac_harness: C_CK_RESET_ABORT_WR
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace8.vcd
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace8_tb.v
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace8.smtc
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace8.yw
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 8..
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Reached cover statement in step 8 at dmac_harness.dut: C_CK_DUPLEX_DONE
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace9.vcd
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace9_tb.v
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace9.smtc
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace9.yw
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 8..
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 9..
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Checking cover reachability in step 10..
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Reached cover statement in step 10 at dmac_harness.dut.u_wr_fifo: C_CK_FIFO_FULL_REPLACE
+SBY 13:00:24 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace10.vcd
+SBY 13:00:24 [proof] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace10_tb.v
+SBY 13:00:24 [proof] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace10.smtc
+SBY 13:00:24 [proof] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace10.yw
+SBY 13:00:24 [proof] engine_0: ##   0:00:01  Checking cover reachability in step 10..
+SBY 13:00:24 [proof] engine_0: ##   0:00:01  Checking cover reachability in step 11..
+SBY 13:00:25 [proof] engine_0: ##   0:00:01  Checking cover reachability in step 12..
+SBY 13:00:25 [proof] engine_0: ##   0:00:01  Reached cover statement in step 12 at dmac_harness.dut: C_CK_MAXLEN_RD
+SBY 13:00:25 [proof] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace11.vcd
+SBY 13:00:25 [proof] engine_0: ##   0:00:02  Writing trace to Verilog testbench: engine_0/trace11_tb.v
+SBY 13:00:25 [proof] engine_0: ##   0:00:02  Writing trace to constraints file: engine_0/trace11.smtc
+SBY 13:00:25 [proof] engine_0: ##   0:00:02  Writing trace to Yosys witness file: engine_0/trace11.yw
+SBY 13:00:25 [proof] engine_0: ##   0:00:02  Checking cover reachability in step 12..
+SBY 13:00:25 [proof] engine_0: ##   0:00:02  Reached cover statement in step 12 at dmac_harness.dut: C_CK_MAXLEN_WR
+SBY 13:00:26 [proof] engine_0: ##   0:00:02  Writing trace to VCD file: engine_0/trace12.vcd
+SBY 13:00:26 [proof] engine_0: ##   0:00:02  Writing trace to Verilog testbench: engine_0/trace12_tb.v
+SBY 13:00:26 [proof] engine_0: ##   0:00:02  Writing trace to constraints file: engine_0/trace12.smtc
+SBY 13:00:26 [proof] engine_0: ##   0:00:02  Writing trace to Yosys witness file: engine_0/trace12.yw
+SBY 13:00:26 [proof] engine_0: ##   0:00:02  Checking cover reachability in step 12..
+SBY 13:00:26 [proof] engine_0: ##   0:00:02  Checking cover reachability in step 13..
+SBY 13:00:26 [proof] engine_0: ##   0:00:03  Checking cover reachability in step 14..
+SBY 13:00:27 [proof] engine_0: ##   0:00:04  Checking cover reachability in step 15..
+SBY 13:00:28 [proof] engine_0: ##   0:00:05  Checking cover reachability in step 16..
+SBY 13:00:30 [proof] engine_0: ##   0:00:06  Checking cover reachability in step 17..
+SBY 13:00:32 [proof] engine_0: ##   0:00:09  Checking cover reachability in step 18..
+SBY 13:00:35 [proof] engine_0: ##   0:00:12  Checking cover reachability in step 19..
+SBY 13:00:39 [proof] engine_0: ##   0:00:15  Checking cover reachability in step 20..
+SBY 13:00:41 [proof] engine_0: ##   0:00:18  Checking cover reachability in step 21..
+SBY 13:00:48 [proof] engine_0: ##   0:00:24  Checking cover reachability in step 22..
+SBY 13:00:51 [proof] engine_0: ##   0:00:27  Reached cover statement in step 22 at dmac_harness.dut: C_CK_THREE_RD
+SBY 13:00:51 [proof] engine_0: ##   0:00:27  Writing trace to VCD file: engine_0/trace13.vcd
+SBY 13:00:51 [proof] engine_0: ##   0:00:27  Writing trace to Verilog testbench: engine_0/trace13_tb.v
+SBY 13:00:51 [proof] engine_0: ##   0:00:27  Writing trace to constraints file: engine_0/trace13.smtc
+SBY 13:00:51 [proof] engine_0: ##   0:00:27  Writing trace to Yosys witness file: engine_0/trace13.yw
+SBY 13:00:51 [proof] engine_0: ##   0:00:27  Checking cover reachability in step 22..
+SBY 13:00:53 [proof] engine_0: ##   0:00:29  Reached cover statement in step 22 at dmac_harness.dut: C_CK_THREE_WR
+SBY 13:00:53 [proof] engine_0: ##   0:00:29  Writing trace to VCD file: engine_0/trace14.vcd
+SBY 13:00:53 [proof] engine_0: ##   0:00:29  Writing trace to Verilog testbench: engine_0/trace14_tb.v
+SBY 13:00:53 [proof] engine_0: ##   0:00:29  Writing trace to constraints file: engine_0/trace14.smtc
+SBY 13:00:53 [proof] engine_0: ##   0:00:29  Writing trace to Yosys witness file: engine_0/trace14.yw
+SBY 13:00:53 [proof] engine_0: ##   0:00:29  Status: passed
+SBY 13:00:53 [proof] engine_0: finished (returncode=0)
+SBY 13:00:53 [proof] engine_0: Status returned by engine: pass
+SBY 13:00:53 [proof] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:30 (30)
+SBY 13:00:53 [proof] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:30 (30)
+SBY 13:00:53 [proof] summary: engine_0 (smtbmc z3) returned pass
+SBY 13:00:53 [proof] summary: cover trace: proof/engine_0/trace0.vcd
+SBY 13:00:53 [proof] summary:   reached cover statement dmac_harness.dut.u_rd_fifo.C_CK_FIFO_EMPTY at inputs/formal/fifo_monitor.svh:32.5-32.55 step 3
+SBY 13:00:53 [proof] summary: cover trace: proof/engine_0/trace1.vcd
+SBY 13:00:53 [proof] summary:   reached cover statement dmac_harness.dut.C_CK_READ_WRAP at inputs/formal/dmac_monitor.svh:100.5-100.87 step 3
+SBY 13:00:53 [proof] summary: cover trace: proof/engine_0/trace10.vcd
+SBY 13:00:53 [proof] summary:   reached cover statement dmac_harness.dut.u_wr_fifo.C_CK_FIFO_FULL_REPLACE at inputs/formal/fifo_monitor.svh:30.5-30.73 step 10
+SBY 13:00:53 [proof] summary: cover trace: proof/engine_0/trace11.vcd
+SBY 13:00:53 [proof] summary:   reached cover statement dmac_harness.dut.C_CK_MAXLEN_RD at inputs/formal/dmac_monitor.svh:103.9-103.83 step 12
+SBY 13:00:53 [proof] summary: cover trace: proof/engine_0/trace12.vcd
+SBY 13:00:53 [proof] summary:   reached cover statement dmac_harness.dut.C_CK_MAXLEN_WR at inputs/formal/dmac_monitor.svh:104.9-104.83 step 12
+SBY 13:00:53 [proof] summary: and 10 further traces
+SBY 13:00:53 [proof] summary: see proof/PASS for a complete summary
+SBY 13:00:53 [proof] DONE (PASS, rc=0)

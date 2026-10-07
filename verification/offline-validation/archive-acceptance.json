@@ -1,0 +1,142 @@
+{
+  "archive": "/home/ucagent-lab/development/dmac-offline-20261007/UCAgent-DMAC-20261007-linux-x86_64.tar.gz",
+  "checks": [
+    {
+      "check": "integrity",
+      "exit_code": 0,
+      "result": {
+        "passed": true,
+        "inventory_files": 40929,
+        "failures": []
+      }
+    },
+    {
+      "check": "startup",
+      "exit_code": 0,
+      "result": {
+        "python": "3.11.6",
+        "tk": 8.6,
+        "server": "http://127.0.0.1:34622",
+        "desktop_supported": true,
+        "overview": {
+          "projects": 4,
+          "runs": 0,
+          "execution": {},
+          "verification": {},
+          "active_jobs": 0,
+          "queued_jobs": 0,
+          "disk": {
+            "total_bytes": 390753419264,
+            "used_bytes": 327253676032,
+            "free_bytes": 63499743232,
+            "minimum_free_bytes": 10737418240,
+            "gate_open": true
+          },
+          "toolchains": [
+            {
+              "id": "bundled_sby",
+              "name": "Bundled SBY / Yosys / Z3 (offline)",
+              "available": true,
+              "status": "unknown",
+              "license_status": "unknown",
+              "max_concurrency": 1,
+              "capabilities": [
+                {
+                  "name": "sby",
+                  "available": true,
+                  "version": "SBY v0.67-4-gfea6e46"
+                },
+                {
+                  "name": "yosys",
+                  "available": true,
+                  "version": "Yosys 0.67+94 (git sha1 7defa5186-dirty, Release, Clang /usr/bin/clang++ 18.1.8)"
+                },
+                {
+                  "name": "yosys-smtbmc",
+                  "available": true,
+                  "version": "bundled with Yosys 0.67+94 (git sha1 7defa5186-dirty, Release, Clang /usr/bin/clang++ 18.1.8)"
+                },
+                {
+                  "name": "z3",
+                  "available": true,
+                  "version": "Z3 version 4.15.5 - 64 bit"
+                }
+              ],
+              "last_probe_at": null,
+              "diagnostic": null
+            },
+            {
+              "id": "sby",
+              "name": "SBY Guided - installed OSS CAD Suite",
+              "available": true,
+              "status": "unknown",
+              "license_status": "unknown",
+              "max_concurrency": 1,
+              "capabilities": [
+                {
+                  "name": "sby",
+                  "available": true,
+                  "version": null
+                },
+                {
+                  "name": "yosys",
+                  "available": true,
+                  "version": null
+                },
+                {
+                  "name": "yosys-smtbmc",
+                  "available": true,
+                  "version": null
+                },
+                {
+                  "name": "z3",
+                  "available": true,
+                  "version": null
+                }
+              ],
+              "last_probe_at": null,
+              "diagnostic": null
+            },
+            {
+              "id": "synopsys_o2018",
+              "name": "Synopsys O-2018.09-SP2 (VCS + Verdi)",
+              "available": true,
+              "status": "unknown",
+              "license_status": "unknown",
+              "max_concurrency": 1,
+              "capabilities": [
+                {
+                  "name": "python",
+                  "available": true,
+                  "version": null
+                },
+                {
+                  "name": "urg",
+                  "available": true,
+                  "version": "O-2018.09-SP2"
+                },
+                {
+                  "name": "vcs",
+                  "available": true,
+                  "version": "O-2018.09-SP2"
+                },
+                {
+                  "name": "verdi",
+                  "available": true,
+                  "version": "Verdi_O-2018.09-SP2"
+                },
+                {
+                  "name": "fsdb_pli",
+                  "available": true,
+                  "reason": null
+                }
+              ],
+              "last_probe_at": null,
+              "diagnostic": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

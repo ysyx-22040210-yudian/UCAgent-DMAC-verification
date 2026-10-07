@@ -1,0 +1,295 @@
+{
+  "suite": "all",
+  "tool_paths": {
+    "sby": "/home/ucagent-lab/development/dmac-offline-20261007/relocated with spaces/UCAgent-DMAC-20261007-linux-x86_64/oss-cad-suite/bin/sby",
+    "iverilog": "/home/ucagent-lab/development/dmac-offline-20261007/relocated with spaces/UCAgent-DMAC-20261007-linux-x86_64/oss-cad-suite/bin/iverilog",
+    "vvp": "/home/ucagent-lab/development/dmac-offline-20261007/relocated with spaces/UCAgent-DMAC-20261007-linux-x86_64/oss-cad-suite/bin/vvp"
+  },
+  "verification_status": "按预期产生证据；设计总体验证结论仍未决",
+  "runs": [
+    {
+      "case": "accepted_cover_a32_l1_f1",
+      "mode": "cover",
+      "exit_code": 0,
+      "tool_status": "PASS",
+      "conclusion": "覆盖全部命中",
+      "expected_observation": true
+    },
+    {
+      "case": "accepted_cover_a32_l32_f2",
+      "mode": "cover",
+      "exit_code": 0,
+      "tool_status": "PASS",
+      "conclusion": "覆盖全部命中",
+      "expected_observation": true
+    },
+    {
+      "case": "accepted_prove_a16_l8_f3",
+      "mode": "prove",
+      "exit_code": 0,
+      "tool_status": "PASS",
+      "conclusion": "本参数实例安全证明通过",
+      "expected_observation": true
+    },
+    {
+      "case": "accepted_prove_a32_l1_f4",
+      "mode": "prove",
+      "exit_code": 0,
+      "tool_status": "PASS",
+      "conclusion": "本参数实例安全证明通过",
+      "expected_observation": true
+    },
+    {
+      "case": "accepted_prove_a32_l32_f2",
+      "mode": "prove",
+      "exit_code": 0,
+      "tool_status": "PASS",
+      "conclusion": "本参数实例安全证明通过",
+      "expected_observation": true
+    },
+    {
+      "case": "accepted_prove_a32_l8_f1",
+      "mode": "prove",
+      "exit_code": 0,
+      "tool_status": "PASS",
+      "conclusion": "本参数实例安全证明通过",
+      "expected_observation": true
+    },
+    {
+      "case": "fault_address_step",
+      "mode": "bmc",
+      "exit_code": 2,
+      "tool_status": "FAIL",
+      "conclusion": "故障对照有效：检测到预期断言反例",
+      "expected_observation": true
+    },
+    {
+      "case": "fault_early_done",
+      "mode": "bmc",
+      "exit_code": 2,
+      "tool_status": "FAIL",
+      "conclusion": "故障对照有效：检测到预期断言反例",
+      "expected_observation": true
+    },
+    {
+      "case": "fault_fifo_pop",
+      "mode": "bmc",
+      "exit_code": 2,
+      "tool_status": "FAIL",
+      "conclusion": "故障对照有效：检测到预期断言反例",
+      "expected_observation": true
+    },
+    {
+      "case": "fault_length_encoding",
+      "mode": "bmc",
+      "exit_code": 2,
+      "tool_status": "FAIL",
+      "conclusion": "故障对照有效：检测到预期断言反例",
+      "expected_observation": true
+    },
+    {
+      "case": "fault_read_lane",
+      "mode": "bmc",
+      "exit_code": 2,
+      "tool_status": "FAIL",
+      "conclusion": "故障对照有效：检测到预期断言反例",
+      "expected_observation": true
+    },
+    {
+      "case": "fault_reset_lane",
+      "mode": "bmc",
+      "exit_code": 2,
+      "tool_status": "FAIL",
+      "conclusion": "故障对照有效：检测到预期断言反例",
+      "expected_observation": true
+    },
+    {
+      "case": "fault_write_lane",
+      "mode": "bmc",
+      "exit_code": 2,
+      "tool_status": "FAIL",
+      "conclusion": "故障对照有效：检测到预期断言反例",
+      "expected_observation": true
+    },
+    {
+      "case": "fifo_cover_f1",
+      "mode": "cover",
+      "exit_code": 0,
+      "tool_status": "PASS",
+      "conclusion": "覆盖全部命中",
+      "expected_observation": true
+    },
+    {
+      "case": "fifo_cover_f3",
+      "mode": "cover",
+      "exit_code": 0,
+      "tool_status": "PASS",
+      "conclusion": "覆盖全部命中",
+      "expected_observation": true
+    },
+    {
+      "case": "fifo_cover_f4",
+      "mode": "cover",
+      "exit_code": 0,
+      "tool_status": "PASS",
+      "conclusion": "覆盖全部命中",
+      "expected_observation": true
+    },
+    {
+      "case": "guided_bmc",
+      "mode": "bmc",
+      "exit_code": 0,
+      "tool_status": "PASS",
+      "conclusion": "有界深度内无反例，仍未决",
+      "expected_observation": true
+    },
+    {
+      "case": "guided_cover",
+      "mode": "cover",
+      "exit_code": 2,
+      "tool_status": "FAIL",
+      "conclusion": "覆盖仍有未命中项，结论未决",
+      "expected_observation": true
+    }
+  ],
+  "replay": [
+    {
+      "case": "fault_address_step_mutant",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_address_step_baseline",
+      "compile_code": 0,
+      "run_code": 1,
+      "expected_run_code": 1,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_early_done_mutant",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_early_done_baseline",
+      "compile_code": 0,
+      "run_code": 1,
+      "expected_run_code": 1,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_fifo_pop_mutant",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_fifo_pop_baseline",
+      "compile_code": 0,
+      "run_code": 1,
+      "expected_run_code": 1,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_length_encoding_mutant",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_length_encoding_baseline",
+      "compile_code": 0,
+      "run_code": 1,
+      "expected_run_code": 1,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_read_lane_mutant",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_read_lane_baseline",
+      "compile_code": 0,
+      "run_code": 1,
+      "expected_run_code": 1,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_reset_lane_mutant",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_reset_lane_baseline",
+      "compile_code": 0,
+      "run_code": 1,
+      "expected_run_code": 1,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_write_lane_mutant",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "fault_write_lane_baseline",
+      "compile_code": 0,
+      "run_code": 1,
+      "expected_run_code": 1,
+      "expected_observation": true
+    },
+    {
+      "case": "C_CK_RESET_ABORT_RD",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "C_CK_RESET_ABORT_WR",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "C_CK_DUPLEX_DONE",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "C_CK_THREE_RD",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    },
+    {
+      "case": "C_CK_THREE_WR",
+      "compile_code": 0,
+      "run_code": 0,
+      "expected_run_code": 0,
+      "expected_observation": true
+    }
+  ],
+  "version_commands": {
+    "sby": 0,
+    "iverilog": 0,
+    "vvp": 0
+  }
+}

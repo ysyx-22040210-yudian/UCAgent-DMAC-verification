@@ -1,0 +1,2 @@
+FATAL: replay_tb.sv:182: VECTOR_MISMATCH step=3 signal=dev_rd_data
+       Time: 22  Scope: replay_tb

@@ -1,0 +1,2 @@
+FATAL: replay_tb.sv:362: VECTOR_MISMATCH step=7 signal=dut.u_wr_fifo.rd_ptr_q
+       Time: 46  Scope: replay_tb

@@ -4,7 +4,7 @@
 
 **在其他 Linux x86_64 设备上使用，请下载完整离线发行包，而不是仅下载仓库源码 ZIP。** 离线包自带 Python、执行服务、SBY、Yosys、Z3 与 Icarus，无需在目标机安装 SBY。
 
-[下载完整离线版](https://github.com/ysyx-22040210-yudian/UCAgent-DMAC-verification/releases/tag/v2026.10.07-offline) · [离线版启动说明](offline/README.md)
+[下载完整离线版](https://github.com/ysyx-22040210-yudian/UCAgent-DMAC-verification/releases/tag/v2026.10.07-offline) · [离线版启动说明](offline/README.md) · [断网验收报告](docs/离线版验收.md)
 
 解压后运行 `./Start-UCAgent`，首次启动自动显示已准备好的 `DMAC-native` 和 `DMAC-main` 工程。无桌面时运行 `./Run-DMAC --suite all`。新设备运行结果独立保存，不继承旧机的通过和审批状态。
 

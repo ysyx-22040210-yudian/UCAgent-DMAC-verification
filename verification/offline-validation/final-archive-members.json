@@ -1,0 +1,21 @@
+{
+  "changed_members_checked": [
+    {
+      "file": "project/scripts/run_dmac.py",
+      "sha256": "3759c54f1ef5685161b915d09e57197c12c09b883a1078b842e36d5ff5dc2157"
+    },
+    {
+      "file": "project/DELIVERY_SHA256.json",
+      "sha256": "8c266ab6421b5817aeb8dbb38d537e7251bf1a804a2995e4d9da173081d66ea6"
+    },
+    {
+      "file": "SHA256SUMS.json",
+      "sha256": "607cb4a18da378e8f1a805b29645e6b82eb1aa67935e57eb77b9f7bb832da3b3"
+    },
+    {
+      "file": "bundle.json",
+      "sha256": "263effb8e0a91bc92e52e1e9810d7cc3983d28f64474da2ea9a52d4d40461be5"
+    }
+  ],
+  "unchanged_runtime_archive_extraction": "Initial candidate was fully extracted and startup verified; final changes are only runner and identity files"
+}

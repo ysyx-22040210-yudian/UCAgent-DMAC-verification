@@ -1,0 +1,36 @@
+SBY 13:04:31 [proof] Removing directory '/home/ucagent-lab/development/dmac-offline-20261007/offline-acceptance/final-cli-results/20261007-130022-adf33de4/fault_write_lane/proof'.
+SBY 13:04:31 [proof] Copy '/home/ucagent-lab/development/dmac-offline-20261007/offline-acceptance/final-cli-results/20261007-130022-adf33de4/fault_write_lane/inputs' to '/home/ucagent-lab/development/dmac-offline-20261007/offline-acceptance/final-cli-results/20261007-130022-adf33de4/fault_write_lane/proof/src/inputs'.
+SBY 13:04:31 [proof] engine_0: smtbmc z3
+SBY 13:04:31 [proof] base: starting process "cd proof/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 13:04:31 [proof] base: Warning: Replacing memory \f_fifo_model with list of registers. See inputs/formal/fifo_monitor.svh:13
+SBY 13:04:31 [proof] base: Warning: Replacing memory \storage with list of registers. See inputs/rtl/dmac_fifo.sv:45
+SBY 13:04:31 [proof] base: finished (returncode=0)
+SBY 13:04:31 [proof] prep: starting process "cd proof/model; yosys -ql design_prep.log design_prep.ys"
+SBY 13:04:31 [proof] prep: finished (returncode=0)
+SBY 13:04:31 [proof] smt2: starting process "cd proof/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY 13:04:31 [proof] smt2: finished (returncode=0)
+SBY 13:04:31 [proof] engine_0: starting process "cd proof; yosys-smtbmc -s z3 --presat --noprogress -t 24  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Solver: z3
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  BMC failed!
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Assert failed in dmac_harness.dut: A_CK_WR_ASSEMBLY
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY 13:04:31 [proof] engine_0: ##   0:00:00  Status: failed
+SBY 13:04:31 [proof] engine_0: finished (returncode=1)
+SBY 13:04:31 [proof] engine_0: Status returned by engine: FAIL
+SBY 13:04:31 [proof] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 13:04:31 [proof] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 13:04:31 [proof] summary: engine_0 (smtbmc z3) returned FAIL
+SBY 13:04:31 [proof] summary: counterexample trace: proof/engine_0/trace.vcd
+SBY 13:04:31 [proof] summary:   failed assertion dmac_harness.dut.A_CK_WR_ASSEMBLY at inputs/formal/dmac_monitor.svh:90.5-90.75 step 3
+SBY 13:04:31 [proof] DONE (FAIL, rc=2)

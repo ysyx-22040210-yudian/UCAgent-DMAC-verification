@@ -1,0 +1,2 @@
+FATAL: replay_tb.sv:134: VECTOR_MISMATCH step=2 signal=mem_rd_valid
+       Time: 16  Scope: replay_tb

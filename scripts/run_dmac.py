@@ -9,6 +9,7 @@ import signal
 import subprocess
 import sys
 import uuid
+import tempfile
 
 from check_delivery import verify
 
@@ -72,7 +73,7 @@ def sby_case(case, target, executable, timeout):
                 conclusion=conclusion, expected_observation=expected)
 
 
-def replay_cases(target, iverilog, vvp, timeout):
+def replay_cases(target, iverilog, vvp, timeout, compiler_base=None):
     """Compile original or deliberately faulty RTL; require all 19 actual replay outcomes."""
     rows = []
     histories = json.loads((REPORTS / 'replay/results.json').read_text(encoding='utf-8'))
@@ -86,7 +87,8 @@ def replay_cases(target, iverilog, vvp, timeout):
         for name in ('dmac.sv', 'dmac_fifo.sv'):
             shutil.copy2(rtl / name, cwd / name)
         shutil.copy2(REPORTS / 'replay' / case / 'replay_tb.sv', cwd / 'replay_tb.sv')
-        code = call([iverilog, '-g2012', '-DSYNTHESIS', '-s', 'replay_tb', '-o',
+        compiler_args = ['-B', str(compiler_base)] if compiler_base else []
+        code = call([iverilog, *compiler_args, '-g2012', '-DSYNTHESIS', '-s', 'replay_tb', '-o',
                      'sim', 'dmac.sv', 'dmac_fifo.sv', 'replay_tb.sv'], cwd, 'compile.log', timeout)
         run_code = call([vvp, 'sim'], cwd, 'run.log', timeout) if code == 0 else None
         expected_code = 1 if case.endswith('_baseline') else 0
@@ -133,8 +135,16 @@ def main():
     target = args.output_root.resolve() / (datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '-' + uuid.uuid4().hex[:8])
     target.mkdir(parents=True, exist_ok=False)
     result = dict(suite=args.suite, tool_paths=tools, verification_status='尚未运行', runs=[], replay=[])
+    alias = None
+    compiler_base = None
     exit_code = 1
     try:
+        if bundled and 'iverilog' in tools:
+            # Icarus' internal shell commands do not quote a spaced -B directory.
+            # Give its unchanged helper binaries a private, space-free directory alias.
+            alias = tempfile.TemporaryDirectory(prefix='ucagent-ivl-', dir='/tmp')
+            compiler_base = Path(alias.name) / 'ivl'
+            compiler_base.symlink_to(bundled / 'oss-cad-suite/lib/ivl', target_is_directory=True)
         versions = {}
         for name, executable in tools.items():
             versions[name] = call([executable, '--version' if name == 'sby' else '-V'],
@@ -152,7 +162,7 @@ def main():
             result['runs'].append(row)
             print(json.dumps(row, ensure_ascii=False), flush=True)
         if args.suite in ('smoke', 'replay', 'all'):
-            result['replay'] = replay_cases(target, tools['iverilog'], tools['vvp'], args.timeout)
+            result['replay'] = replay_cases(target, tools['iverilog'], tools['vvp'], args.timeout, compiler_base)
         checks = result['runs'] + result['replay']
         exit_code = 0 if checks and all(r['expected_observation'] for r in checks) else 1
         result['verification_status'] = '按预期产生证据；设计总体验证结论仍未决' if exit_code == 0 else '存在执行错误或结果不符合预期'
@@ -160,6 +170,8 @@ def main():
         result['error'] = str(error)
         result['verification_status'] = '执行错误或超时，无通过结论'
     finally:
+        if alias is not None:
+            alias.cleanup()
         (target / 'results.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('结果目录：' + str(target), flush=True)
     return exit_code

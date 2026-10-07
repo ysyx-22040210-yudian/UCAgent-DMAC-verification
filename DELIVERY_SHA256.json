@@ -29,7 +29,7 @@
     "README.md": "a18656ad7e632a9e9bc7293bf6851c616400136664f2470bec7cb7db12f3f3d6",
     "scripts/build_offline.py": "58ec6ce8047318f316123f390351bd551ccbc27919e6b9839b5de551ae929c7a",
     "scripts/check_delivery.py": "ff3e7bf5c3e158aa0379ea43c3bf2054ab61bdfae89617ee913354b7236996f0",
-    "scripts/run_dmac.py": "db792fc8c2d979d5529458426630e59a93dde828e8cd0ed0da6b2c1973648f57",
+    "scripts/run_dmac.py": "3759c54f1ef5685161b915d09e57197c12c09b883a1078b842e36d5ff5dc2157",
     "ucagent-tool/AGENTS.md": "cf42d6357da9d42cf8e4e73a1b2363a3388c6e0437f598ae5d4646f73e8cd35f",
     "ucagent-tool/deploy/accept_portable.py": "f3b1fcd0449d862433166d41c94cbeed2f54f1595c927bae62c768bf1ee0c5a6",
     "ucagent-tool/deploy/audit_claude_installation.py": "d86f5dc2f5d78701615042ef11d7d524493ec30017ad881c69b80856b8fcd591",
